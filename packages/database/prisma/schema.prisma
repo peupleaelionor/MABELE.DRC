@@ -1,0 +1,320 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  phone         String   @unique
+  email         String?  @unique
+  name          String
+  avatar        String?
+  role          Role     @default(USER)
+  province      String?
+  ville         String?
+  isVerified    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  immoListings  ImmoListing[]
+  jobPostings   JobPosting[]
+  marketItems   MarketItem[]
+  agriProducts  AgriProduct[]
+  invoices      Invoice[]
+  favorites     Favorite[]
+  reviews       Review[]
+  tontineGroups TontineGroupMember[]
+  notifications Notification[]
+}
+
+enum Role {
+  USER
+  AGENT_IMMO
+  EMPLOYER
+  FARMER
+  ADMIN
+}
+
+model ImmoListing {
+  id          String     @id @default(cuid())
+  type        ImmoType
+  action      ImmoAction
+  titre       String
+  description String
+  prix        Float
+  devise      String     @default("USD")
+  ville       String
+  quartier    String
+  province    String
+  adresse     String?
+  latitude    Float?
+  longitude   Float?
+  surface     Int
+  chambres    Int        @default(0)
+  sallesBain  Int        @default(0)
+  etage       Int?
+  meuble      Boolean    @default(false)
+  parking     Boolean    @default(false)
+  gardien     Boolean    @default(false)
+  electrogen  Boolean    @default(false)
+  eauChaude   Boolean    @default(false)
+  internet    Boolean    @default(false)
+  titreVerifie  Boolean  @default(false)
+  numFoncier    String?
+  photos      String[]
+  video360    String?
+  status      ListingStatus @default(ACTIVE)
+  vues        Int        @default(0)
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  favorites   Favorite[]
+  reviews     Review[]
+
+  @@index([ville, type, action])
+  @@index([prix])
+}
+
+enum ImmoType {
+  APPARTEMENT
+  MAISON
+  VILLA
+  DUPLEX
+  TERRAIN
+  BUREAU
+  LOCAL_COMMERCIAL
+  ENTREPOT
+}
+
+enum ImmoAction {
+  LOCATION
+  VENTE
+}
+
+enum ListingStatus {
+  ACTIVE
+  PENDING
+  SOLD
+  RENTED
+  EXPIRED
+  FLAGGED
+}
+
+model JobPosting {
+  id          String   @id @default(cuid())
+  titre       String
+  description String
+  entreprise  String
+  logo        String?
+  ville       String
+  province    String
+  type        JobType
+  categorie   String
+  salaireMin  Float?
+  salaireMax  Float?
+  devise      String   @default("USD")
+  experience  String?
+  competences String[]
+  urgent      Boolean  @default(false)
+  remote      Boolean  @default(false)
+  status      ListingStatus @default(ACTIVE)
+  vues        Int      @default(0)
+  candidatures Int     @default(0)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime?
+  applications JobApplication[]
+  favorites    Favorite[]
+
+  @@index([ville, categorie, type])
+}
+
+enum JobType {
+  CDI
+  CDD
+  FREELANCE
+  STAGE
+  INTERIM
+}
+
+model JobApplication {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       JobPosting @relation(fields: [jobId], references: [id])
+  nom       String
+  email     String
+  phone     String
+  cv        String?
+  message   String?
+  status    ApplicationStatus @default(PENDING)
+  createdAt DateTime @default(now())
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWED
+  SHORTLISTED
+  REJECTED
+  HIRED
+}
+
+model MarketItem {
+  id          String   @id @default(cuid())
+  nom         String
+  description String
+  categorie   String
+  prix        Float
+  devise      String   @default("USD")
+  etat        ItemCondition
+  ville       String
+  province    String
+  photos      String[]
+  status      ListingStatus @default(ACTIVE)
+  vues        Int      @default(0)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  favorites   Favorite[]
+
+  @@index([categorie, ville])
+}
+
+enum ItemCondition {
+  NEUF
+  OCCASION
+  RECONDITIONNE
+}
+
+model AgriProduct {
+  id          String   @id @default(cuid())
+  produit     String
+  description String?
+  quantite    Float
+  unite       String
+  prixUnitaire Float
+  devise      String   @default("USD")
+  ville       String
+  province    String
+  disponible  Boolean  @default(true)
+  bio         Boolean  @default(false)
+  certifie    Boolean  @default(false)
+  photos      String[]
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([produit, ville])
+}
+
+model Invoice {
+  id          String   @id @default(cuid())
+  numero      String   @unique
+  clientNom   String
+  clientPhone String?
+  clientEmail String?
+  items       Json
+  sousTotal   Float
+  taxe        Float    @default(0)
+  total       Float
+  devise      String   @default("USD")
+  status      InvoiceStatus @default(DRAFT)
+  paidAt      DateTime?
+  paidVia     String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  dueDate     DateTime?
+
+  @@index([userId, status])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+model TontineGroup {
+  id          String   @id @default(cuid())
+  nom         String
+  description String?
+  montant     Float
+  devise      String   @default("USD")
+  frequence   TontineFrequency
+  maxMembres  Int
+  members     TontineGroupMember[]
+  createdAt   DateTime @default(now())
+}
+
+model TontineGroupMember {
+  id        String   @id @default(cuid())
+  groupId   String
+  group     TontineGroup @relation(fields: [groupId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  role      TontineRole @default(MEMBER)
+  score     Float    @default(100)
+
+  @@unique([groupId, userId])
+}
+
+enum TontineFrequency {
+  HEBDOMADAIRE
+  BIMENSUEL
+  MENSUEL
+}
+
+enum TontineRole {
+  ADMIN
+  MEMBER
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  targetId  String
+  immoId    String?
+  immo      ImmoListing? @relation(fields: [immoId], references: [id])
+  jobId     String?
+  job       JobPosting? @relation(fields: [jobId], references: [id])
+  marketId  String?
+  market    MarketItem? @relation(fields: [marketId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, type, targetId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  note      Int
+  commentaire String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  immoId    String?
+  immo      ImmoListing? @relation(fields: [immoId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  titre     String
+  message   String
+  read      Boolean  @default(false)
+  data      Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}

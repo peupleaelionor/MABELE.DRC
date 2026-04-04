@@ -1,0 +1,819 @@
+import { useState, useEffect, useRef, useCallback, useMemo, useReducer } from “react”;
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// M A B E L E   v 2 0
+// Super-Plateforme Nationale RDC — Production Grade
+// TechFlow Solutions — techflowagc.netlify.app
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ─── DESIGN SYSTEM ───
+const C = {
+bg:”#07070B”,bg2:”#0D0D13”,bg3:”#131320”,
+card:“rgba(255,255,255,0.032)”,cardHov:“rgba(255,255,255,0.055)”,
+gold:”#D4A017”,gold2:”#F5D060”,goldD:“rgba(212,160,23,0.10)”,
+grn:”#00C853”,grnD:“rgba(0,200,83,0.10)”,
+teal:”#26C6DA”,tealD:“rgba(38,198,218,0.10)”,
+red:”#FF5252”,redD:“rgba(255,82,82,0.10)”,
+pur:”#B388FF”,purD:“rgba(179,136,255,0.10)”,
+blu:”#448AFF”,bluD:“rgba(68,138,255,0.10)”,
+ora:”#FFB300”,oraD:“rgba(255,179,0,0.10)”,
+pnk:”#FF4081”,pnkD:“rgba(255,64,129,0.10)”,
+w:”#F2F2F2”,w2:”#A0A0B0”,w3:”#5A5A6E”,w4:”#353545”,
+brd:“rgba(255,255,255,0.055)”,brdG:“rgba(212,160,23,0.22)”,
+r:16,rs:10,rx:24,
+f:”‘DM Sans’,system-ui,sans-serif”,fd:”‘Playfair Display’,Georgia,serif”,
+t:“all 0.22s cubic-bezier(0.4,0,0.2,1)”,
+};
+
+// ─── ICONS ───
+const I={
+home:c=><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+bld:c=><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"/></svg>,
+bag:c=><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>,
+crt:c=><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>,
+lf:c=><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/></svg>,
+dot:c=><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>,
+srch:c=><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+hrt:(c,f=“none”)=><svg width="17" height="17" viewBox="0 0 24 24" fill={f} stroke={c} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>,
+bk:c=><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>,
+str:c=><svg width="13" height="13" viewBox="0 0 24 24" fill={c} stroke={c} strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+pin:c=><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>,
+bel:c=><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>,
+shd:c=><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.2" strokeLinecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+x:c=><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+shr:c=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>,
+usr:c=><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+cam:c=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>,
+msg:c=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>,
+ph:c=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>,
+srt:c=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="9" y2="18"/></svg>,
+chk:c=><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="3" strokeLinecap="round"><path d="M20 6L9 17l-5-5"/></svg>,
+};
+
+// ─── DATA ───
+const IMMO=[
+{id:1,type:“Appartement”,act:“Location”,px:800,v:“Kinshasa”,q:“Gombe”,ch:3,m2:120,vr:true,desc:“Moderne, vue fleuve Congo, parking sécurisé, groupe électrogène, 2 SdB”,ph:8,agt:“Immobilière du Centre”,rt:4.7,amen:[“Parking”,“Électrogène”,“Gardien 24h”,“Eau chaude”,“Climatisation”],pub:“2j”},
+{id:2,type:“Villa”,act:“Vente”,px:150000,v:“Lubumbashi”,q:“Golf Malela”,ch:5,m2:350,vr:true,desc:“Villa standing avec jardin, piscine, titre foncier vérifié, quartier calme”,ph:12,agt:“Katanga Realty”,rt:4.9,amen:[“Piscine”,“Jardin”,“Gardien”,“Groupe électrogène”,“Fibre optique”],pub:“1j”},
+{id:3,type:“Terrain”,act:“Vente”,px:25000,v:“Kinshasa”,q:“Mont-Ngafula”,ch:0,m2:1000,vr:false,desc:“Terrain constructible, accès route nationale, eau et électricité à proximité”,ph:4,agt:“Particulier”,rt:0,amen:[“Accès route”,“Eau”,“Électricité”],pub:“5j”},
+{id:4,type:“Bureau”,act:“Location”,px:1200,v:“Kinshasa”,q:“Gombe”,ch:0,m2:80,vr:true,desc:“Bureau équipé Blvd du 30 juin, fibre optique, clim, gardiennage 24h”,ph:6,agt:“Business Center CD”,rt:4.5,amen:[“Fibre optique”,“Climatisation”,“Gardien”,“Ascenseur”],pub:“3j”},
+{id:5,type:“Appartement”,act:“Location”,px:450,v:“Goma”,q:“Himbi”,ch:2,m2:75,vr:true,desc:“Meublé, vue lac Kivu, eau chaude, gardien, Internet haut débit”,ph:7,agt:“Kivu Properties”,rt:4.3,amen:[“Meublé”,“Vue lac”,“Internet”,“Eau chaude”],pub:“1sem”},
+{id:6,type:“Entrepôt”,act:“Location”,px:3000,v:“Matadi”,q:“Zone Portuaire”,ch:0,m2:500,vr:true,desc:“500m² proche port, accès camions, bureau intégré, quai de chargement”,ph:5,agt:“Matadi Logistics”,rt:4.1,amen:[“Quai chargement”,“Bureau”,“Accès camions”],pub:“4j”},
+{id:7,type:“Maison”,act:“Vente”,px:85000,v:“Kinshasa”,q:“Bandalungwa”,ch:4,m2:200,vr:false,desc:“4 chambres, à rénover, bon emplacement commercial, parcelle 400m²”,ph:3,agt:“Particulier”,rt:0,amen:[“Grande parcelle”,“Emplacement commercial”],pub:“2sem”},
+{id:8,type:“Duplex”,act:“Location”,px:1500,v:“Kinshasa”,q:“Ngaliema”,ch:4,m2:180,vr:true,desc:“Duplex standing, terrasse, 2 salons, cuisine américaine, gardien”,ph:10,agt:“Résidences Premium”,rt:4.8,amen:[“Terrasse”,“2 salons”,“Cuisine américaine”,“Gardien”,“Parking”],pub:“2j”},
+{id:9,type:“Terrain”,act:“Vente”,px:45000,v:“Lubumbashi”,q:“Annexe”,ch:0,m2:2000,vr:true,desc:“2000m² viabilisé, idéal promoteur, documents complets, accès route”,ph:6,agt:“Katanga Realty”,rt:4.9,amen:[“Viabilisé”,“Documents complets”,“Accès route”],pub:“6j”},
+{id:10,type:“Local Commercial”,act:“Location”,px:2500,v:“Lubumbashi”,q:“Centre-Ville”,ch:0,m2:150,vr:true,desc:“Emplacement premium, vitrine 8m, parking client, forte affluence”,ph:5,agt:“Katanga Realty”,rt:4.9,amen:[“Vitrine”,“Parking client”,“Forte affluence”],pub:“3j”},
+];
+const EMPLOI=[
+{id:1,ti:“Développeur React/Node.js”,ent:“Rawbank”,v:“Kinshasa”,tp:“CDI”,sal:“2000-3500”,cat:“Tech”,urg:true,desc:“Développement d’applications bancaires, APIs REST, microservices. 3+ ans d’expérience React, Node.js, PostgreSQL. Télétravail partiel possible.”,logo:“🏦”,pub:“2j”,cand:23,comp:[“React”,“Node.js”,“PostgreSQL”,“API REST”]},
+{id:2,ti:“Community Manager”,ent:“Orange RDC”,v:“Kinshasa”,tp:“CDI”,sal:“800-1200”,cat:“Marketing”,urg:false,desc:“Gestion complète des réseaux sociaux (FB, IG, TikTok, X), création de contenu, reporting mensuel, veille concurrentielle.”,logo:“📱”,pub:“5j”,cand:45,comp:[“Réseaux sociaux”,“Création contenu”,“Analytics”]},
+{id:3,ti:“Designer UI/UX”,ent:“Vodacom”,v:“Lubumbashi”,tp:“Freelance”,sal:“50-80/h”,cat:“Design”,urg:true,desc:“Refonte complète de l’app mobile Vodacom. Figma, user research, prototypage, design system. Mission 3 mois.”,logo:“🎨”,pub:“1j”,cand:12,comp:[“Figma”,“User Research”,“Design System”,“Prototypage”]},
+{id:4,ti:“Comptable Senior OHADA”,ent:“Bralima”,v:“Kinshasa”,tp:“CDI”,sal:“1500-2500”,cat:“Finance”,urg:false,desc:“Gestion comptable selon normes OHADA, déclarations DGI, états financiers, audit interne.”,logo:“📊”,pub:“1sem”,cand:34,comp:[“OHADA”,“DGI”,“Audit”,“États financiers”]},
+{id:5,ti:“Agent Commercial Terrain”,ent:“Advans Banque”,v:“Goma”,tp:“CDD”,sal:“400-700”,cat:“Vente”,urg:true,desc:“Prospection PME dans l’Est RDC, vente de produits bancaires, reporting. Véhiculé. CDD 12 mois renouvelable.”,logo:“🎯”,pub:“3j”,cand:67,comp:[“Prospection”,“Vente B2B”,“Mobile banking”]},
+{id:6,ti:“Data Analyst”,ent:“FEC”,v:“Kinshasa”,tp:“CDI”,sal:“1800-2800”,cat:“Tech”,urg:false,desc:“Analyse de données économiques congolaises, dashboards Power BI, modélisation Python, SQL avancé.”,logo:“📈”,pub:“4j”,cand:18,comp:[“Power BI”,“Python”,“SQL”,“Data viz”]},
+{id:7,ti:“Chef de Projet Digital”,ent:“Equity BCDC”,v:“Kinshasa”,tp:“CDI”,sal:“2500-4000”,cat:“Tech”,urg:true,desc:“Pilotage transformation digitale post-fusion. Management équipe de 8 (devs, designers). Méthodologie Agile.”,logo:“🚀”,pub:“1j”,cand:9,comp:[“Agile”,“Management”,“Transformation digitale”]},
+{id:8,ti:“Traducteur FR/EN/Lingala”,ent:“MONUSCO”,v:“Goma”,tp:“Freelance”,sal:“30-50/h”,cat:“Langue”,urg:false,desc:“Traduction de documents officiels, interprétariat en réunions, localisation de contenus numériques.”,logo:“🌍”,pub:“6j”,cand:28,comp:[“Français”,“Anglais”,“Lingala”,“Interprétariat”]},
+];
+const MKT=[
+{id:1,nm:“iPhone 14 Pro 256GB”,cat:“Électronique”,px:650,v:“Kinshasa”,et:“Occasion”,vnd:“Patrick M.”,rt:4.8,vues:234,em:“📱”,pub:“2j”},
+{id:2,nm:“Toyota RAV4 2019”,cat:“Véhicules”,px:18000,v:“Lubumbashi”,et:“Occasion”,vnd:“Jean-Pierre K.”,rt:4.5,vues:567,em:“🚗”,pub:“1j”},
+{id:3,nm:“Groupe Électrogène 5KVA”,cat:“Équipement”,px:1200,v:“Kinshasa”,et:“Neuf”,vnd:“Congo Electric”,rt:4.9,vues:189,em:“⚡”,pub:“3j”},
+{id:4,nm:“MacBook Pro M2”,cat:“Électronique”,px:980,v:“Kinshasa”,et:“Occasion”,vnd:“Marie T.”,rt:4.7,vues:312,em:“💻”,pub:“5j”},
+{id:5,nm:“Mobilier Bureau Pro”,cat:“Mobilier”,px:900,v:“Kinshasa”,et:“Neuf”,vnd:“Office Pro CD”,rt:4.6,vues:98,em:“🪑”,pub:“1sem”},
+{id:6,nm:“Moto Honda CGL 125”,cat:“Véhicules”,px:1800,v:“Bukavu”,et:“Neuf”,vnd:“Moto Center”,rt:5.0,vues:445,em:“🏍️”,pub:“4j”},
+{id:7,nm:“Samsung Galaxy S24”,cat:“Électronique”,px:420,v:“Goma”,et:“Neuf”,vnd:“Tech Store Goma”,rt:4.4,vues:156,em:“📱”,pub:“2j”},
+{id:8,nm:“Kit Solaire 300W Complet”,cat:“Équipement”,px:350,v:“Kinshasa”,et:“Neuf”,vnd:“SolarCongo”,rt:4.8,vues:678,em:“☀️”,pub:“1j”},
+{id:9,nm:“Réfrigérateur LG 350L”,cat:“Électroménager”,px:480,v:“Kinshasa”,et:“Neuf”,vnd:“LG Store Kin”,rt:4.6,vues:201,em:“🧊”,pub:“3j”},
+{id:10,nm:“Canapé Cuir 3 places”,cat:“Mobilier”,px:650,v:“Lubumbashi”,et:“Occasion”,vnd:“Déco Lushi”,rt:4.3,vues:89,em:“🛋️”,pub:“6j”},
+];
+const AGRI=[
+{id:1,pr:“Manioc frais”,qt:“5 tonnes”,px:“200”,u:”$/tonne”,v:“Bandundu”,prod:“Coop. Mboka”,ok:true,em:“🌿”,bio:true},
+{id:2,pr:“Haricots rouges”,qt:“2 tonnes”,px:“800”,u:”$/tonne”,v:“Bukavu”,prod:“Ferme Kivu”,ok:true,em:“🫘”,bio:false},
+{id:3,pr:“Bananes plantain”,qt:“10 tonnes”,px:“150”,u:”$/tonne”,v:“Kisangani”,prod:“Coop. Tshopo”,ok:false,em:“🍌”,bio:true},
+{id:4,pr:“Maïs grain”,qt:“8 tonnes”,px:“350”,u:”$/tonne”,v:“Mbuji-Mayi”,prod:“Agri-Kasaï”,ok:true,em:“🌽”,bio:false},
+{id:5,pr:“Huile de palme”,qt:“3000 litres”,px:“1.2”,u:”$/litre”,v:“Bandundu”,prod:“Palm Congo”,ok:true,em:“🫒”,bio:true},
+{id:6,pr:“Poisson fumé Capitaine”,qt:“500 kg”,px:“5”,u:”$/kg”,v:“Kalemie”,prod:“Pêcheurs Tanganyika”,ok:true,em:“🐟”,bio:true},
+{id:7,pr:“Café Kivu AA”,qt:“1 tonne”,px:“3200”,u:”$/tonne”,v:“Bukavu”,prod:“Kivu Coffee Coop”,ok:true,em:“☕”,bio:true},
+{id:8,pr:“Riz paddy”,qt:“4 tonnes”,px:“600”,u:”$/tonne”,v:“Kisangani”,prod:“Riziculture Tshopo”,ok:false,em:“🍚”,bio:false},
+];
+const NOTIFS=[
+{id:1,type:“immo”,ti:“Nouvel appartement à Gombe”,msg:“Un appartement 3ch vient d’être publié dans votre zone”,time:“Il y a 5 min”,read:false},
+{id:2,type:“emploi”,ti:“Offre urgente — Rawbank”,msg:“Un poste de développeur correspond à votre profil”,time:“Il y a 30 min”,read:false},
+{id:3,type:“system”,ti:“Bienvenue sur MABELE !”,msg:“Explorez tous les services disponibles pour la RDC”,time:“Il y a 2h”,read:true},
+{id:4,type:“market”,ti:“Prix baissé !”,msg:“Le Kit Solaire 300W est passé à 320$”,time:“Il y a 4h”,read:true},
+];
+
+// ─── UTILS ───
+const fmt=n=>{if(n>=1e6)return`${(n/1e6).toFixed(1)}M`;if(n>=1e3)return`${(n/1e3).toFixed(n%1e3===0?0:1)}K`;return`${n}`;};
+const delay=(i,b=60)=>`${i*b}ms`;
+
+// ─── CSS ───
+const css=`@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}} @keyframes si{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}} @keyframes sc{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}} @keyframes pu{0%,100%{opacity:1}50%{opacity:.4}} @keyframes sh{0%{background-position:-200% 0}100%{background-position:200% 0}} @keyframes gl{0%,100%{box-shadow:0 0 6px rgba(212,160,23,.15)}50%{box-shadow:0 0 18px rgba(212,160,23,.3)}} @keyframes spin{to{transform:rotate(360deg)}} @keyframes drIn{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes drOut{from{transform:translateY(0)}to{transform:translateY(100%)}} @keyframes ovIn{from{opacity:0}to{opacity:1}} .fu{animation:fu .38s ease-out both}.si{animation:si .32s ease-out both}.sc{animation:sc .28s ease-out both} .gl{animation:gl 2.5s ease-in-out infinite} .skel{background:linear-gradient(90deg,rgba(255,255,255,.03) 25%,rgba(255,255,255,.07) 50%,rgba(255,255,255,.03) 75%);background-size:200% 100%;animation:sh 1.8s infinite;border-radius:8px} *{-webkit-tap-highlight-color:transparent;box-sizing:border-box;margin:0;padding:0} ::-webkit-scrollbar{display:none} input::placeholder{color:${C.w3}} body{background:${C.bg};overflow-x:hidden}`;
+
+// ═══════════════════════════════════════════════════════════════
+// COMPOSANTS UI
+// ═══════════════════════════════════════════════════════════════
+
+function Badge({children,color=C.gold,sz=“sm”}){
+const p=sz===“lg”?“5px 11px”:“3px 7px”,fs=sz===“lg”?10.5:9;
+return <span style={{display:“inline-flex”,alignItems:“center”,gap:3,padding:p,borderRadius:6,background:`${color}18`,color,fontSize:fs,fontWeight:700,letterSpacing:.3,lineHeight:1,whiteSpace:“nowrap”}}>{children}</span>;
+}
+
+function Card({children,onClick,glow,di=0,s={}}){
+return <div className=“fu” onClick={onClick} style={{background:C.card,border:`1px solid ${glow?C.brdG:C.brd}`,borderRadius:C.r,padding:13,cursor:onClick?“pointer”:“default”,transition:C.t,animationDelay:delay(di),…(glow?{boxShadow:“0 0 14px rgba(212,160,23,.05)”}:{}),…s}}>{children}</div>;
+}
+
+function Btn({children,color=C.gold,ghost,full,onClick,s={}}){
+return <button onClick={onClick} style={{padding:“12px 22px”,borderRadius:11,border:ghost?`1.5px solid ${color}33`:“none”,background:ghost?“transparent”:color,color:ghost?color:”#000”,fontSize:12.5,fontWeight:700,cursor:“pointer”,fontFamily:C.f,width:full?“100%”:“auto”,transition:C.t,display:“inline-flex”,alignItems:“center”,justifyContent:“center”,gap:5,…s}}>{children}</button>;
+}
+
+function SearchBar({ph,val,onChange,right}){
+return <div style={{position:“relative”,margin:“0 14px 12px”}}>
+<div style={{position:“absolute”,left:13,top:“50%”,transform:“translateY(-50%)”}}>{I.srch(C.w4)}</div>
+<input type=“text” placeholder={ph} value={val} onChange={e=>onChange(e.target.value)} style={{width:“100%”,padding:“12px 16px 12px 40px”,background:“rgba(255,255,255,.035)”,border:`1px solid ${C.brd}`,borderRadius:13,color:C.w,fontSize:13.5,outline:“none”,fontFamily:C.f,transition:C.t}} onFocus={e=>{e.target.style.borderColor=C.brdG}} onBlur={e=>{e.target.style.borderColor=C.brd}} />
+{right && <div style={{position:“absolute”,right:10,top:“50%”,transform:“translateY(-50%)”}}>{right}</div>}
+
+  </div>;
+}
+
+function Pills({ops,act,set,cls={}}){
+return <div style={{display:“flex”,gap:6,overflowX:“auto”,padding:“0 14px 12px”,scrollbarWidth:“none”}}>{ops.map(o=>{const a=act===o,c=cls[o]||C.gold;return <button key={o} onClick={()=>set(o)} style={{padding:“7px 14px”,borderRadius:18,border:a?“none”:`1px solid ${C.brd}`,background:a?c:“transparent”,color:a?”#000”:C.w2,fontSize:11.5,fontWeight:600,cursor:“pointer”,whiteSpace:“nowrap”,transition:C.t,fontFamily:C.f}}>{o}</button>;})}</div>;
+}
+
+function Hdr({icon,title,sub,act,onAct}){
+return <div style={{padding:“0 14px”,marginBottom:12,display:“flex”,justifyContent:“space-between”,alignItems:“flex-start”}}>
+<div><h2 style={{fontSize:20,fontWeight:800,color:C.w,margin:0,fontFamily:C.fd,display:“flex”,alignItems:“center”,gap:7}}>{icon}{title}</h2>{sub&&<p style={{fontSize:11.5,color:C.w2,margin:“2px 0 0”,lineHeight:1.4}}>{sub}</p>}</div>
+{act&&<button onClick={onAct} style={{background:“none”,border:“none”,color:C.gold,fontSize:11.5,fontWeight:600,cursor:“pointer”,padding:“3px 0”,fontFamily:C.f}}>{act}</button>}
+
+  </div>;
+}
+
+function Fav({on,toggle}){return <button onClick={e=>{e.stopPropagation();toggle()}} style={{background:“none”,border:“none”,cursor:“pointer”,padding:3,transition:C.t,transform:on?“scale(1.15)”:“scale(1)”}}>{I.hrt(on?C.red:”#444”,on?C.red:“none”)}</button>;}
+
+function Stars({r}){return r?<span style={{display:“inline-flex”,alignItems:“center”,gap:2}}>{I.str(C.ora)}<span style={{fontSize:10.5,fontWeight:700,color:C.ora}}>{r}</span></span>:null;}
+
+function Empty({icon,t,s}){return <div style={{textAlign:“center”,padding:“44px 28px”}}><div style={{fontSize:44,marginBottom:10}}>{icon}</div><div style={{fontSize:15,fontWeight:700,color:C.w2}}>{t}</div><div style={{fontSize:12,color:C.w3,marginTop:3}}>{s}</div></div>;}
+
+function Skel({h=16,w=“100%”,r=8}){return <div className="skel" style={{height:h,width:w,borderRadius:r}}/>;}
+
+// ─── DRAWER (bottom sheet) ───
+function Drawer({open,onClose,title,children}){
+if(!open)return null;
+return <div style={{position:“fixed”,inset:0,zIndex:200}}>
+<div onClick={onClose} style={{position:“absolute”,inset:0,background:“rgba(0,0,0,.65)”,animation:“ovIn .2s ease”}}/>
+<div style={{position:“absolute”,bottom:0,left:0,right:0,maxHeight:“85vh”,background:C.bg2,borderRadius:“24px 24px 0 0”,animation:“drIn .3s cubic-bezier(.2,.9,.3,1)”,overflow:“auto”}}>
+<div style={{display:“flex”,justifyContent:“center”,padding:“10px 0 4px”}}><div style={{width:36,height:4,borderRadius:2,background:C.w4}}/></div>
+<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,padding:“8px 18px 14px”}}>
+<span style={{fontSize:16,fontWeight:800,color:C.w,fontFamily:C.fd}}>{title}</span>
+<button onClick={onClose} style={{background:“none”,border:“none”,cursor:“pointer”,padding:4}}>{I.x(C.w3)}</button>
+</div>
+<div style={{padding:“0 18px 28px”}}>{children}</div>
+</div>
+
+  </div>;
+}
+
+// ─── TOAST ───
+function Toast({msg,visible}){
+if(!visible)return null;
+return <div className=“sc” style={{position:“fixed”,bottom:90,left:“50%”,transform:“translateX(-50%)”,zIndex:300,padding:“11px 22px”,borderRadius:12,background:C.gold,color:”#000”,fontSize:12.5,fontWeight:700,boxShadow:“0 8px 28px rgba(0,0,0,.5)”,fontFamily:C.f,whiteSpace:“nowrap”}}>{msg}</div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ONBOARDING
+// ═══════════════════════════════════════════════════════════════
+function Onboarding({onDone}){
+const [step,setStep]=useState(0);
+const steps=[
+{em:“🇨🇩”,ti:“Bienvenue sur MABELE”,sub:“La super-plateforme qui connecte 112 millions de Congolais. Immobilier, emploi, commerce, agriculture, finance — tout en un.”,cta:“Découvrir”},
+{em:“🔍”,ti:“Trouvez ce que vous cherchez”,sub:“Appartements vérifiés, offres d’emploi, produits agricoles frais, outils pour votre entreprise — tout est là.”,cta:“Continuer”},
+{em:“🚀”,ti:“C’est parti !”,sub:“Publiez des annonces gratuitement, contactez directement, payez par mobile money. Tout se fait en quelques taps.”,cta:“Commencer”},
+];
+const s=steps[step];
+return <div style={{minHeight:“100vh”,background:C.bg,display:“flex”,flexDirection:“column”,justifyContent:“center”,alignItems:“center”,padding:32,textAlign:“center”}}>
+<div className=“sc” key={step} style={{display:“flex”,flexDirection:“column”,alignItems:“center”}}>
+<div style={{fontSize:72,marginBottom:28}}>{s.em}</div>
+<h1 style={{fontSize:26,fontWeight:900,color:C.w,fontFamily:C.fd,marginBottom:10}}>{s.ti}</h1>
+<p style={{fontSize:14,color:C.w2,lineHeight:1.7,maxWidth:320,marginBottom:32}}>{s.sub}</p>
+</div>
+<div style={{display:“flex”,gap:6,marginBottom:28}}>{steps.map((_,i)=><div key={i} style={{width:i===step?24:8,height:8,borderRadius:4,background:i===step?C.gold:C.w4,transition:C.t}}/>)}</div>
+<Btn full color={C.gold} onClick={()=>step<2?setStep(step+1):onDone()}>{s.cta} →</Btn>
+{step<2&&<button onClick={onDone} style={{background:“none”,border:“none”,color:C.w3,fontSize:12,marginTop:14,cursor:“pointer”,fontFamily:C.f}}>Passer</button>}
+
+  </div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════════════════════════
+function NotifPanel({open,onClose,notifs,markRead}){
+return <Drawer open={open} onClose={onClose} title="Notifications">
+{notifs.length===0?<Empty icon="🔔" t="Rien de nouveau" s="Vos notifications apparaîtront ici"/>:
+<div style={{display:“flex”,flexDirection:“column”,gap:8}}>
+{notifs.map(n=><div key={n.id} onClick={()=>markRead(n.id)} style={{display:“flex”,gap:12,padding:12,borderRadius:12,background:n.read?“transparent”:C.goldD,border:`1px solid ${n.read?C.brd:C.brdG}`,cursor:“pointer”,transition:C.t}}>
+<div style={{width:40,height:40,borderRadius:10,background:n.type===“immo”?C.goldD:n.type===“emploi”?C.tealD:n.type===“market”?C.redD:C.bluD,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:18,flexShrink:0}}>{n.type===“immo”?“🏠”:n.type===“emploi”?“💼”:n.type===“market”?“🛒”:“🔔”}</div>
+<div style={{flex:1,minWidth:0}}>
+<div style={{fontSize:13,fontWeight:n.read?600:700,color:C.w}}>{n.ti}</div>
+<div style={{fontSize:11,color:C.w2,marginTop:2,lineHeight:1.4}}>{n.msg}</div>
+<div style={{fontSize:10,color:C.w3,marginTop:4}}>{n.time}</div>
+</div>
+{!n.read&&<div style={{width:8,height:8,borderRadius:4,background:C.gold,flexShrink:0,marginTop:4}}/>}
+</div>)}
+</div>}
+</Drawer>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PUBLISH FORM
+// ═══════════════════════════════════════════════════════════════
+function PublishDrawer({open,onClose,onPublish}){
+const [cat,setCat]=useState(null);
+const cats=[
+{id:“immo”,em:“🏗️”,lb:“Immobilier”,cl:C.gold},
+{id:“emploi”,em:“💼”,lb:“Offre d’emploi”,cl:C.teal},
+{id:“market”,em:“🛒”,lb:“Annonce marché”,cl:C.red},
+{id:“agri”,em:“🌾”,lb:“Produit agricole”,cl:C.grn},
+];
+return <Drawer open={open} onClose={()=>{setCat(null);onClose();}} title={cat?“Nouvelle annonce”:“Que publiez-vous ?”}>
+{!cat?<div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:10}}>
+{cats.map(c=><button key={c.id} onClick={()=>setCat(c.id)} style={{background:C.card,border:`1px solid ${C.brd}`,borderRadius:16,padding:20,cursor:“pointer”,textAlign:“center”,transition:C.t}}>
+<div style={{fontSize:32,marginBottom:8}}>{c.em}</div>
+<div style={{fontSize:13,fontWeight:700,color:C.w}}>{c.lb}</div>
+</button>)}
+</div>:
+<div style={{display:“flex”,flexDirection:“column”,gap:12}}>
+<div style={{fontSize:13,color:C.w2,fontWeight:600}}>Catégorie : {cats.find(c=>c.id===cat)?.lb}</div>
+{[“Titre”,“Description”,“Prix (USD)”,“Ville”,“Quartier”].map(f=><div key={f}>
+<label style={{fontSize:11,color:C.w3,fontWeight:600,marginBottom:4,display:“block”}}>{f}</label>
+<input placeholder={f} style={{width:“100%”,padding:“11px 14px”,background:“rgba(255,255,255,.04)”,border:`1px solid ${C.brd}`,borderRadius:10,color:C.w,fontSize:13,outline:“none”,fontFamily:C.f}} />
+</div>)}
+<button style={{padding:“14px”,borderRadius:14,border:“2px dashed “+C.w4,background:“transparent”,color:C.w3,fontSize:12,cursor:“pointer”,display:“flex”,alignItems:“center”,justifyContent:“center”,gap:8,fontFamily:C.f}}>{I.cam(C.w3)} Ajouter des photos</button>
+<Btn full color={cats.find(c=>c.id===cat)?.cl} onClick={()=>{onPublish();setCat(null);onClose();}}>Publier l’annonce →</Btn>
+</div>}
+</Drawer>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONTACT DRAWER
+// ═══════════════════════════════════════════════════════════════
+function ContactDrawer({open,onClose,name}){
+return <Drawer open={open} onClose={onClose} title={`Contacter ${name||""}`}>
+<div style={{display:“flex”,flexDirection:“column”,gap:10}}>
+<Btn full color={C.grn}>{I.ph(”#000”)} Appeler</Btn>
+<Btn full color="#25D366">{I.msg(”#000”)} WhatsApp</Btn>
+<Btn full ghost color={C.w2}>{I.msg(C.w2)} Message in-app</Btn>
+</div>
+</Drawer>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════════════════════════════
+function Home({go,unread}){
+const svcs=[
+{id:“immo”,em:“🏗️”,lb:“Immobilier”,ds:“Achat · Location · Vérification”,cl:C.gold,n:IMMO.length},
+{id:“emploi”,em:“💼”,lb:“Emploi”,ds:“CDI · Freelance · Formation”,cl:C.teal,n:EMPLOI.length},
+{id:“market”,em:“🛒”,lb:“Marché”,ds:“Achetez & vendez tout”,cl:C.red,n:MKT.length},
+{id:“agri”,em:“🌾”,lb:“AgriTech”,ds:“Producteurs → Acheteurs”,cl:C.grn,n:AGRI.length},
+{id:“outils”,em:“⚙️”,lb:“Outils PME”,ds:“Facturation · Stock · Compta”,cl:C.pur},
+{id:“data”,em:“📊”,lb:“Congo Data”,ds:“Intelligence économique”,cl:C.blu},
+{id:“finance”,em:“💰”,lb:“KangaPay”,ds:“Tontine · Épargne”,cl:C.ora},
+{id:“health”,em:“🏥”,lb:“Bima Santé”,ds:“Télémédecine”,cl:C.pnk,soon:true},
+];
+return <div>
+{/* Hero */}
+<div className=“fu” style={{margin:“0 10px 18px”,padding:“20px 18px”,borderRadius:C.rx,background:`linear-gradient(145deg,${C.goldD} 0%,rgba(0,100,0,.06) 60%,${C.goldD.replace(".10",".03")} 100%)`,border:`1px solid ${C.brdG}`,position:“relative”,overflow:“hidden”}}>
+<div style={{position:“absolute”,inset:0,opacity:.03,backgroundImage:“radial-gradient(circle at 20% 80%,rgba(212,160,23,.3),transparent 50%),radial-gradient(circle at 80% 20%,rgba(0,100,0,.2),transparent 50%)”}}/>
+<div style={{position:“relative”}}>
+<div style={{display:“flex”,alignItems:“center”,gap:10,marginBottom:12}}>
+<div style={{width:44,height:44,borderRadius:13,background:`linear-gradient(135deg,${C.gold},#006400)`,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:10,fontWeight:900,color:”#fff”,letterSpacing:.8,fontFamily:C.fd}}>M</div>
+<div><div style={{fontSize:21,fontWeight:900,color:C.w,fontFamily:C.fd,letterSpacing:-.5}}>MABELE</div><div style={{fontSize:8.5,color:C.gold,letterSpacing:2.8,fontWeight:700}}>PLATEFORME NATIONALE RDC</div></div>
+</div>
+<p style={{fontSize:13,color:”#bbb”,lineHeight:1.65}}>L’écosystème digital pour <span style={{color:C.gold,fontWeight:700}}>112 millions</span> de Congolais.</p>
+</div>
+</div>
+{/* Quick stats */}
+<div className=“fu” style={{display:“grid”,gridTemplateColumns:“repeat(4,1fr)”,gap:6,padding:“0 10px”,marginBottom:18,animationDelay:“80ms”}}>
+{[{n:“112M”,l:“Habitants”,em:“👥”},{n:“67%”,l:“Mobile”,em:“📱”,cl:C.teal},{n:“8.7Md”,l:“Plan Digital”,em:“💎”,cl:C.pur},{n:“26”,l:“Provinces”,em:“🗺️”,cl:C.grn}].map(s=><div key={s.l} style={{background:C.card,borderRadius:13,padding:“12px 6px”,textAlign:“center”,border:`1px solid ${C.brd}`}}>
+<div style={{fontSize:14,marginBottom:1}}>{s.em}</div>
+<div style={{fontSize:15.5,fontWeight:800,color:s.cl||C.gold}}>{s.n}</div>
+<div style={{fontSize:7.5,color:C.w3,fontWeight:700,letterSpacing:.4,marginTop:1}}>{s.l}</div>
+</div>)}
+</div>
+{/* Services grid */}
+<Hdr icon="" title="Services" sub="Tout pour la RDC, dans une seule app" />
+<div style={{display:“grid”,gridTemplateColumns:“repeat(2,1fr)”,gap:8,padding:“0 10px”,marginBottom:20}}>
+{svcs.map((s,i)=><div key={s.id} className=“fu” onClick={()=>!s.soon&&go(s.id)} style={{background:C.card,border:`1px solid ${s.cl}12`,borderRadius:C.r,padding:“14px 12px”,cursor:s.soon?“default”:“pointer”,transition:C.t,animationDelay:delay(i,35),position:“relative”,overflow:“hidden”}}>
+<div style={{position:“absolute”,top:-10,right:-10,fontSize:44,opacity:.04}}>{s.em}</div>
+<span style={{fontSize:24}}>{s.em}</span>
+<div style={{fontSize:13,fontWeight:700,color:C.w,marginTop:7}}>{s.lb}</div>
+<div style={{fontSize:10,color:C.w2,marginTop:1.5}}>{s.ds}</div>
+<div style={{marginTop:7,display:“flex”,gap:5}}>{s.n&&<Badge color={s.cl}>{s.n} annonces</Badge>}{s.soon&&<Badge color={C.pnk}>BIENTÔT</Badge>}</div>
+</div>)}
+</div>
+{/* Trending */}
+<Hdr icon=”” title=“Tendances” sub=“Les plus consultés cette semaine” act=“Tout voir →” onAct={()=>go(“market”)} />
+<div style={{display:“flex”,gap:9,overflowX:“auto”,padding:“0 10px 18px”,scrollbarWidth:“none”}}>
+{MKT.slice(0,5).map((m,i)=><div key={m.id} className=“si” onClick={()=>go(“market”)} style={{minWidth:140,background:C.card,borderRadius:C.r,padding:12,border:`1px solid ${C.brd}`,cursor:“pointer”,animationDelay:delay(i,70),flexShrink:0}}>
+<div style={{fontSize:34,textAlign:“center”,padding:“8px 0”,background:“rgba(255,255,255,.015)”,borderRadius:10,marginBottom:8}}>{m.em}</div>
+<div style={{fontSize:11.5,fontWeight:700,color:C.w,lineHeight:1.3}}>{m.nm}</div>
+<div style={{fontSize:9.5,color:C.w3,marginTop:2}}>{m.v} · {m.et}</div>
+<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginTop:5}}>
+<span style={{fontSize:14,fontWeight:800,color:C.red}}>{fmt(m.px)} $</span>
+<Stars r={m.rt}/>
+</div>
+</div>)}
+</div>
+{/* Urgent jobs */}
+<Hdr icon=”” title=“Recrutement urgent” act=“Voir tout →” onAct={()=>go(“emploi”)} />
+<div style={{display:“flex”,flexDirection:“column”,gap:8,padding:“0 10px”,marginBottom:20}}>
+{EMPLOI.filter(j=>j.urg).slice(0,3).map((j,i)=><Card key={j.id} onClick={()=>go(“emploi”)} glow di={i}>
+<div style={{display:“flex”,gap:11}}>
+<div style={{width:42,height:42,borderRadius:11,background:C.tealD,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:20,flexShrink:0}}>{j.logo}</div>
+<div style={{flex:1,minWidth:0}}>
+<div style={{display:“flex”,gap:4,marginBottom:3}}><Badge color={C.teal}>{j.tp}</Badge><Badge color={C.red}>URGENT</Badge></div>
+<div style={{fontSize:13,fontWeight:700,color:C.w}}>{j.ti}</div>
+<div style={{fontSize:11.5,color:C.teal,fontWeight:600}}>{j.ent}</div>
+<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginTop:4}}>
+<span style={{fontSize:10,color:C.w3}}>{I.pin(C.w3)} {j.v} · {j.pub}</span>
+<span style={{fontSize:12,fontWeight:800,color:C.gold}}>{j.sal} $</span>
+</div>
+</div>
+</div>
+</Card>)}
+</div>
+{/* CTA */}
+<div className=“fu” style={{padding:“0 10px 28px”,animationDelay:“350ms”}}>
+<div style={{background:`linear-gradient(135deg,${C.gold},#B8860B)`,borderRadius:C.rx,padding:“20px 18px”,textAlign:“center”,position:“relative”,overflow:“hidden”}}>
+<div style={{position:“absolute”,inset:0,opacity:.07,background:“repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(0,0,0,.12) 8px,rgba(0,0,0,.12) 16px)”}}/>
+<div style={{position:“relative”}}>
+<div style={{fontSize:14.5,fontWeight:800,color:”#000”}}>Propulsé par TechFlow Solutions</div>
+<div style={{fontSize:10.5,color:“rgba(0,0,0,.5)”,marginTop:2}}>Agence digitale & stratégie de croissance</div>
+<div style={{display:“inline-block”,marginTop:10,padding:“9px 20px”,background:“rgba(0,0,0,.85)”,borderRadius:C.rs,color:C.gold,fontSize:11,fontWeight:700,cursor:“pointer”,letterSpacing:.3}}>techflowagc.netlify.app →</div>
+</div>
+</div>
+</div>
+
+  </div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// IMMOBILIER
+// ═══════════════════════════════════════════════════════════════
+function Immo({favs,tFav,openContact}){
+const [q,sQ]=useState(””), [f,sF]=useState(“Tout”), [sort,sSort]=useState(“Récent”), [sel,sSel]=useState(null);
+const [sortOpen,sSortOpen]=useState(false);
+const filters=[“Tout”,“Location”,“Vente”,“Appartement”,“Villa”,“Terrain”,“Bureau”,“Duplex”];
+const sortOps=[“Récent”,“Prix ↑”,“Prix ↓”,“Surface ↑”];
+const list=useMemo(()=>{
+let r=IMMO.filter(l=>{if(f!==“Tout”&&l.type!==f&&l.act!==f)return false;if(q&&!`${l.type} ${l.q} ${l.v} ${l.desc}`.toLowerCase().includes(q.toLowerCase()))return false;return true;});
+if(sort===“Prix ↑”)r=[…r].sort((a,b)=>a.px-b.px);
+if(sort===“Prix ↓”)r=[…r].sort((a,b)=>b.px-a.px);
+if(sort===“Surface ↑”)r=[…r].sort((a,b)=>b.m2-a.m2);
+return r;
+},[q,f,sort]);
+
+if(sel){const l=sel;return <div className="sc">
+<div style={{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“10px 14px”}}>
+<button onClick={()=>sSel(null)} style={{background:“none”,border:“none”,cursor:“pointer”,display:“flex”,alignItems:“center”,gap:5,color:C.gold,fontSize:12.5,fontWeight:600,fontFamily:C.f}}>{I.bk(C.gold)} Retour</button>
+<div style={{display:“flex”,gap:8}}><Fav on={favs.has(`i${l.id}`)} toggle={()=>tFav(`i${l.id}`)}/><button onClick={()=>{}} style={{background:“none”,border:“none”,cursor:“pointer”,padding:3}}>{I.shr(C.w3)}</button></div>
+</div>
+<div style={{padding:“0 14px”}}>
+{/* Image gallery placeholder */}
+<div style={{height:210,borderRadius:20,marginBottom:14,background:`linear-gradient(135deg,${C.goldD},rgba(0,80,0,.05))`,display:“flex”,alignItems:“center”,justifyContent:“center”,position:“relative”,overflow:“hidden”}}>
+<div style={{position:“absolute”,inset:0,opacity:.03,backgroundImage:“radial-gradient(circle at 30% 70%,rgba(212,160,23,.4),transparent 60%)”}}/>
+<div style={{fontSize:56,position:“relative”}}>🏠</div>
+<div style={{position:“absolute”,bottom:10,left:12,display:“flex”,gap:4}}>{[…Array(Math.min(l.ph,5))].map((_,i)=><div key={i} style={{width:38,height:38,borderRadius:8,background:“rgba(0,0,0,.4)”,border:“1px solid rgba(255,255,255,.15)”}}/>)}</div>
+<div style={{position:“absolute”,bottom:10,right:12}}><Badge color="#fff" sz="lg">📷 {l.ph} photos</Badge></div>
+</div>
+{/* Tags */}
+<div style={{display:“flex”,gap:5,marginBottom:10,flexWrap:“wrap”}}>
+<Badge sz="lg">{l.act}</Badge><Badge color={C.teal} sz="lg">{l.type}</Badge>
+{l.vr&&<Badge color={C.grn} sz="lg">{I.shd(C.grn)} Titre vérifié</Badge>}
+</div>
+<h3 style={{fontSize:22,fontWeight:800,color:C.w,margin:“0 0 3px”,fontFamily:C.fd}}>{l.type} — {l.q}</h3>
+<p style={{color:C.w2,fontSize:12.5,margin:“0 0 12px”,display:“flex”,alignItems:“center”,gap:4}}>{I.pin(C.w2)} {l.v}, {l.q}{l.rt>0&&<span style={{marginLeft:8}}><Stars r={l.rt}/></span>}</p>
+<div style={{fontSize:30,fontWeight:900,color:C.gold,marginBottom:16}}>{fmt(l.px)} $ {l.act===“Location”&&<span style={{fontSize:13,color:C.w2,fontWeight:400}}>/mois</span>}</div>
+{/* Stats */}
+<div style={{display:“grid”,gridTemplateColumns:“repeat(3,1fr)”,gap:7,marginBottom:16}}>
+{l.ch>0&&<div style={{background:C.card,borderRadius:12,padding:11,textAlign:“center”,border:`1px solid ${C.brd}`}}><div style={{fontSize:17,fontWeight:800,color:C.teal}}>{l.ch}</div><div style={{fontSize:8,color:C.w3,fontWeight:600}}>CHAMBRES</div></div>}
+<div style={{background:C.card,borderRadius:12,padding:11,textAlign:“center”,border:`1px solid ${C.brd}`}}><div style={{fontSize:17,fontWeight:800,color:C.pur}}>{l.m2}</div><div style={{fontSize:8,color:C.w3,fontWeight:600}}>M²</div></div>
+<div style={{background:C.card,borderRadius:12,padding:11,textAlign:“center”,border:`1px solid ${C.brd}`}}><div style={{fontSize:17,fontWeight:800,color:l.vr?C.grn:C.red}}>{l.vr?“✓”:“✕”}</div><div style={{fontSize:8,color:C.w3,fontWeight:600}}>FONCIER</div></div>
+</div>
+{/* Description */}
+<p style={{color:”#bbb”,fontSize:13,lineHeight:1.7,marginBottom:14}}>{l.desc}</p>
+{/* Amenities */}
+<div style={{display:“flex”,gap:5,flexWrap:“wrap”,marginBottom:16}}>
+{l.amen.map(a=><Badge key={a} color={C.w3} sz="lg">{a}</Badge>)}
+</div>
+{/* Agent */}
+{l.agt!==“Particulier”&&<div style={{background:C.card,borderRadius:13,padding:12,marginBottom:16,border:`1px solid ${C.brd}`,display:“flex”,alignItems:“center”,gap:11}}>
+<div style={{width:38,height:38,borderRadius:10,background:C.goldD,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:16}}>🏢</div>
+<div style={{flex:1}}><div style={{fontSize:12.5,fontWeight:700,color:C.w}}>{l.agt}</div><div style={{fontSize:10.5,color:C.w2}}>Agent immobilier</div></div>
+<Stars r={l.rt}/>
+</div>}
+{/* Actions */}
+<div style={{display:“flex”,gap:9,marginBottom:22}}>
+<Btn full color={C.gold} onClick={()=>openContact(l.agt)}>{I.ph(”#000”)} Contacter</Btn>
+<Btn full ghost color={C.gold}>🏠 Visite 360°</Btn>
+</div>
+</div>
+
+  </div>;}
+
+return <div>
+<Hdr icon=“🏗️ “ title=“Immobilier” sub=“Titres fonciers vérifiés — Toute la RDC” act={`${list.length} biens`}/>
+<SearchBar ph=“Quartier, ville, type de bien…” val={q} onChange={sQ} right={<button onClick={()=>sSortOpen(true)} style={{background:“none”,border:“none”,cursor:“pointer”,padding:2}}>{I.srt(C.w3)}</button>}/>
+<Pills ops={filters} act={f} set={sF}/>
+<Drawer open={sortOpen} onClose={()=>sSortOpen(false)} title=“Trier par”>
+<div style={{display:“flex”,flexDirection:“column”,gap:6}}>{sortOps.map(o=><button key={o} onClick={()=>{sSort(o);sSortOpen(false);}} style={{padding:13,borderRadius:11,border:`1px solid ${sort===o?C.brdG:C.brd}`,background:sort===o?C.goldD:“transparent”,color:sort===o?C.gold:C.w2,fontSize:13,fontWeight:600,cursor:“pointer”,textAlign:“left”,fontFamily:C.f,display:“flex”,alignItems:“center”,justifyContent:“space-between”}}>{o}{sort===o&&I.chk(C.gold)}</button>)}</div>
+</Drawer>
+<div style={{display:“flex”,flexDirection:“column”,gap:8,padding:“0 10px”}}>
+{list.length===0&&<Empty icon="🏠" t="Aucun résultat" s="Essayez avec d'autres critères"/>}
+{list.map((l,i)=><Card key={l.id} onClick={()=>sSel(l)} glow={l.vr} di={i}>
+<div style={{display:“flex”,gap:11}}>
+<div style={{width:68,height:68,borderRadius:14,background:l.vr?C.goldD:“rgba(255,255,255,.03)”,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:30,flexShrink:0,position:“relative”}}>🏠{l.vr&&<div style={{position:“absolute”,bottom:-2,right:-2}}>{I.shd(C.grn)}</div>}</div>
+<div style={{flex:1,minWidth:0}}>
+<div style={{display:“flex”,gap:4,marginBottom:3,alignItems:“center”}}>
+<Badge>{l.act}</Badge><Badge color={C.teal}>{l.type}</Badge>
+<div style={{marginLeft:“auto”}}><Fav on={favs.has(`i${l.id}`)} toggle={()=>tFav(`i${l.id}`)}/></div>
+</div>
+<div style={{fontSize:13.5,fontWeight:700,color:C.w}}>{l.type} — {l.q}</div>
+<div style={{fontSize:10.5,color:C.w2,display:“flex”,alignItems:“center”,gap:3,marginTop:1.5}}>{I.pin(C.w3)} {l.v} · {l.m2}m²{l.ch>0&&` · ${l.ch}ch`}{l.rt>0&&<span style={{marginLeft:4}}><Stars r={l.rt}/></span>}</div>
+<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginTop:5}}>
+<span style={{fontSize:16,fontWeight:800,color:C.gold}}>{fmt(l.px)} $ {l.act===“Location”&&<span style={{fontSize:10,color:C.w3,fontWeight:400}}>/mois</span>}</span>
+<span style={{fontSize:9.5,color:C.w4}}>{l.pub}</span>
+</div>
+</div>
+</div>
+</Card>)}
+</div>
+
+  </div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EMPLOI
+// ═══════════════════════════════════════════════════════════════
+function Emploi({favs,tFav,openContact}){
+const [q,sQ]=useState(””),[f,sF]=useState(“Tout”),[sel,sSel]=useState(null);
+const filters=[“Tout”,“CDI”,“CDD”,“Freelance”,“Tech”,“Marketing”,“Finance”,“Design”,“Vente”];
+const list=useMemo(()=>EMPLOI.filter(l=>{if(f!==“Tout”&&l.tp!==f&&l.cat!==f)return false;if(q&&!`${l.ti} ${l.ent} ${l.v} ${l.cat}`.toLowerCase().includes(q.toLowerCase()))return false;return true;}),[q,f]);
+
+if(sel){const l=sel;return <div className="sc">
+<div style={{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“10px 14px”}}>
+<button onClick={()=>sSel(null)} style={{background:“none”,border:“none”,cursor:“pointer”,display:“flex”,alignItems:“center”,gap:5,color:C.teal,fontSize:12.5,fontWeight:600,fontFamily:C.f}}>{I.bk(C.teal)} Retour</button>
+<Fav on={favs.has(`j${l.id}`)} toggle={()=>tFav(`j${l.id}`)}/>
+</div>
+<div style={{padding:“0 14px”}}>
+<div style={{display:“flex”,gap:5,marginBottom:10,flexWrap:“wrap”}}><Badge color={C.teal} sz="lg">{l.tp}</Badge><Badge sz="lg">{l.cat}</Badge>{l.urg&&<Badge color={C.red} sz="lg">🔥 URGENT</Badge>}</div>
+<h3 style={{fontSize:22,fontWeight:800,color:C.w,margin:“0 0 5px”,fontFamily:C.fd}}>{l.ti}</h3>
+<div style={{display:“flex”,alignItems:“center”,gap:8,marginBottom:4}}><span style={{fontSize:22}}>{l.logo}</span><span style={{fontSize:15,color:C.teal,fontWeight:700}}>{l.ent}</span></div>
+<p style={{color:C.w2,fontSize:12.5,margin:“0 0 16px”,display:“flex”,alignItems:“center”,gap:4}}>{I.pin(C.w2)} {l.v} · Publié il y a {l.pub} · {l.cand} candidatures</p>
+<div style={{fontSize:28,fontWeight:900,color:C.gold,marginBottom:18,padding:16,background:C.goldD,borderRadius:16}}>{l.sal} USD <span style={{fontSize:12,color:C.w2,fontWeight:400}}>/mois</span></div>
+<p style={{color:”#bbb”,fontSize:13.5,lineHeight:1.7,marginBottom:16}}>{l.desc}</p>
+{/* Compétences */}
+<div style={{marginBottom:18}}><div style={{fontSize:12,fontWeight:700,color:C.w2,marginBottom:8}}>Compétences requises</div><div style={{display:“flex”,gap:5,flexWrap:“wrap”}}>{l.comp.map(c=><Badge key={c} color={C.blu} sz="lg">{c}</Badge>)}</div></div>
+<Btn full color={C.teal} onClick={()=>openContact(l.ent)}>Postuler maintenant →</Btn>
+<div style={{height:10}}/>
+<Btn full ghost color={C.teal}>Sauvegarder l’offre</Btn>
+</div>
+
+  </div>;}
+
+return <div>
+<Hdr icon=“💼 “ title=“Emploi & Freelance” sub=“CDI, CDD, missions freelance — toute la RDC” act={`${list.length} offres`}/>
+<SearchBar ph="Poste, entreprise, compétence..." val={q} onChange={sQ}/>
+<Pills ops={filters} act={f} set={sF} cls={{CDI:C.teal,Freelance:C.pur,CDD:C.ora,Tech:C.blu,Design:C.pnk,Marketing:C.ora,Finance:C.grn}}/>
+<div style={{display:“flex”,flexDirection:“column”,gap:8,padding:“0 10px”}}>
+{list.length===0&&<Empty icon="💼" t="Aucune offre trouvée" s="Essayez d'autres critères"/>}
+{list.map((l,i)=><Card key={l.id} onClick={()=>sSel(l)} glow={l.urg} di={i}>
+<div style={{display:“flex”,gap:11}}>
+<div style={{width:42,height:42,borderRadius:11,background:C.card,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:20,flexShrink:0,border:`1px solid ${C.brd}`}}>{l.logo}</div>
+<div style={{flex:1,minWidth:0}}>
+<div style={{display:“flex”,gap:4,marginBottom:3}}><Badge color={C.teal}>{l.tp}</Badge>{l.urg&&<Badge color={C.red}>URGENT</Badge>}</div>
+<div style={{fontSize:13.5,fontWeight:700,color:C.w}}>{l.ti}</div>
+<div style={{fontSize:12,color:C.teal,fontWeight:600,marginTop:1}}>{l.ent}</div>
+<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginTop:4}}>
+<span style={{fontSize:10,color:C.w3}}>{I.pin(C.w3)} {l.v} · {l.pub} · {l.cand} cand.</span>
+<span style={{fontSize:12.5,fontWeight:800,color:C.gold}}>{l.sal} $</span>
+</div>
+</div>
+<Fav on={favs.has(`j${l.id}`)} toggle={()=>tFav(`j${l.id}`)}/>
+</div>
+</Card>)}
+</div>
+
+  </div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MARCHÉ
+// ═══════════════════════════════════════════════════════════════
+function Market({favs,tFav}){
+const [q,sQ]=useState(””),[f,sF]=useState(“Tout”);
+const cats=[“Tout”,“Électronique”,“Véhicules”,“Équipement”,“Mobilier”,“Électroménager”];
+const list=useMemo(()=>MKT.filter(l=>{if(f!==“Tout”&&l.cat!==f)return false;if(q&&!`${l.nm} ${l.v} ${l.cat}`.toLowerCase().includes(q.toLowerCase()))return false;return true;}),[q,f]);
+return <div>
+<Hdr icon="🛒 " title="Marché" sub="Achetez & vendez — Le Bon Coin congolais"/>
+<SearchBar ph="Que recherchez-vous ?" val={q} onChange={sQ}/>
+<Pills ops={cats} act={f} set={sF} cls={{Électronique:C.blu,Véhicules:C.red,Équipement:C.ora,Mobilier:C.pur,Électroménager:C.teal}}/>
+<div style={{display:“grid”,gridTemplateColumns:“repeat(2,1fr)”,gap:8,padding:“0 10px”}}>
+{list.map((l,i)=><Card key={l.id} di={i}>
+<div style={{position:“relative”}}>
+<div style={{fontSize:36,textAlign:“center”,padding:“12px 0”,background:“rgba(255,82,82,.03)”,borderRadius:11,marginBottom:8}}>{l.em}</div>
+<div style={{position:“absolute”,top:4,right:0}}><Fav on={favs.has(`m${l.id}`)} toggle={()=>tFav(`m${l.id}`)}/></div>
+</div>
+<div style={{fontSize:12,fontWeight:700,color:C.w,lineHeight:1.3}}>{l.nm}</div>
+<div style={{fontSize:9.5,color:C.w3,marginTop:2}}>{I.pin(C.w3)} {l.v} · {l.et}</div>
+<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginTop:5}}>
+<span style={{fontSize:15,fontWeight:800,color:C.red}}>{fmt(l.px)} $</span>
+<Stars r={l.rt}/>
+</div>
+<div style={{fontSize:9,color:C.w4,marginTop:3}}>👁 {l.vues} · {l.vnd} · {l.pub}</div>
+</Card>)}
+</div>
+
+  </div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AGRITECH
+// ═══════════════════════════════════════════════════════════════
+function Agri({openContact}){
+const [q,sQ]=useState(””);
+const list=useMemo(()=>AGRI.filter(l=>!q||`${l.pr} ${l.v} ${l.prod}`.toLowerCase().includes(q.toLowerCase())),[q]);
+return <div>
+<Hdr icon="🌾 " title="Soko Congo" sub="Du champ à la table. Zéro intermédiaire."/>
+<SearchBar ph="Manioc, maïs, Bukavu..." val={q} onChange={sQ}/>
+<div style={{display:“flex”,flexDirection:“column”,gap:8,padding:“0 10px”}}>
+{list.map((l,i)=><Card key={l.id} glow={l.ok} di={i}>
+<div style={{display:“flex”,gap:11}}>
+<div style={{width:56,height:56,borderRadius:14,background:C.grnD,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:28,flexShrink:0}}>{l.em}</div>
+<div style={{flex:1}}>
+<div style={{display:“flex”,gap:4,marginBottom:3}}>{l.ok?<Badge color={C.grn}>DISPONIBLE</Badge>:<Badge color={C.ora}>EN ATTENTE</Badge>}{l.bio&&<Badge color={C.grn}>🌱 BIO</Badge>}</div>
+<div style={{fontSize:14,fontWeight:700,color:C.w}}>{l.pr}</div>
+<div style={{fontSize:10.5,color:C.w2,marginTop:1.5}}>{I.pin(C.w3)} {l.v} · {l.qt} · 👤 {l.prod}</div>
+<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginTop:5}}>
+<span style={{fontSize:16,fontWeight:800,color:C.grn}}>{l.px} {l.u}</span>
+{l.ok&&<button onClick={e=>{e.stopPropagation();openContact(l.prod);}} style={{background:C.grn,border:“none”,borderRadius:8,padding:“5px 12px”,color:”#000”,fontSize:10,fontWeight:700,cursor:“pointer”,fontFamily:C.f}}>Commander</button>}
+</div>
+</div>
+</div>
+</Card>)}
+</div>
+<div className=“fu” style={{padding:“16px 10px”,animationDelay:“250ms”}}>
+<div style={{background:C.grnD,borderRadius:C.r,padding:14,border:`1px solid ${C.grn}22`}}>
+<div style={{fontSize:12.5,fontWeight:700,color:C.grn}}>🚛 Livraison intégrée Moto Express</div>
+<div style={{fontSize:11,color:C.w2,marginTop:3,lineHeight:1.5}}>Nos transporteurs livrent dans tout le pays. Paiement mobile money. Suivi en temps réel.</div>
+</div>
+</div>
+
+  </div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// OUTILS PME (NKISI)
+// ═══════════════════════════════════════════════════════════════
+function Outils(){
+const feats=[
+{ic:“📄”,ti:“Factures Pro”,ds:“PDF en 30s, envoi WhatsApp/SMS”,tg:“Gratuit”,cl:C.grn},
+{ic:“💳”,ti:“Paiement Mobile Money”,ds:“M-Pesa, Airtel, Orange dans chaque facture”,tg:“1%”,cl:C.gold},
+{ic:“📦”,ti:“Gestion de Stock”,ds:“Alertes réappro, suivi temps réel”,tg:“5$/mois”,cl:C.pur},
+{ic:“📊”,ti:“Comptabilité”,ds:“Recettes, dépenses — export DGI”,tg:“10$/mois”,cl:C.blu},
+{ic:“💱”,ti:“Multi-Devises”,ds:“CDF ↔ USD automatiquement”,tg:“Inclus”,cl:C.teal},
+{ic:“📡”,ti:“Mode Hors-Ligne”,ds:“Travaillez sans Internet, synchro auto”,tg:“Inclus”,cl:C.ora},
+];
+return <div>
+<Hdr icon="⚙️ " title="NKISI" sub="Facturation · Stock · Comptabilité — tout-en-un PME"/>
+<div className=“fu” style={{margin:“0 10px 16px”,padding:20,borderRadius:C.rx,background:`linear-gradient(135deg,${C.purD},${C.purD.replace(".10",".02")})`,border:`1px solid ${C.pur}20`}}>
+<div style={{fontSize:32,fontWeight:900,color:C.pur,fontFamily:C.fd}}>0 CDF</div>
+<div style={{fontSize:12,color:”#bbb”,marginTop:3}}>Pour commencer — 50 factures/mois gratuitement</div>
+<Btn color={C.pur} s={{marginTop:12}}>Créer mon compte gratuit →</Btn>
+</div>
+<div style={{display:“flex”,flexDirection:“column”,gap:8,padding:“0 10px”}}>
+{feats.map((f,i)=><Card key={i} di={i}><div style={{display:“flex”,gap:11,alignItems:“center”}}>
+<div style={{width:42,height:42,borderRadius:11,background:`${f.cl}12`,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:19,flexShrink:0}}>{f.ic}</div>
+<div style={{flex:1}}><div style={{fontSize:13,fontWeight:700,color:C.w}}>{f.ti}</div><div style={{fontSize:10.5,color:C.w2,marginTop:1}}>{f.ds}</div></div>
+<Badge color={f.cl}>{f.tg}</Badge>
+</div></Card>)}
+</div>
+
+  </div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONGO DATA
+// ═══════════════════════════════════════════════════════════════
+function Data(){
+const ind=[
+{lb:“Taux USD/CDF”,vl:“2,850”,tr:”+1.2%”,up:true},
+{lb:“Inflation”,vl:“23.4%”,tr:”+0.8%”,up:true},
+{lb:“Croissance PIB”,vl:”+6.2%”,tr:”+0.3%”,up:true},
+{lb:“Prix manioc/kg”,vl:“1,200 F”,tr:”-2.1%”,up:false},
+{lb:“Prix essence/L”,vl:“3,800 F”,tr:”+5.4%”,up:true},
+{lb:“Mobile users”,vl:“45.2M”,tr:”+3.1%”,up:true},
+];
+return <div>
+<Hdr icon="📊 " title="Congo Data" sub="Intelligence économique en temps réel"/>
+<div className=“fu” style={{margin:“0 10px 12px”,padding:12,borderRadius:13,background:C.bluD,border:`1px solid ${C.blu}20`,display:“flex”,alignItems:“center”,gap:8}}>
+<div style={{width:7,height:7,borderRadius:4,background:C.red,animation:“pu 1.5s infinite”}}/><span style={{fontSize:11.5,color:C.blu,fontWeight:600}}>LIVE — Mise à jour il y a 2h</span>
+</div>
+<div style={{display:“grid”,gridTemplateColumns:“repeat(2,1fr)”,gap:8,padding:“0 10px”}}>
+{ind.map((d,i)=><Card key={i} di={i}>
+<div style={{fontSize:10,color:C.w3,marginBottom:2}}>{d.lb}</div>
+<div style={{fontSize:19,fontWeight:800,color:C.w}}>{d.vl}</div>
+<div style={{fontSize:11,fontWeight:700,color:d.up?C.red:C.grn,marginTop:1}}>{d.up?“↗”:“↘”} {d.tr}</div>
+</Card>)}
+</div>
+<div style={{padding:“16px 10px”}}><Btn full color={C.blu}>Accéder aux rapports complets →</Btn></div>
+
+  </div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// KANGAPAY
+// ═══════════════════════════════════════════════════════════════
+function Finance(){
+const feats=[
+{ic:“🤝”,ti:“Likelemba Digital”,ds:“Tontine sécurisée, rotation automatique, transparence totale”,cl:C.ora},
+{ic:“🎯”,ti:“Épargne par Objectif”,ds:“École, santé, commerce — épargnez vers un but”,cl:C.grn},
+{ic:“💸”,ti:“Micro-Crédit P2P”,ds:“Empruntez dans votre communauté, taux justes”,cl:C.teal},
+{ic:“📊”,ti:“Score Communautaire”,ds:“Votre fiabilité = votre crédit”,cl:C.pur},
+];
+return <div>
+<Hdr icon="💰 " title="KangaPay" sub="Tontine digitale · Micro-épargne · Inclusion financière"/>
+<div className=“fu” style={{margin:“0 10px 16px”,padding:24,borderRadius:C.rx,textAlign:“center”,background:`linear-gradient(145deg,${C.oraD},${C.goldD.replace(".10",".04")})`,border:`1px solid ${C.ora}28`}}>
+<div style={{fontSize:11,color:C.ora,fontWeight:700,letterSpacing:1.8,marginBottom:5}}>VOTRE SOLDE</div>
+<div style={{fontSize:38,fontWeight:900,color:C.w,fontFamily:C.fd}}>0.00 <span style={{fontSize:15,color:C.w2}}>USD</span></div>
+<div style={{display:“flex”,gap:9,justifyContent:“center”,marginTop:14}}><Btn color={C.ora}>+ Épargner</Btn><Btn ghost color={C.ora}>Envoyer</Btn></div>
+</div>
+<div style={{display:“flex”,flexDirection:“column”,gap:8,padding:“0 10px”}}>
+{feats.map((f,i)=><Card key={i} di={i}><div style={{display:“flex”,gap:11,alignItems:“center”}}>
+<div style={{width:46,height:46,borderRadius:13,background:`${f.cl}12`,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:21,flexShrink:0}}>{f.ic}</div>
+<div><div style={{fontSize:13.5,fontWeight:700,color:C.w}}>{f.ti}</div><div style={{fontSize:10.5,color:C.w2,marginTop:1.5}}>{f.ds}</div></div>
+</div></Card>)}
+</div>
+
+  </div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MORE
+// ═══════════════════════════════════════════════════════════════
+function More({go,favs}){
+const items=[
+{id:“outils”,em:“⚙️”,lb:“NKISI — Outils PME”,ds:“Facturation, stock, comptabilité”,cl:C.pur},
+{id:“data”,em:“📊”,lb:“Congo Data”,ds:“Intelligence économique temps réel”,cl:C.blu},
+{id:“finance”,em:“💰”,lb:“KangaPay”,ds:“Tontine & micro-épargne”,cl:C.ora},
+];
+const fCount=favs.size;
+return <div>
+<Hdr icon="➕ " title="Plus" sub="Services, favoris et paramètres"/>
+{/* Favorites count */}
+<div style={{padding:“0 10px”,marginBottom:14}}>
+<Card s={{display:“flex”,alignItems:“center”,gap:12}}>
+<div style={{width:44,height:44,borderRadius:12,background:C.redD,display:“flex”,alignItems:“center”,justifyContent:“center”}}>{I.hrt(C.red,C.red)}</div>
+<div style={{flex:1}}><div style={{fontSize:14,fontWeight:700,color:C.w}}>Mes favoris</div><div style={{fontSize:11,color:C.w2}}>{fCount} élément{fCount>1?“s”:””} sauvegardé{fCount>1?“s”:””}</div></div>
+<Badge color={C.red} sz="lg">{fCount}</Badge>
+</Card>
+</div>
+<div style={{display:“flex”,flexDirection:“column”,gap:8,padding:“0 10px”,marginBottom:18}}>
+{items.map((s,i)=><Card key={s.id} onClick={()=>go(s.id)} di={i}><div style={{display:“flex”,gap:12,alignItems:“center”}}>
+<div style={{width:48,height:48,borderRadius:13,background:`${s.cl}12`,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:24}}>{s.em}</div>
+<div style={{flex:1}}><div style={{fontSize:14,fontWeight:700,color:C.w}}>{s.lb}</div><div style={{fontSize:11.5,color:C.w2}}>{s.ds}</div></div>
+<span style={{color:s.cl,fontSize:15}}>→</span>
+</div></Card>)}
+</div>
+<div style={{padding:“0 10px 6px”}}><div style={{fontSize:11,fontWeight:600,color:C.w3,marginBottom:8,paddingLeft:4}}>Bientôt disponible</div>
+<div style={{display:“flex”,gap:7,flexWrap:“wrap”}}>
+{[“🏥 Bima Santé”,“🏍️ Moto Express”,“🎓 École+”,“🏛️ Gouv Digital”].map(s=><Badge key={s} color={C.w4}>{s}</Badge>)}
+</div>
+</div>
+{/* Profile preview */}
+<div style={{padding:“18px 10px 24px”}}>
+<Card s={{display:“flex”,alignItems:“center”,gap:12}}>
+<div style={{width:44,height:44,borderRadius:12,background:C.goldD,display:“flex”,alignItems:“center”,justifyContent:“center”}}>{I.usr(C.gold)}</div>
+<div style={{flex:1}}><div style={{fontSize:14,fontWeight:700,color:C.w}}>Mon profil</div><div style={{fontSize:11,color:C.w2}}>Configurer mon compte MABELE</div></div>
+<span style={{color:C.gold,fontSize:15}}>→</span>
+</Card>
+</div>
+
+  </div>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function Nav({act,go,onPublish}){
+const tabs=[
+{id:“home”,lb:“Accueil”,ic:I.home},
+{id:“immo”,lb:“Immo”,ic:I.bld},
+{id:“pub”,lb:“Publier”,ic:null,special:true},
+{id:“emploi”,lb:“Emploi”,ic:I.bag},
+{id:“more”,lb:“Plus”,ic:I.dot},
+];
+return <nav style={{position:“fixed”,bottom:0,left:“50%”,transform:“translateX(-50%)”,width:“100%”,maxWidth:430,zIndex:100,background:“rgba(7,7,11,.93)”,backdropFilter:“blur(22px)”,borderTop:`1px solid ${C.brd}`,display:“flex”,justifyContent:“space-around”,alignItems:“flex-end”,padding:“4px 0 10px”}}>
+{tabs.map(t=>{
+if(t.special)return <button key=“pub” onClick={onPublish} style={{background:`linear-gradient(135deg,${C.gold},#B8860B)`,border:“none”,cursor:“pointer”,width:46,height:46,borderRadius:14,display:“flex”,alignItems:“center”,justifyContent:“center”,marginBottom:4,boxShadow:“0 4px 16px rgba(212,160,23,.3)”,transition:C.t}}>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>;
+const on=act===t.id||(t.id===“more”&&[“outils”,“data”,“finance”,“market”,“agri”,“more”].includes(act));
+const c=on?C.gold:C.w4;
+return <button key={t.id} onClick={()=>go(t.id)} style={{background:“none”,border:“none”,cursor:“pointer”,padding:“4px 0”,display:“flex”,flexDirection:“column”,alignItems:“center”,gap:2,transition:C.t}}>
+{t.ic(c)}
+<span style={{fontSize:8.5,fontWeight:700,color:c,letterSpacing:.4}}>{t.lb}</span>
+{on&&<div style={{width:4,height:4,borderRadius:2,background:C.gold,marginTop:-1}}/>}
+</button>;
+})}
+
+  </nav>;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// APP
+// ═══════════════════════════════════════════════════════════════
+export default function Mabele(){
+const [boarded,setBoarded]=useState(false);
+const [act,setAct]=useState(“home”);
+const [favs,setFavs]=useState(new Set());
+const [notifs,setNotifs]=useState(NOTIFS);
+const [notifOpen,setNotifOpen]=useState(false);
+const [pubOpen,setPubOpen]=useState(false);
+const [contactOpen,setContactOpen]=useState(false);
+const [contactName,setContactName]=useState(””);
+const [toast,setToast]=useState({msg:””,vis:false});
+const ref=useRef(null);
+
+// Persistent storage
+useEffect(()=>{
+(async()=>{try{
+const r=await window.storage.get(“mabele-boarded”);
+if(r&&r.value===“true”)setBoarded(true);
+const f=await window.storage.get(“mabele-favs”);
+if(f)setFavs(new Set(JSON.parse(f.value)));
+}catch(e){/* first visit */}})();
+},[]);
+
+const go=useCallback(id=>{setAct(id);if(ref.current)ref.current.scrollTop=0;},[]);
+
+const tFav=useCallback(id=>{
+setFavs(p=>{const n=new Set(p);n.has(id)?n.delete(id):n.add(id);
+try{window.storage.set(“mabele-favs”,JSON.stringify([…n]));}catch(e){}
+return n;});
+showToast(favs.has(id)?“Retiré des favoris”:“Ajouté aux favoris ❤️”);
+},[favs]);
+
+const showToast=useCallback(msg=>{setToast({msg,vis:true});setTimeout(()=>setToast({msg:””,vis:false}),2000);},[]);
+
+const markRead=useCallback(id=>{setNotifs(p=>p.map(n=>n.id===id?{…n,read:true}:n));},[]);
+
+const openContact=useCallback(name=>{setContactName(name);setContactOpen(true);},[]);
+
+const finishOnboard=useCallback(()=>{setBoarded(true);try{window.storage.set(“mabele-boarded”,“true”);}catch(e){}},[]);
+
+const unread=notifs.filter(n=>!n.read).length;
+
+if(!boarded)return <><style>{css}</style><link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet"/><Onboarding onDone={finishOnboard}/></>;
+
+const sec=()=>{switch(act){
+case”home”:return <Home go={go} unread={unread}/>;
+case”immo”:return <Immo favs={favs} tFav={tFav} openContact={openContact}/>;
+case”emploi”:return <Emploi favs={favs} tFav={tFav} openContact={openContact}/>;
+case”market”:return <Market favs={favs} tFav={tFav}/>;
+case”agri”:return <Agri openContact={openContact}/>;
+case”outils”:return <Outils/>;
+case”data”:return <Data/>;
+case”finance”:return <Finance/>;
+case”more”:return <More go={go} favs={favs}/>;
+default:return <Home go={go}/>;
+}};
+
+return <div style={{maxWidth:430,margin:“0 auto”,minHeight:“100vh”,background:C.bg,color:C.w,fontFamily:C.f,position:“relative”}}>
+<style>{css}</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet"/>
+{/* Top bar */}
+<div style={{padding:“12px 14px 8px”,display:“flex”,justifyContent:“space-between”,alignItems:“center”,position:“sticky”,top:0,zIndex:50,background:“rgba(7,7,11,.88)”,backdropFilter:“blur(18px)”}}>
+<div style={{display:“flex”,alignItems:“center”,gap:7}}>
+<div style={{width:28,height:28,borderRadius:8,background:`linear-gradient(135deg,${C.gold},#006400)`,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:8.5,fontWeight:900,color:”#fff”,letterSpacing:.5,fontFamily:C.fd}}>M</div>
+<span style={{fontWeight:800,color:C.gold,fontSize:14.5,letterSpacing:-.3}}>MABELE</span>
+</div>
+<div style={{display:“flex”,alignItems:“center”,gap:10}}>
+<span style={{fontSize:10.5,color:C.w3,fontWeight:600}}>🇨🇩</span>
+<button onClick={()=>setNotifOpen(true)} style={{background:“none”,border:“none”,cursor:“pointer”,position:“relative”,padding:2}}>
+{I.bel(C.w3)}
+{unread>0&&<div style={{position:“absolute”,top:-3,right:-3,width:15,height:15,borderRadius:8,background:C.red,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:8.5,fontWeight:700,color:”#fff”}}>{unread}</div>}
+</button>
+</div>
+</div>
+{/* Content */}
+<div ref={ref} style={{paddingBottom:78}}>{sec()}</div>
+{/* Nav */}
+<Nav act={act} go={go} onPublish={()=>setPubOpen(true)}/>
+{/* Overlays */}
+<NotifPanel open={notifOpen} onClose={()=>setNotifOpen(false)} notifs={notifs} markRead={markRead}/>
+<PublishDrawer open={pubOpen} onClose={()=>setPubOpen(false)} onPublish={()=>showToast(“Annonce publiée ! 🎉”)}/>
+<ContactDrawer open={contactOpen} onClose={()=>setContactOpen(false)} name={contactName}/>
+<Toast msg={toast.msg} visible={toast.vis}/>
+
+  </div>;
+}

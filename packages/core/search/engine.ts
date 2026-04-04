@@ -176,6 +176,16 @@ export async function getSuggestions(
 
 const DEFAULT_POPULAR_LIMIT = 10
 
+function isSearchProperties(props: unknown): props is { query: string } {
+  return (
+    typeof props === 'object' &&
+    props !== null &&
+    'query' in props &&
+    typeof (props as Record<string, unknown>).query === 'string' &&
+    (props as Record<string, unknown>).query !== ''
+  )
+}
+
 export async function getPopularSearches(
   prisma: PrismaClient,
   limit?: number,
@@ -195,15 +205,13 @@ export async function getPopularSearches(
 
     for (const event of events) {
       if (terms.length >= maxResults) break
-      const props = event.properties as Record<string, unknown> | null
-      if (props && typeof props === 'object' && typeof props.query === 'string' && props.query.trim()) {
-        terms.push(props.query.trim())
+      if (isSearchProperties(event.properties)) {
+        terms.push(event.properties.query.trim())
       }
     }
 
     return terms
   } catch {
-    // If analytics table doesn't exist or query fails, return empty
     return []
   }
 }

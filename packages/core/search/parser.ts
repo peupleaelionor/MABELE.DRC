@@ -32,12 +32,12 @@ const INTENT_KEYWORDS: Record<ListingTypeValue, string[]> = {
 // ─── Price extraction patterns ───────────────────────────────────────────────
 
 const PRICE_PATTERNS: RegExp[] = [
-  /(\d[\d\s]*)\s*\$/, // "500$" or "1 000$"
-  /(\d[\d\s]*)\s*(?:usd|dollars?)/i, // "1000 usd" or "500 dollars"
-  /(\d[\d\s]*)\s*(?:fc|cdf)/i, // "5000 fc" or "5000 cdf"
-  /moins\s+de\s+(\d[\d\s]*)/i, // "moins de 2000"
-  /plus\s+de\s+(\d[\d\s]*)/i, // "plus de 500"
-  /entre\s+(\d[\d\s]*)\s+et\s+(\d[\d\s]*)/i, // "entre 500 et 1000"
+  /(\d(?:\d| \d)*)\s*\$/, // "500$" or "1 000$"
+  /(\d(?:\d| \d)*)\s*(?:usd|dollars?)/i, // "1000 usd" or "500 dollars"
+  /(\d(?:\d| \d)*)\s*(?:fc|cdf)/i, // "5000 fc" or "5000 cdf"
+  /moins\s+de\s+(\d(?:\d| \d)*)/i, // "moins de 2000"
+  /plus\s+de\s+(\d(?:\d| \d)*)/i, // "plus de 500"
+  /entre\s+(\d(?:\d| \d)*)\s+et\s+(\d(?:\d| \d)*)/i, // "entre 500 et 1000"
 ]
 
 function cleanNumber(str: string): number {
@@ -70,19 +70,19 @@ function extractPriceRange(text: string): { min?: number; max?: number } | undef
   const normalized = normalize(text)
 
   // "entre X et Y"
-  const entreMatch = normalized.match(/entre\s+(\d[\d\s]*)\s+et\s+(\d[\d\s]*)/i)
+  const entreMatch = normalized.match(/entre\s+(\d(?:\d| \d)*)\s+et\s+(\d(?:\d| \d)*)/i)
   if (entreMatch) {
     return { min: cleanNumber(entreMatch[1]), max: cleanNumber(entreMatch[2]) }
   }
 
   // "moins de X"
-  const moinsMatch = normalized.match(/moins\s+de\s+(\d[\d\s]*)/i)
+  const moinsMatch = normalized.match(/moins\s+de\s+(\d(?:\d| \d)*)/i)
   if (moinsMatch) {
     return { max: cleanNumber(moinsMatch[1]) }
   }
 
   // "plus de X"
-  const plusMatch = normalized.match(/plus\s+de\s+(\d[\d\s]*)/i)
+  const plusMatch = normalized.match(/plus\s+de\s+(\d(?:\d| \d)*)/i)
   if (plusMatch) {
     return { min: cleanNumber(plusMatch[1]) }
   }
@@ -161,7 +161,7 @@ export function parseQuery(query: string): ParsedQuery {
   const keywords = extractKeywords(normalized)
   const priceRange = extractPriceRange(query)
   const location = extractLocation(query)
-  const detectedType = detectIntent(query) ?? undefined
+  const detectedType = detectIntent(query) || undefined
 
   return {
     raw: query,

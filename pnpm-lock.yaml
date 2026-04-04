@@ -100,6 +100,19 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  packages/core/features:
+    dependencies:
+      '@mabele/database':
+        specifier: workspace:*
+        version: link:../../database
+      '@prisma/client':
+        specifier: ^5.14.0
+        version: 5.22.0(prisma@5.22.0)
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
   packages/core/listings:
     dependencies:
       '@mabele/database':
@@ -114,6 +127,48 @@ importers:
       zod:
         specifier: ^3.23.0
         version: 3.25.76
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
+  packages/core/messaging:
+    dependencies:
+      '@mabele/database':
+        specifier: workspace:*
+        version: link:../../database
+      '@prisma/client':
+        specifier: ^5.14.0
+        version: 5.22.0(prisma@5.22.0)
+      zod:
+        specifier: ^3.23.0
+        version: 3.25.76
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
+  packages/core/notifications:
+    dependencies:
+      '@mabele/database':
+        specifier: workspace:*
+        version: link:../../database
+      '@prisma/client':
+        specifier: ^5.14.0
+        version: 5.22.0(prisma@5.22.0)
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
+  packages/core/payments:
+    dependencies:
+      '@mabele/database':
+        specifier: workspace:*
+        version: link:../../database
+      '@prisma/client':
+        specifier: ^5.14.0
+        version: 5.22.0(prisma@5.22.0)
     devDependencies:
       typescript:
         specifier: ^5.0.0

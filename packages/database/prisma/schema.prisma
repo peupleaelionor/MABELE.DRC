@@ -8,27 +8,35 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid())
-  phone         String   @unique
-  email         String?  @unique
-  name          String
-  avatar        String?
-  role          Role     @default(USER)
-  province      String?
-  ville         String?
-  isVerified    Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id         String   @id @default(cuid())
+  phone      String   @unique
+  email      String?  @unique
+  name       String
+  avatar     String?
+  role       Role     @default(USER)
+  province   String?
+  ville      String?
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  immoListings  ImmoListing[]
-  jobPostings   JobPosting[]
-  marketItems   MarketItem[]
-  agriProducts  AgriProduct[]
-  invoices      Invoice[]
-  favorites     Favorite[]
-  reviews       Review[]
-  tontineGroups TontineGroupMember[]
-  notifications Notification[]
+  immoListings    ImmoListing[]
+  jobPostings     JobPosting[]
+  marketItems     MarketItem[]
+  agriProducts    AgriProduct[]
+  invoices        Invoice[]
+  favorites       Favorite[]
+  reviews         Review[]
+  tontineGroups   TontineGroupMember[]
+  notifications   Notification[]
+  listings        Listing[]
+  conversations   ConversationParticipant[]
+  sentMessages    Message[]
+  trustProfile    TrustProfile?
+  reports         Report[]
+  auditLogs       AuditLog[]
+  paymentIntents  PaymentIntent[]
+  analyticsEvents AnalyticsEvent[]
 }
 
 enum Role {
@@ -40,41 +48,41 @@ enum Role {
 }
 
 model ImmoListing {
-  id          String     @id @default(cuid())
-  type        ImmoType
-  action      ImmoAction
-  titre       String
-  description String
-  prix        Float
-  devise      String     @default("USD")
-  ville       String
-  quartier    String
-  province    String
-  adresse     String?
-  latitude    Float?
-  longitude   Float?
-  surface     Int
-  chambres    Int        @default(0)
-  sallesBain  Int        @default(0)
-  etage       Int?
-  meuble      Boolean    @default(false)
-  parking     Boolean    @default(false)
-  gardien     Boolean    @default(false)
-  electrogen  Boolean    @default(false)
-  eauChaude   Boolean    @default(false)
-  internet    Boolean    @default(false)
-  titreVerifie  Boolean  @default(false)
-  numFoncier    String?
-  photos      String[]
-  video360    String?
-  status      ListingStatus @default(ACTIVE)
-  vues        Int        @default(0)
-  userId      String
-  user        User       @relation(fields: [userId], references: [id])
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  favorites   Favorite[]
-  reviews     Review[]
+  id           String        @id @default(cuid())
+  type         ImmoType
+  action       ImmoAction
+  titre        String
+  description  String
+  prix         Float
+  devise       String        @default("USD")
+  ville        String
+  quartier     String
+  province     String
+  adresse      String?
+  latitude     Float?
+  longitude    Float?
+  surface      Int
+  chambres     Int           @default(0)
+  sallesBain   Int           @default(0)
+  etage        Int?
+  meuble       Boolean       @default(false)
+  parking      Boolean       @default(false)
+  gardien      Boolean       @default(false)
+  electrogen   Boolean       @default(false)
+  eauChaude    Boolean       @default(false)
+  internet     Boolean       @default(false)
+  titreVerifie Boolean       @default(false)
+  numFoncier   String?
+  photos       String[]
+  video360     String?
+  status       ListingStatus @default(ACTIVE)
+  vues         Int           @default(0)
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  favorites    Favorite[]
+  reviews      Review[]
 
   @@index([ville, type, action])
   @@index([prix])
@@ -106,29 +114,29 @@ enum ListingStatus {
 }
 
 model JobPosting {
-  id          String   @id @default(cuid())
-  titre       String
-  description String
-  entreprise  String
-  logo        String?
-  ville       String
-  province    String
-  type        JobType
-  categorie   String
-  salaireMin  Float?
-  salaireMax  Float?
-  devise      String   @default("USD")
-  experience  String?
-  competences String[]
-  urgent      Boolean  @default(false)
-  remote      Boolean  @default(false)
-  status      ListingStatus @default(ACTIVE)
-  vues        Int      @default(0)
-  candidatures Int     @default(0)
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-  expiresAt   DateTime?
+  id           String           @id @default(cuid())
+  titre        String
+  description  String
+  entreprise   String
+  logo         String?
+  ville        String
+  province     String
+  type         JobType
+  categorie    String
+  salaireMin   Float?
+  salaireMax   Float?
+  devise       String           @default("USD")
+  experience   String?
+  competences  String[]
+  urgent       Boolean          @default(false)
+  remote       Boolean          @default(false)
+  status       ListingStatus    @default(ACTIVE)
+  vues         Int              @default(0)
+  candidatures Int              @default(0)
+  userId       String
+  user         User             @relation(fields: [userId], references: [id])
+  createdAt    DateTime         @default(now())
+  expiresAt    DateTime?
   applications JobApplication[]
   favorites    Favorite[]
 
@@ -144,16 +152,16 @@ enum JobType {
 }
 
 model JobApplication {
-  id        String   @id @default(cuid())
+  id        String            @id @default(cuid())
   jobId     String
-  job       JobPosting @relation(fields: [jobId], references: [id])
+  job       JobPosting        @relation(fields: [jobId], references: [id])
   nom       String
   email     String
   phone     String
   cv        String?
   message   String?
   status    ApplicationStatus @default(PENDING)
-  createdAt DateTime @default(now())
+  createdAt DateTime          @default(now())
 }
 
 enum ApplicationStatus {
@@ -165,21 +173,21 @@ enum ApplicationStatus {
 }
 
 model MarketItem {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   nom         String
   description String
   categorie   String
   prix        Float
-  devise      String   @default("USD")
+  devise      String        @default("USD")
   etat        ItemCondition
   ville       String
   province    String
   photos      String[]
   status      ListingStatus @default(ACTIVE)
-  vues        Int      @default(0)
+  vues        Int           @default(0)
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
+  user        User          @relation(fields: [userId], references: [id])
+  createdAt   DateTime      @default(now())
   favorites   Favorite[]
 
   @@index([categorie, ville])
@@ -192,43 +200,43 @@ enum ItemCondition {
 }
 
 model AgriProduct {
-  id          String   @id @default(cuid())
-  produit     String
-  description String?
-  quantite    Float
-  unite       String
+  id           String   @id @default(cuid())
+  produit      String
+  description  String?
+  quantite     Float
+  unite        String
   prixUnitaire Float
-  devise      String   @default("USD")
-  ville       String
-  province    String
-  disponible  Boolean  @default(true)
-  bio         Boolean  @default(false)
-  certifie    Boolean  @default(false)
-  photos      String[]
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
+  devise       String   @default("USD")
+  ville        String
+  province     String
+  disponible   Boolean  @default(true)
+  bio          Boolean  @default(false)
+  certifie     Boolean  @default(false)
+  photos       String[]
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
 
   @@index([produit, ville])
 }
 
 model Invoice {
-  id          String   @id @default(cuid())
-  numero      String   @unique
+  id          String        @id @default(cuid())
+  numero      String        @unique
   clientNom   String
   clientPhone String?
   clientEmail String?
   items       Json
   sousTotal   Float
-  taxe        Float    @default(0)
+  taxe        Float         @default(0)
   total       Float
-  devise      String   @default("USD")
+  devise      String        @default("USD")
   status      InvoiceStatus @default(DRAFT)
   paidAt      DateTime?
   paidVia     String?
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
+  user        User          @relation(fields: [userId], references: [id])
+  createdAt   DateTime      @default(now())
   dueDate     DateTime?
 
   @@index([userId, status])
@@ -243,25 +251,25 @@ enum InvoiceStatus {
 }
 
 model TontineGroup {
-  id          String   @id @default(cuid())
+  id          String               @id @default(cuid())
   nom         String
   description String?
   montant     Float
-  devise      String   @default("USD")
+  devise      String               @default("USD")
   frequence   TontineFrequency
   maxMembres  Int
   members     TontineGroupMember[]
-  createdAt   DateTime @default(now())
+  createdAt   DateTime             @default(now())
 }
 
 model TontineGroupMember {
-  id        String   @id @default(cuid())
-  groupId   String
-  group     TontineGroup @relation(fields: [groupId], references: [id])
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  role      TontineRole @default(MEMBER)
-  score     Float    @default(100)
+  id      String       @id @default(cuid())
+  groupId String
+  group   TontineGroup @relation(fields: [groupId], references: [id])
+  userId  String
+  user    User         @relation(fields: [userId], references: [id])
+  role    TontineRole  @default(MEMBER)
+  score   Float        @default(100)
 
   @@unique([groupId, userId])
 }
@@ -278,31 +286,31 @@ enum TontineRole {
 }
 
 model Favorite {
-  id        String   @id @default(cuid())
+  id        String       @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User         @relation(fields: [userId], references: [id])
   type      String
   targetId  String
   immoId    String?
   immo      ImmoListing? @relation(fields: [immoId], references: [id])
   jobId     String?
-  job       JobPosting? @relation(fields: [jobId], references: [id])
+  job       JobPosting?  @relation(fields: [jobId], references: [id])
   marketId  String?
-  market    MarketItem? @relation(fields: [marketId], references: [id])
-  createdAt DateTime @default(now())
+  market    MarketItem?  @relation(fields: [marketId], references: [id])
+  createdAt DateTime     @default(now())
 
   @@unique([userId, type, targetId])
 }
 
 model Review {
-  id        String   @id @default(cuid())
-  note      Int
+  id          String       @id @default(cuid())
+  note        Int
   commentaire String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  immoId    String?
-  immo      ImmoListing? @relation(fields: [immoId], references: [id])
-  createdAt DateTime @default(now())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  immoId      String?
+  immo        ImmoListing? @relation(fields: [immoId], references: [id])
+  createdAt   DateTime     @default(now())
 }
 
 model Notification {
@@ -317,4 +325,315 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@index([userId, read])
+}
+
+// ─── Unified Listing & Extensions ────────────────────────────────────────────
+
+enum ListingType {
+  IMMOBILIER
+  EMPLOI
+  PRODUIT
+  AGRI
+  SERVICE
+}
+
+model Listing {
+  id          String        @id @default(cuid())
+  type        ListingType
+  title       String
+  description String
+  price       Float?
+  devise      String        @default("USD")
+  location    String?
+  ville       String?
+  province    String?
+  latitude    Float?
+  longitude   Float?
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  status      ListingStatus @default(ACTIVE)
+  vues        Int           @default(0)
+  photos      String[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  realEstateDetails RealEstateDetails?
+  jobDetails        JobDetails?
+  productDetails    ProductDetails?
+  agriDetails       AgriDetails?
+  conversations     Conversation[]
+
+  @@index([type, status])
+  @@index([userId])
+  @@index([ville, province])
+}
+
+model RealEstateDetails {
+  id           String     @id @default(cuid())
+  listingId    String     @unique
+  listing      Listing    @relation(fields: [listingId], references: [id])
+  action       ImmoAction
+  surface      Int
+  chambres     Int        @default(0)
+  sallesBain   Int        @default(0)
+  quartier     String
+  meuble       Boolean    @default(false)
+  parking      Boolean    @default(false)
+  gardien      Boolean    @default(false)
+  electrogen   Boolean    @default(false)
+  eauChaude    Boolean    @default(false)
+  internet     Boolean    @default(false)
+  titreVerifie Boolean    @default(false)
+  numFoncier   String?
+}
+
+model JobDetails {
+  id          String    @id @default(cuid())
+  listingId   String    @unique
+  listing     Listing   @relation(fields: [listingId], references: [id])
+  entreprise  String
+  type        JobType
+  categorie   String
+  salaireMin  Float?
+  salaireMax  Float?
+  experience  String?
+  competences String[]
+  urgent      Boolean   @default(false)
+  remote      Boolean   @default(false)
+  expiresAt   DateTime?
+}
+
+model ProductDetails {
+  id        String        @id @default(cuid())
+  listingId String        @unique
+  listing   Listing       @relation(fields: [listingId], references: [id])
+  categorie String
+  etat      ItemCondition
+}
+
+model AgriDetails {
+  id           String  @id @default(cuid())
+  listingId    String  @unique
+  listing      Listing @relation(fields: [listingId], references: [id])
+  produit      String
+  quantite     Float
+  unite        String
+  prixUnitaire Float
+  bio          Boolean @default(false)
+  certifie     Boolean @default(false)
+  disponible   Boolean @default(true)
+}
+
+// ─── Messaging ───────────────────────────────────────────────────────────────
+
+model Conversation {
+  id           String                    @id @default(cuid())
+  listingId    String?
+  listing      Listing?                  @relation(fields: [listingId], references: [id])
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  joinedAt       DateTime     @default(now())
+
+  @@unique([conversationId, userId])
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  content        String
+  type           MessageType  @default(TEXT)
+  read           Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+// ─── Trust & Reputation ──────────────────────────────────────────────────────
+
+enum TrustLevel {
+  NEW
+  BASIC
+  VERIFIED
+  TRUSTED
+  PREMIUM
+}
+
+model TrustProfile {
+  id                String     @id @default(cuid())
+  userId            String     @unique
+  user              User       @relation(fields: [userId], references: [id])
+  score             Float      @default(0)
+  level             TrustLevel @default(NEW)
+  badges            String[]
+  totalReviews      Int        @default(0)
+  totalTransactions Int        @default(0)
+  verifiedPhone     Boolean    @default(false)
+  verifiedEmail     Boolean    @default(false)
+  verifiedId        Boolean    @default(false)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}
+
+// ─── Moderation ──────────────────────────────────────────────────────────────
+
+enum ReportReason {
+  SPAM
+  FRAUD
+  INAPPROPRIATE
+  FAKE_LISTING
+  HARASSMENT
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWING
+  RESOLVED
+  DISMISSED
+}
+
+model Report {
+  id          String       @id @default(cuid())
+  reporterId  String
+  reporter    User         @relation(fields: [reporterId], references: [id])
+  targetType  String
+  targetId    String
+  reason      ReportReason
+  description String?
+  status      ReportStatus @default(PENDING)
+  adminNote   String?
+  resolvedAt  DateTime?
+  resolvedBy  String?
+  createdAt   DateTime     @default(now())
+
+  @@index([status])
+  @@index([targetType, targetId])
+}
+
+// ─── Audit ───────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  action     String
+  targetType String
+  targetId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+}
+
+// ─── Payments ────────────────────────────────────────────────────────────────
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentType {
+  LISTING_BOOST
+  PREMIUM
+  DEPOSIT
+  PURCHASE
+  SUBSCRIPTION
+}
+
+model PaymentIntent {
+  id        String        @id @default(cuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  amount    Float
+  devise    String        @default("USD")
+  provider  String?
+  status    PaymentStatus @default(PENDING)
+  type      PaymentType
+  reference String?
+  metadata  Json?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([userId, status])
+}
+
+// ─── Feature Flags ───────────────────────────────────────────────────────────
+
+model FeatureFlag {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  description String?
+  enabled     Boolean  @default(false)
+  modules     String[]
+  cities      String[]
+  countries   String[]
+  roles       String[]
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Analytics ───────────────────────────────────────────────────────────────
+
+model AnalyticsEvent {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  event      String
+  properties Json?
+  sessionId  String?
+  createdAt  DateTime @default(now())
+
+  @@index([event])
+  @@index([userId])
+}
+
+// ─── Geo ─────────────────────────────────────────────────────────────────────
+
+enum GeoType {
+  COUNTRY
+  PROVINCE
+  CITY
+  QUARTIER
+}
+
+model GeoLocation {
+  id         String        @id @default(cuid())
+  name       String
+  type       GeoType
+  parentId   String?
+  parent     GeoLocation?  @relation("GeoHierarchy", fields: [parentId], references: [id])
+  children   GeoLocation[] @relation("GeoHierarchy")
+  latitude   Float?
+  longitude  Float?
+  population Int?
+  metadata   Json?
+
+  @@index([type])
+  @@index([parentId])
 }

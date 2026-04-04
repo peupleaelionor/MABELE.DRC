@@ -31,17 +31,21 @@ const INTENT_KEYWORDS: Record<ListingTypeValue, string[]> = {
 
 // ─── Price extraction patterns ───────────────────────────────────────────────
 
+// Collapse internal whitespace in numbers so "1 000" becomes "1000" before matching
+function collapseNumberSpaces(text: string): string {
+  return text.replace(/(\d)\s+(?=\d)/g, '$1')
+}
+
+const PRICE_AMOUNT = '(\\d+)'
+
 const PRICE_PATTERNS: RegExp[] = [
-  /(\d(?:\d| \d)*)\s*\$/, // "500$" or "1 000$"
-  /(\d(?:\d| \d)*)\s*(?:usd|dollars?)/i, // "1000 usd" or "500 dollars"
-  /(\d(?:\d| \d)*)\s*(?:fc|cdf)/i, // "5000 fc" or "5000 cdf"
-  /moins\s+de\s+(\d(?:\d| \d)*)/i, // "moins de 2000"
-  /plus\s+de\s+(\d(?:\d| \d)*)/i, // "plus de 500"
-  /entre\s+(\d(?:\d| \d)*)\s+et\s+(\d(?:\d| \d)*)/i, // "entre 500 et 1000"
+  new RegExp(PRICE_AMOUNT + '\\s*\\$'), // "500$"
+  new RegExp(PRICE_AMOUNT + '\\s*(?:usd|dollars?)', 'i'), // "1000 usd"
+  new RegExp(PRICE_AMOUNT + '\\s*(?:fc|cdf)', 'i'), // "5000 fc"
 ]
 
 function cleanNumber(str: string): number {
-  return parseInt(str.replace(/\s/g, ''), 10)
+  return parseInt(str, 10)
 }
 
 // ─── Normalize ───────────────────────────────────────────────────────────────
@@ -67,28 +71,28 @@ function extractKeywords(text: string): string[] {
 // ─── Price Detection ─────────────────────────────────────────────────────────
 
 function extractPriceRange(text: string): { min?: number; max?: number } | undefined {
-  const normalized = normalize(text)
+  const normalized = collapseNumberSpaces(normalize(text))
 
   // "entre X et Y"
-  const entreMatch = normalized.match(/entre\s+(\d(?:\d| \d)*)\s+et\s+(\d(?:\d| \d)*)/i)
+  const entreMatch = normalized.match(/entre\s+(\d+)\s+et\s+(\d+)/i)
   if (entreMatch) {
     return { min: cleanNumber(entreMatch[1]), max: cleanNumber(entreMatch[2]) }
   }
 
   // "moins de X"
-  const moinsMatch = normalized.match(/moins\s+de\s+(\d(?:\d| \d)*)/i)
+  const moinsMatch = normalized.match(/moins\s+de\s+(\d+)/i)
   if (moinsMatch) {
     return { max: cleanNumber(moinsMatch[1]) }
   }
 
   // "plus de X"
-  const plusMatch = normalized.match(/plus\s+de\s+(\d(?:\d| \d)*)/i)
+  const plusMatch = normalized.match(/plus\s+de\s+(\d+)/i)
   if (plusMatch) {
     return { min: cleanNumber(plusMatch[1]) }
   }
 
   // "500$", "1000 usd", "5000 fc"
-  for (const pattern of PRICE_PATTERNS.slice(0, 3)) {
+  for (const pattern of PRICE_PATTERNS) {
     const match = normalized.match(pattern)
     if (match) {
       const value = cleanNumber(match[1])

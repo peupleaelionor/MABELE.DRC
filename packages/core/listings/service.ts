@@ -173,7 +173,7 @@ export async function getListings(
   const limit = Math.min(100, Math.max(1, pagination.limit ?? 20))
   const skip = (page - 1) * limit
 
-  const where: Record<string, unknown> = {}
+  const where: Prisma.ListingWhereInput = {}
 
   if (validatedFilters.type) where.type = validatedFilters.type
   if (validatedFilters.status) where.status = validatedFilters.status

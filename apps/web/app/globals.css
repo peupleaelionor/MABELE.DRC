@@ -21,7 +21,7 @@
   --radius-sm: 10px;
   --radius-hero: 24px;
 
-  /* Module colors */
+  /* Module colors — source of truth: packages/config/tailwind.ts and packages/shared/constants/index.ts */
   --color-immo: #D4A017;
   --color-emploi: #26C6DA;
   --color-marche: #FF5252;

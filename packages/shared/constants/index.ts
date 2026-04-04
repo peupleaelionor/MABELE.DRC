@@ -160,9 +160,11 @@ export const DRC_STATS = {
   exchangeRate: 2780, // CDF per USD (approximate)
 } as const
 
+// DRC mobile operator number prefixes (2-digit, after country code +243)
+// Airtel: 081x–082x, Vodacom/M-Pesa: 082x–083x, Orange: 084x–085x, Africell: 089x–090x
 export const MOBILE_MONEY_OPERATORS = [
-  { id: 'airtel', name: 'Airtel Money', emoji: '🔴', color: '#FF5252', prefix: ['81'] },
-  { id: 'vodacom', name: 'M-Pesa (Vodacom)', emoji: '🟢', color: '#00C853', prefix: ['82'] },
+  { id: 'airtel', name: 'Airtel Money', emoji: '🔴', color: '#FF5252', prefix: ['81', '82'] },
+  { id: 'vodacom', name: 'M-Pesa (Vodacom)', emoji: '🟢', color: '#00C853', prefix: ['82', '83'] },
   { id: 'orange', name: 'Orange Money', emoji: '🟠', color: '#FFB300', prefix: ['84', '85'] },
   { id: 'africell', name: 'Africell', emoji: '🔵', color: '#448AFF', prefix: ['89', '90'] },
 ] as const

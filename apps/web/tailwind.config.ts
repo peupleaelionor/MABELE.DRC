@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss'
 import typography from '@tailwindcss/typography'
+import sharedConfig from '../../packages/config/tailwind'
 
 const config: Config = {
   content: [
@@ -7,45 +8,10 @@ const config: Config = {
     './components/**/*.{ts,tsx}',
     '../../packages/shared/**/*.{ts,tsx}',
   ],
-  darkMode: 'class',
+  presets: [sharedConfig as Config],
   theme: {
     extend: {
-      colors: {
-        background: '#08080C',
-        foreground: '#F0F0F0',
-        primary: {
-          DEFAULT: '#D4A017',
-          foreground: '#08080C',
-        },
-        secondary: {
-          DEFAULT: '#006400',
-          foreground: '#F0F0F0',
-        },
-        muted: {
-          DEFAULT: '#1A1A24',
-          foreground: '#9090A0',
-        },
-        border: '#2A2A3A',
-        card: '#12121C',
-        // Module colors
-        immo: '#D4A017',
-        emploi: '#26C6DA',
-        marche: '#FF5252',
-        agri: '#00C853',
-        nkisi: '#B388FF',
-        congo: '#448AFF',
-        kanga: '#FFB300',
-        bima: '#FF4081',
-      },
-      fontFamily: {
-        sans: ['DM Sans', 'system-ui', 'sans-serif'],
-        display: ['Playfair Display', 'Georgia', 'serif'],
-      },
-      borderRadius: {
-        card: '16px',
-        sm: '10px',
-        hero: '24px',
-      },
+      // Web-only additions: animations/keyframes not needed in shared config
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.4s ease-out',

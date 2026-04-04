@@ -119,6 +119,25 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  packages/core/search:
+    dependencies:
+      '@mabele/database':
+        specifier: workspace:*
+        version: link:../../database
+      '@mabele/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@prisma/client':
+        specifier: ^5.14.0
+        version: 5.22.0(prisma@5.22.0)
+      zod:
+        specifier: ^3.23.0
+        version: 3.25.76
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
   packages/database:
     dependencies:
       '@prisma/client':

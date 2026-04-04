@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "buildCommand": "cd ../.. && pnpm build --filter=@mabele/web",
+  "outputDirectory": "apps/web/.next",
+  "installCommand": "pnpm install",
+  "regions": ["cdg1"],
+  "env": {
+    "DATABASE_URL": "@mabele_database_url",
+    "NEXTAUTH_SECRET": "@mabele_nextauth_secret",
+    "NEXTAUTH_URL": "@mabele_nextauth_url",
+    "REDIS_URL": "@mabele_redis_url",
+    "MEILISEARCH_HOST": "@mabele_meilisearch_host",
+    "MEILISEARCH_API_KEY": "@mabele_meilisearch_key"
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

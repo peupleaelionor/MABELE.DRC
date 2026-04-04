@@ -1,0 +1,24 @@
+{
+  "name": "mabele",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:web": "turbo dev --filter=@mabele/web",
+    "dev:admin": "turbo dev --filter=@mabele/admin",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "db:push": "turbo db:push --filter=@mabele/database",
+    "db:seed": "turbo db:seed --filter=@mabele/database",
+    "db:migrate": "turbo db:migrate --filter=@mabele/database",
+    "db:studio": "turbo db:studio --filter=@mabele/database"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "prettier": "^3.0.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

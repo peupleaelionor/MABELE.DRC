@@ -99,7 +99,7 @@ export const isValidDRCPhone = (phone: string): boolean => {
  */
 export const generateInvoiceNumber = (sequence: number): string => {
   const year = new Date().getFullYear()
-  const padded = String(sequence).padStart(3, '0')
+  const padded = String(sequence).padStart(5, '0')
   return `FAC-${year}-${padded}`
 }
 

@@ -35,15 +35,15 @@ const SAMPLE_TRANSACTIONS = [
 ]
 
 const MOBILE_MONEY = [
-  { name: 'Airtel Money', emoji: '🔴', color: '#FF5252', balance: 45230 },
-  { name: 'M-Pesa', emoji: '🟢', color: '#00C853', balance: 12850 },
-  { name: 'Orange Money', emoji: '🟠', color: '#FFB300', balance: 8400 },
+  { name: 'Airtel Money', emoji: '🔴', color: '#FF5252', balanceUSD: 45230 / 2780 },
+  { name: 'M-Pesa', emoji: '🟢', color: '#00C853', balanceUSD: 12850 / 2780 },
+  { name: 'Orange Money', emoji: '🟠', color: '#FFB300', balanceUSD: 8400 / 2780 },
 ]
 
 export default function FinancePage() {
   const [activeTab, setActiveTab] = useState<'wallet' | 'tontine' | 'transactions'>('wallet')
 
-  const totalBalance = MOBILE_MONEY.reduce((s, m) => s + m.balance, 0)
+  const totalBalance = MOBILE_MONEY.reduce((s, m) => s + m.balanceUSD, 0)
 
   return (
     <div className="p-4 md:p-6 max-w-5xl mx-auto">
@@ -63,9 +63,9 @@ export default function FinancePage() {
       >
         <p className="text-sm font-medium text-yellow-900 mb-1">Solde total</p>
         <div className="text-4xl font-display font-bold text-yellow-900 mb-1">
-          {totalBalance.toLocaleString('fr-FR')} CDF
+          {totalBalance.toFixed(2)} USD
         </div>
-        <p className="text-sm text-yellow-800">≈ {(totalBalance / 2780).toFixed(0)} USD</p>
+        <p className="text-sm text-yellow-800">≈ {(totalBalance * 2780).toLocaleString('fr-FR')} CDF</p>
 
         <div className="flex gap-3 mt-6">
           <button className="flex-1 py-2 rounded-[10px] text-sm font-semibold bg-yellow-900/20 text-yellow-900 hover:bg-yellow-900/30 transition-all">
@@ -94,7 +94,7 @@ export default function FinancePage() {
             <div>
               <p className="text-xs text-muted-foreground">{acc.name}</p>
               <p className="text-sm font-bold" style={{ color: acc.color }}>
-                {acc.balance.toLocaleString()} CDF
+                {acc.balanceUSD.toFixed(2)} USD
               </p>
             </div>
           </div>

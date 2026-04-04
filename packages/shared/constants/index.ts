@@ -161,8 +161,8 @@ export const DRC_STATS = {
 } as const
 
 export const MOBILE_MONEY_OPERATORS = [
-  { id: 'airtel', name: 'Airtel Money', emoji: '🔴', color: '#FF5252', prefix: ['81', '82'] },
-  { id: 'vodacom', name: 'M-Pesa (Vodacom)', emoji: '🟢', color: '#00C853', prefix: ['82', '81'] },
+  { id: 'airtel', name: 'Airtel Money', emoji: '🔴', color: '#FF5252', prefix: ['81'] },
+  { id: 'vodacom', name: 'M-Pesa (Vodacom)', emoji: '🟢', color: '#00C853', prefix: ['82'] },
   { id: 'orange', name: 'Orange Money', emoji: '🟠', color: '#FFB300', prefix: ['84', '85'] },
   { id: 'africell', name: 'Africell', emoji: '🔵', color: '#448AFF', prefix: ['89', '90'] },
 ] as const

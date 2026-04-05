@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@mabele/database": "workspace:*",
+    "@mabele/shared": "workspace:*",
     "@prisma/client": "^5.14.0"
   },
   "devDependencies": {

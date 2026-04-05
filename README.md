@@ -11,11 +11,18 @@ MABELE (Terre en Lingala) is a unified digital super-platform for the Democratic
 ```
 mabele/
 ├── apps/
-│   └── web/                  # Next.js 14+ App Router (main web app)
+│   └── web/                  # Next.js 15 App Router (main web app)
 ├── packages/
-│   ├── database/             # Prisma ORM + PostgreSQL schema
-│   ├── shared/               # Types, utils, constants
-│   └── config/               # Shared ESLint, TypeScript, Tailwind configs
+│   ├── core/                 # Domain logic packages
+│   │   ├── listings/         # CRUD annonces (immobilier, emploi, produit, agri)
+│   │   ├── search/           # Recherche multi-verticale + NLP
+│   │   ├── messaging/        # Conversations & messages temps réel
+│   │   ├── notifications/    # Notifications utilisateur
+│   │   ├── payments/         # Mobile money & paiements
+│   │   └── features/         # Feature flags par module
+│   ├── database/             # Prisma ORM + PostgreSQL schema + seed
+│   ├── shared/               # Types, utils, constants partagés
+│   └── config/               # ESLint, TypeScript, Tailwind partagés
 ├── infrastructure/           # Docker, Dockerfile, deploy configs
 └── docs/                     # API, Deployment, Contributing docs
 ```
@@ -39,7 +46,7 @@ mabele/
 
 ## 🛠 Tech Stack
 
-- **Framework**: Next.js 14+ (App Router)
+- **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript 5 (strict)
 - **Styling**: Tailwind CSS + CSS Variables
 - **Database**: PostgreSQL via Prisma ORM
@@ -72,7 +79,7 @@ pnpm install
 cp .env.example .env
 
 # Start infrastructure (PostgreSQL, Redis, Meilisearch)
-docker-compose up -d
+docker-compose -f infrastructure/docker-compose.yml up -d
 
 # Push database schema
 pnpm db:push

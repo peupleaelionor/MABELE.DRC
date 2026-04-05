@@ -6,7 +6,7 @@ Tu es un agent IA spécialisé dans le développement de la plateforme **MABELE*
 
 ## Stack technique
 
-- **Framework**: Next.js 14+ avec App Router
+- **Framework**: Next.js 15 avec App Router
 - **Langage**: TypeScript 5 (mode strict)
 - **Styling**: Tailwind CSS + variables CSS personnalisées
 - **Base de données**: PostgreSQL + Prisma ORM

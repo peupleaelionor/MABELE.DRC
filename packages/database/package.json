@@ -2,6 +2,9 @@
   "name": "@mabele/database",
   "version": "0.1.0",
   "private": true,
+  "exports": {
+    ".": "./index.ts"
+  },
   "scripts": {
     "db:push": "prisma db push",
     "db:seed": "tsx seed.ts",

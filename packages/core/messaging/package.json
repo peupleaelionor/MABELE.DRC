@@ -1,0 +1,16 @@
+{
+  "name": "@mabele/core-messaging",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@mabele/database": "workspace:*",
+    "@prisma/client": "^5.14.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

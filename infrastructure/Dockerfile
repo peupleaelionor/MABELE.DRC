@@ -12,6 +12,12 @@ COPY apps/web/package.json ./apps/web/
 COPY packages/database/package.json ./packages/database/
 COPY packages/shared/package.json ./packages/shared/
 COPY packages/config/package.json ./packages/config/
+COPY packages/core/listings/package.json ./packages/core/listings/
+COPY packages/core/search/package.json ./packages/core/search/
+COPY packages/core/messaging/package.json ./packages/core/messaging/
+COPY packages/core/notifications/package.json ./packages/core/notifications/
+COPY packages/core/payments/package.json ./packages/core/payments/
+COPY packages/core/features/package.json ./packages/core/features/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile

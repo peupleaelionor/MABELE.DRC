@@ -6,7 +6,8 @@ const config: Config = {
   content: [
     './app/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
-    '../../packages/shared/**/*.{ts,tsx}',
+    '../../packages/shared/constants/**/*.ts',
+    '../../packages/shared/utils/**/*.ts',
   ],
   presets: [sharedConfig as Config],
   theme: {

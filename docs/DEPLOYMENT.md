@@ -36,6 +36,33 @@ pnpm dev
 
 ---
 
+## Production Deployment — Netlify
+
+### 1. Connect your repository
+- Go to [app.netlify.com](https://app.netlify.com)
+- Click **"Add new site" → "Import an existing project"**
+- Select the GitHub repository
+
+### 2. Configure build settings
+The `netlify.toml` at the root of the repo auto-configures:
+- **Build command**: `cd apps/web && npx next build`
+- **Publish directory**: `apps/web/.next`
+- **Node version**: 20
+- **Plugin**: `@netlify/plugin-nextjs`
+
+### 3. Environment variables
+Set the following in **Site Settings → Environment Variables**:
+```
+DATABASE_URL=...
+NEXTAUTH_SECRET=...
+NEXTAUTH_URL=https://your-site.netlify.app
+```
+
+### 4. Deploy
+Netlify deploys automatically on every push to main. Use branch deploys for staging.
+
+---
+
 ## Production Deployment — Vercel
 
 ### 1. Install Vercel CLI

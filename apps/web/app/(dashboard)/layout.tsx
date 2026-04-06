@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: '/outils', label: 'NKISI', emoji: '🧾', color: '#B388FF' },
   { href: '/data', label: 'Data', emoji: '📊', color: '#448AFF' },
   { href: '/finance', label: 'KangaPay', emoji: '💰', color: '#FFB300' },
+  { href: '/bima', label: 'Bima Santé', emoji: '🏥', color: '#FF4081' },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

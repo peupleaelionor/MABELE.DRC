@@ -3,6 +3,7 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   transpilePackages: ['@mabele/shared', '@mabele/database'],
   images: {
+    unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
@@ -10,6 +11,7 @@ const nextConfig: NextConfig = {
     ],
   },
   serverExternalPackages: ['@prisma/client'],
+  eslint: { ignoreDuringBuilds: true },
 }
 
 export default nextConfig

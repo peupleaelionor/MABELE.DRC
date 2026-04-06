@@ -1,0 +1,18 @@
+{
+  "name": "MABELE",
+  "short_name": "MABELE",
+  "description": "La super-plateforme digitale tout-en-un pour 112 millions de Congolais",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08080C",
+  "theme_color": "#D4A017",
+  "orientation": "portrait-primary",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

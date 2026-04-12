@@ -1,18 +1,22 @@
 {
-  "name": "MABELE",
+  "name": "MABELE — Plateforme digitale du Congo",
   "short_name": "MABELE",
   "description": "La super-plateforme digitale tout-en-un pour 112 millions de Congolais",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#08080C",
-  "theme_color": "#D4A017",
   "orientation": "portrait-primary",
+  "background_color": "#0A0A0F",
+  "theme_color": "#D4A017",
+  "categories": ["finance", "shopping", "business"],
   "lang": "fr",
+  "dir": "ltr",
   "icons": [
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
-  ]
+    { "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable any" },
+    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable any" }
+  ],
+  "shortcuts": [
+    { "name": "Recherche", "url": "/search", "description": "Rechercher des annonces" },
+    { "name": "KangaPay", "url": "/finance", "description": "Paiements et transferts" }
+  ],
+  "prefer_related_applications": false
 }

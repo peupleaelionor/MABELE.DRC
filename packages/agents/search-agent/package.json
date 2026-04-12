@@ -1,0 +1,6 @@
+{
+  "name": "@mabele/agent-search",
+  "version": "0.1.0",
+  "private": true,
+  "exports": { ".": "./index.ts" }
+}

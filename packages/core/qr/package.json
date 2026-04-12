@@ -1,0 +1,14 @@
+{
+  "name": "@mabele/core-qr",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2"
+  }
+}

@@ -7,6 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── Users & Auth ─────────────────────────────────────────────────────────────
+
 model User {
   id         String   @id @default(cuid())
   phone      String   @unique
@@ -17,35 +19,339 @@ model User {
   province   String?
   ville      String?
   isVerified Boolean  @default(false)
+  locale     String   @default("fr")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  immoListings    ImmoListing[]
-  jobPostings     JobPosting[]
-  marketItems     MarketItem[]
-  agriProducts    AgriProduct[]
-  invoices        Invoice[]
-  favorites       Favorite[]
-  reviews         Review[]
-  tontineGroups   TontineGroupMember[]
-  notifications   Notification[]
-  listings        Listing[]
-  conversations   ConversationParticipant[]
-  sentMessages    Message[]
-  trustProfile    TrustProfile?
-  reports         Report[]
-  auditLogs       AuditLog[]
-  paymentIntents  PaymentIntent[]
-  analyticsEvents AnalyticsEvent[]
+  immoListings         ImmoListing[]
+  jobPostings          JobPosting[]
+  marketItems          MarketItem[]
+  agriProducts         AgriProduct[]
+  invoices             Invoice[]
+  favorites            Favorite[]
+  reviews              Review[]
+  tontineGroups        TontineGroupMember[]
+  notifications        Notification[]
+  listings             Listing[]
+  conversations        ConversationParticipant[]
+  sentMessages         Message[]
+  trustProfile         TrustProfile?
+  reports              Report[]
+  auditLogs            AuditLog[]
+  paymentIntents       PaymentIntent[]
+  analyticsEvents      AnalyticsEvent[]
+  subscriptions        Subscription[]
+  verifications        UserVerification[]
+  wallet               Wallet?
+  idempotencyKeys      IdempotencyKey[]
+  domainEvents         DomainEvent[]
+  referrals            Referral[]        @relation("Referrer")
+  referredBy           Referral?         @relation("Referred")
+  consentLogs          ConsentLog[]
 }
 
 enum Role {
   USER
+  VERIFIED_USER
+  MERCHANT
   AGENT_IMMO
   EMPLOYER
   FARMER
+  AGENT
+  MODERATOR
   ADMIN
+  SUPER_ADMIN
 }
+
+// ─── KYC & Verification ───────────────────────────────────────────────────────
+
+enum VerificationType {
+  PHONE
+  EMAIL
+  NATIONAL_ID
+  BUSINESS_REG
+  SELFIE
+  ADDRESS
+}
+
+enum VerificationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+model UserVerification {
+  id          String             @id @default(cuid())
+  userId      String
+  user        User               @relation(fields: [userId], references: [id])
+  type        VerificationType
+  status      VerificationStatus @default(PENDING)
+  documentUrl String?
+  selfieUrl   String?
+  data        Json?
+  reviewedBy  String?
+  reviewNote  String?
+  expiresAt   DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([userId, type])
+  @@index([status])
+}
+
+// ─── Billing: Plans ──────────────────────────────────────────────────────────
+
+enum PlanTier {
+  FREE
+  STARTER
+  BUSINESS
+  ENTERPRISE
+}
+
+enum BillingCycle {
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+model Plan {
+  id            String       @id @default(cuid())
+  key           String       @unique
+  name          String
+  tier          PlanTier
+  description   String?
+  priceMonthly  Float        @default(0)
+  priceYearly   Float        @default(0)
+  devise        String       @default("USD")
+  features      Json
+  limits        Json
+  isActive      Boolean      @default(true)
+  isPublic      Boolean      @default(true)
+  sortOrder     Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  subscriptions Subscription[]
+
+  @@index([tier, isActive])
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+}
+
+model Subscription {
+  id                String             @id @default(cuid())
+  userId            String
+  user              User               @relation(fields: [userId], references: [id])
+  planId            String
+  plan              Plan               @relation(fields: [planId], references: [id])
+  status            SubscriptionStatus @default(ACTIVE)
+  cycle             BillingCycle       @default(MONTHLY)
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd  Boolean           @default(false)
+  cancelledAt        DateTime?
+  trialEnd           DateTime?
+  providerRef        String?
+  metadata           Json?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  billingEvents BillingEvent[]
+
+  @@index([userId, status])
+  @@index([currentPeriodEnd])
+}
+
+// ─── Billing Events (audit trail) ────────────────────────────────────────────
+
+enum BillingEventType {
+  SUBSCRIPTION_CREATED
+  SUBSCRIPTION_RENEWED
+  SUBSCRIPTION_CANCELLED
+  SUBSCRIPTION_EXPIRED
+  PAYMENT_SUCCEEDED
+  PAYMENT_FAILED
+  REFUND_ISSUED
+  TRIAL_STARTED
+  TRIAL_ENDED
+  PLAN_UPGRADED
+  PLAN_DOWNGRADED
+  INVOICE_GENERATED
+  BOOST_PURCHASED
+  VERIFICATION_CHARGED
+}
+
+model BillingEvent {
+  id             String           @id @default(cuid())
+  subscriptionId String?
+  subscription   Subscription?    @relation(fields: [subscriptionId], references: [id])
+  paymentIntentId String?
+  type           BillingEventType
+  amount         Float?
+  devise         String?
+  metadata       Json?
+  createdAt      DateTime         @default(now())
+
+  @@index([subscriptionId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+// ─── Wallet ──────────────────────────────────────────────────────────────────
+
+enum WalletStatus {
+  ACTIVE
+  FROZEN
+  CLOSED
+}
+
+model Wallet {
+  id        String       @id @default(cuid())
+  userId    String       @unique
+  user      User         @relation(fields: [userId], references: [id])
+  balance   Float        @default(0)
+  currency  String       @default("USD")
+  status    WalletStatus @default(ACTIVE)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  transactions WalletTransaction[]
+}
+
+enum WalletTxType {
+  DEPOSIT
+  WITHDRAWAL
+  TRANSFER_IN
+  TRANSFER_OUT
+  PAYMENT
+  REFUND
+  FEE
+  BONUS
+  TONTINE_CONTRIBUTION
+  TONTINE_PAYOUT
+}
+
+model WalletTransaction {
+  id          String       @id @default(cuid())
+  walletId    String
+  wallet      Wallet       @relation(fields: [walletId], references: [id])
+  type        WalletTxType
+  amount      Float
+  currency    String       @default("USD")
+  balanceBefore Float
+  balanceAfter  Float
+  description String?
+  reference   String?
+  metadata    Json?
+  createdAt   DateTime     @default(now())
+
+  @@index([walletId, createdAt])
+  @@index([reference])
+}
+
+// ─── Idempotency ─────────────────────────────────────────────────────────────
+
+model IdempotencyKey {
+  id         String   @id @default(cuid())
+  key        String   @unique
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  endpoint   String
+  response   Json?
+  status     Int?
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+
+  @@index([key])
+  @@index([expiresAt])
+}
+
+// ─── Webhooks ────────────────────────────────────────────────────────────────
+
+enum WebhookEventStatus {
+  RECEIVED
+  PROCESSED
+  FAILED
+  SKIPPED
+}
+
+model WebhookEvent {
+  id           String             @id @default(cuid())
+  provider     String
+  eventType    String
+  payload      Json
+  signature    String?
+  status       WebhookEventStatus @default(RECEIVED)
+  processedAt  DateTime?
+  errorMessage String?
+  retries      Int                @default(0)
+  createdAt    DateTime           @default(now())
+
+  @@index([provider, eventType])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ─── Domain Events ────────────────────────────────────────────────────────────
+
+model DomainEvent {
+  id         String   @id @default(cuid())
+  type       String
+  aggregateId String?
+  aggregateType String?
+  payload    Json
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  processedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([type])
+  @@index([aggregateId, aggregateType])
+  @@index([createdAt])
+}
+
+// ─── Referrals ────────────────────────────────────────────────────────────────
+
+model Referral {
+  id          String   @id @default(cuid())
+  referrerId  String
+  referrer    User     @relation("Referrer", fields: [referrerId], references: [id])
+  referredId  String   @unique
+  referred    User     @relation("Referred", fields: [referredId], references: [id])
+  code        String
+  rewarded    Boolean  @default(false)
+  rewardedAt  DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([referrerId])
+  @@index([code])
+}
+
+// ─── Consent Logs (GDPR/compliance) ──────────────────────────────────────────
+
+model ConsentLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  type        String
+  granted     Boolean
+  version     String
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([userId, type])
+}
+
+// ─── Legacy Vertical Models ───────────────────────────────────────────────────
 
 model ImmoListing {
   id           String        @id @default(cuid())
@@ -76,6 +382,8 @@ model ImmoListing {
   photos       String[]
   video360     String?
   status       ListingStatus @default(ACTIVE)
+  boosted      Boolean       @default(false)
+  boostedUntil DateTime?
   vues         Int           @default(0)
   userId       String
   user         User          @relation(fields: [userId], references: [id])
@@ -86,6 +394,7 @@ model ImmoListing {
 
   @@index([ville, type, action])
   @@index([prix])
+  @@index([boosted, boostedUntil])
 }
 
 enum ImmoType {
@@ -111,6 +420,7 @@ enum ListingStatus {
   RENTED
   EXPIRED
   FLAGGED
+  DRAFT
 }
 
 model JobPosting {
@@ -131,6 +441,8 @@ model JobPosting {
   urgent       Boolean          @default(false)
   remote       Boolean          @default(false)
   status       ListingStatus    @default(ACTIVE)
+  boosted      Boolean          @default(false)
+  boostedUntil DateTime?
   vues         Int              @default(0)
   candidatures Int              @default(0)
   userId       String
@@ -184,6 +496,8 @@ model MarketItem {
   province    String
   photos      String[]
   status      ListingStatus @default(ACTIVE)
+  boosted     Boolean       @default(false)
+  boostedUntil DateTime?
   vues        Int           @default(0)
   userId      String
   user        User          @relation(fields: [userId], references: [id])
@@ -234,10 +548,12 @@ model Invoice {
   status      InvoiceStatus @default(DRAFT)
   paidAt      DateTime?
   paidVia     String?
+  dueDate     DateTime?
+  notes       String?
   userId      String
   user        User          @relation(fields: [userId], references: [id])
   createdAt   DateTime      @default(now())
-  dueDate     DateTime?
+  updatedAt   DateTime      @updatedAt
 
   @@index([userId, status])
 }
@@ -258,18 +574,25 @@ model TontineGroup {
   devise      String               @default("USD")
   frequence   TontineFrequency
   maxMembres  Int
+  currentRound Int                 @default(0)
+  startDate   DateTime?
+  endDate     DateTime?
+  isActive    Boolean              @default(true)
   members     TontineGroupMember[]
   createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
 }
 
 model TontineGroupMember {
-  id      String       @id @default(cuid())
-  groupId String
-  group   TontineGroup @relation(fields: [groupId], references: [id])
-  userId  String
-  user    User         @relation(fields: [userId], references: [id])
-  role    TontineRole  @default(MEMBER)
-  score   Float        @default(100)
+  id        String       @id @default(cuid())
+  groupId   String
+  group     TontineGroup @relation(fields: [groupId], references: [id])
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  role      TontineRole  @default(MEMBER)
+  score     Float        @default(100)
+  order     Int          @default(0)
+  joinedAt  DateTime     @default(now())
 
   @@unique([groupId, userId])
 }
@@ -314,17 +637,19 @@ model Review {
 }
 
 model Notification {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  type      String
-  titre     String
-  message   String
-  read      Boolean  @default(false)
-  data      Json?
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  type        String
+  titre       String
+  message     String
+  read        Boolean  @default(false)
+  actionUrl   String?
+  data        Json?
+  createdAt   DateTime @default(now())
 
   @@index([userId, read])
+  @@index([userId, createdAt])
 }
 
 // ─── Unified Listing & Extensions ────────────────────────────────────────────
@@ -338,24 +663,27 @@ enum ListingType {
 }
 
 model Listing {
-  id          String        @id @default(cuid())
-  type        ListingType
-  title       String
-  description String
-  price       Float?
-  devise      String        @default("USD")
-  location    String?
-  ville       String?
-  province    String?
-  latitude    Float?
-  longitude   Float?
-  userId      String
-  user        User          @relation(fields: [userId], references: [id])
-  status      ListingStatus @default(ACTIVE)
-  vues        Int           @default(0)
-  photos      String[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id           String        @id @default(cuid())
+  type         ListingType
+  title        String
+  description  String
+  price        Float?
+  devise       String        @default("USD")
+  location     String?
+  ville        String?
+  province     String?
+  latitude     Float?
+  longitude    Float?
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  status       ListingStatus @default(ACTIVE)
+  boosted      Boolean       @default(false)
+  boostedUntil DateTime?
+  vues         Int           @default(0)
+  photos       String[]
+  tags         String[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   realEstateDetails RealEstateDetails?
   jobDetails        JobDetails?
@@ -366,6 +694,8 @@ model Listing {
   @@index([type, status])
   @@index([userId])
   @@index([ville, province])
+  @@index([boosted, boostedUntil])
+  @@index([createdAt])
 }
 
 model RealEstateDetails {
@@ -430,10 +760,14 @@ model Conversation {
   id           String                    @id @default(cuid())
   listingId    String?
   listing      Listing?                  @relation(fields: [listingId], references: [id])
+  lastMessage  String?
+  lastMessageAt DateTime?
   createdAt    DateTime                  @default(now())
   updatedAt    DateTime                  @updatedAt
   participants ConversationParticipant[]
   messages     Message[]
+
+  @@index([lastMessageAt])
 }
 
 model ConversationParticipant {
@@ -443,6 +777,7 @@ model ConversationParticipant {
   userId         String
   user           User         @relation(fields: [userId], references: [id])
   joinedAt       DateTime     @default(now())
+  lastReadAt     DateTime?
 
   @@unique([conversationId, userId])
 }
@@ -452,6 +787,7 @@ enum MessageType {
   IMAGE
   FILE
   SYSTEM
+  AUDIO
 }
 
 model Message {
@@ -462,10 +798,12 @@ model Message {
   sender         User         @relation(fields: [senderId], references: [id])
   content        String
   type           MessageType  @default(TEXT)
+  fileUrl        String?
   read           Boolean      @default(false)
   createdAt      DateTime     @default(now())
 
   @@index([conversationId, createdAt])
+  @@index([senderId])
 }
 
 // ─── Trust & Reputation ──────────────────────────────────────────────────────
@@ -486,10 +824,12 @@ model TrustProfile {
   level             TrustLevel @default(NEW)
   badges            String[]
   totalReviews      Int        @default(0)
+  avgRating         Float      @default(0)
   totalTransactions Int        @default(0)
   verifiedPhone     Boolean    @default(false)
   verifiedEmail     Boolean    @default(false)
   verifiedId        Boolean    @default(false)
+  verifiedBusiness  Boolean    @default(false)
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt
 }
@@ -533,17 +873,20 @@ model Report {
 // ─── Audit ───────────────────────────────────────────────────────────────────
 
 model AuditLog {
-  id         String   @id @default(cuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  action     String
-  targetType String
-  targetId   String
-  metadata   Json?
-  createdAt  DateTime @default(now())
+  id           String   @id @default(cuid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id])
+  action       String
+  targetType   String?
+  targetId     String?
+  metadata     Json?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
 
   @@index([userId])
   @@index([action])
+  @@index([createdAt])
 }
 
 // ─── Payments ────────────────────────────────────────────────────────────────
@@ -554,31 +897,44 @@ enum PaymentStatus {
   COMPLETED
   FAILED
   REFUNDED
+  CANCELLED
 }
 
 enum PaymentType {
   LISTING_BOOST
-  PREMIUM
+  PREMIUM_SUBSCRIPTION
+  VERIFICATION_FEE
+  LISTING_FEATURE
   DEPOSIT
   PURCHASE
   SUBSCRIPTION
+  TRANSFER
+  TONTINE
+  INVOICE_PAYMENT
+  API_USAGE
 }
 
 model PaymentIntent {
-  id        String        @id @default(cuid())
-  userId    String
-  user      User          @relation(fields: [userId], references: [id])
-  amount    Float
-  devise    String        @default("USD")
-  provider  String?
-  status    PaymentStatus @default(PENDING)
-  type      PaymentType
-  reference String?
-  metadata  Json?
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id              String        @id @default(cuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  amount          Float
+  devise          String        @default("USD")
+  provider        String?
+  status          PaymentStatus @default(PENDING)
+  type            PaymentType
+  reference       String?       @unique
+  idempotencyKey  String?       @unique
+  providerRef     String?
+  callbackUrl     String?
+  expiresAt       DateTime?
+  metadata        Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
   @@index([userId, status])
+  @@index([reference])
+  @@index([providerRef])
 }
 
 // ─── Feature Flags ───────────────────────────────────────────────────────────
@@ -589,10 +945,12 @@ model FeatureFlag {
   name        String
   description String?
   enabled     Boolean  @default(false)
+  rolloutPct  Int      @default(100)
   modules     String[]
   cities      String[]
   countries   String[]
   roles       String[]
+  planTiers   String[]
   metadata    Json?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -601,16 +959,21 @@ model FeatureFlag {
 // ─── Analytics ───────────────────────────────────────────────────────────────
 
 model AnalyticsEvent {
-  id         String   @id @default(cuid())
-  userId     String?
-  user       User?    @relation(fields: [userId], references: [id])
-  event      String
-  properties Json?
-  sessionId  String?
-  createdAt  DateTime @default(now())
+  id          String   @id @default(cuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  event       String
+  properties  Json?
+  sessionId   String?
+  deviceType  String?
+  locale      String?
+  province    String?
+  createdAt   DateTime @default(now())
 
   @@index([event])
   @@index([userId])
+  @@index([createdAt])
+  @@index([event, createdAt])
 }
 
 // ─── Geo ─────────────────────────────────────────────────────────────────────
@@ -625,6 +988,7 @@ enum GeoType {
 model GeoLocation {
   id         String        @id @default(cuid())
   name       String
+  nameLocal  String?
   type       GeoType
   parentId   String?
   parent     GeoLocation?  @relation("GeoHierarchy", fields: [parentId], references: [id])
@@ -636,4 +1000,33 @@ model GeoLocation {
 
   @@index([type])
   @@index([parentId])
+}
+
+// ─── Background Jobs ─────────────────────────────────────────────────────────
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  RETRYING
+  DEAD
+}
+
+model BackgroundJob {
+  id          String    @id @default(cuid())
+  queue       String
+  type        String
+  payload     Json
+  status      JobStatus @default(QUEUED)
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3)
+  runAt       DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  error       String?
+  createdAt   DateTime  @default(now())
+
+  @@index([queue, status, runAt])
+  @@index([type])
 }

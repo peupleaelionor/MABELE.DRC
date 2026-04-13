@@ -141,7 +141,7 @@ export default function ImmoPage() {
             className="input-field flex-1"
             readOnly
           />
-          <button className="btn-primary whitespace-nowrap" style={{ backgroundColor: '#D4A017', color: '#08080C' }}>
+          <button className="btn-primary whitespace-nowrap" style={{ backgroundColor: '#BB902A', color: '#0E0E0E' }}>
             Rechercher
           </button>
         </div>
@@ -154,7 +154,7 @@ export default function ImmoPage() {
             key={type}
             className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition-all ${
               type === 'Tous'
-                ? 'border-[#D4A017] bg-[#D4A01720] text-[#D4A017]'
+                ? 'border-[#BB902A] bg-[#BB902A20] text-[#BB902A]'
                 : 'border-border text-muted-foreground hover:border-muted-foreground'
             }`}
           >
@@ -169,7 +169,7 @@ export default function ImmoPage() {
             key={action}
             className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
               action === 'Tous'
-                ? 'border-[#D4A017] bg-[#D4A01720] text-[#D4A017]'
+                ? 'border-[#BB902A] bg-[#BB902A20] text-[#BB902A]'
                 : 'border-border text-muted-foreground hover:border-muted-foreground'
             }`}
           >
@@ -201,8 +201,8 @@ export default function ImmoPage() {
               <span
                 className="badge text-[10px]"
                 style={{
-                  backgroundColor: listing.action === 'Vente' ? '#D4A01720' : '#26C6DA20',
-                  color: listing.action === 'Vente' ? '#D4A017' : '#26C6DA',
+                  backgroundColor: listing.action === 'Vente' ? '#BB902A20' : '#26C6DA20',
+                  color: listing.action === 'Vente' ? '#BB902A' : '#26C6DA',
                 }}
               >
                 {listing.action}
@@ -231,7 +231,7 @@ export default function ImmoPage() {
 
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-lg font-bold" style={{ color: '#D4A017' }}>
+                <span className="text-lg font-bold" style={{ color: '#BB902A' }}>
                   {listing.prix.toLocaleString('fr-FR')}
                 </span>
                 <span className="text-xs text-muted-foreground ml-1">
@@ -250,7 +250,7 @@ export default function ImmoPage() {
 
       <button
         className="fixed bottom-20 lg:bottom-8 right-4 lg:right-8 w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-lg glow-gold z-30 font-bold"
-        style={{ backgroundColor: '#D4A017', color: '#08080C' }}
+        style={{ backgroundColor: '#BB902A', color: '#0E0E0E' }}
         title="Publier une annonce"
       >
         +

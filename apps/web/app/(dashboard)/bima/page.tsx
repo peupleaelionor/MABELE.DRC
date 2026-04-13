@@ -29,7 +29,7 @@ const PLANS = [
     prix: 15,
     devise: 'USD',
     periode: '/mois',
-    color: '#D4A017',
+    color: '#BB902A',
     description: 'Protégez toute votre famille',
     couvertures: [
       'Tout le plan Essentiel',
@@ -128,7 +128,7 @@ export default function BimaPage() {
             {plan.populaire && (
               <div
                 className="absolute top-0 right-0 text-[9px] font-bold px-3 py-1 rounded-bl-[10px]"
-                style={{ backgroundColor: plan.color, color: '#08080C' }}
+                style={{ backgroundColor: plan.color, color: '#0E0E0E' }}
               >
                 ⭐ POPULAIRE
               </div>
@@ -152,7 +152,7 @@ export default function BimaPage() {
               className="w-full py-2.5 rounded-[10px] text-sm font-semibold transition-all"
               style={
                 plan.populaire
-                  ? { backgroundColor: plan.color, color: '#08080C' }
+                  ? { backgroundColor: plan.color, color: '#0E0E0E' }
                   : { border: `1px solid ${plan.color}`, color: plan.color }
               }
             >

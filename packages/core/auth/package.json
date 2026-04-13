@@ -7,8 +7,5 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@paralleldrive/cuid2": "^2.2.2"
   }
 }

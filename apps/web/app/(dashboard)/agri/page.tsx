@@ -61,7 +61,7 @@ export default function AgriPage() {
           </select>
           <button
             className="btn-primary whitespace-nowrap"
-            style={{ backgroundColor: '#00C853', color: '#08080C' }}
+            style={{ backgroundColor: '#00C853', color: '#0E0E0E' }}
           >
             Rechercher
           </button>
@@ -127,7 +127,7 @@ export default function AgriPage() {
               </button>
               <button
                 className="flex-1 py-2 rounded-[10px] text-xs font-semibold"
-                style={{ backgroundColor: '#00C853', color: '#08080C' }}
+                style={{ backgroundColor: '#00C853', color: '#0E0E0E' }}
               >
                 Commander
               </button>
@@ -144,7 +144,7 @@ export default function AgriPage() {
 
       <button
         className="fixed bottom-20 lg:bottom-8 right-4 lg:right-8 w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg z-30 font-bold"
-        style={{ backgroundColor: '#00C853', color: '#08080C' }}
+        style={{ backgroundColor: '#00C853', color: '#0E0E0E' }}
         title="Publier un produit"
       >
         +

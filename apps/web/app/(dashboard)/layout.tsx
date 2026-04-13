@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const NAV_ITEMS = [
-  { href: '/immo', label: 'Immobilier', emoji: '🏠', color: '#D4A017' },
+  { href: '/immo', label: 'Immobilier', emoji: '🏠', color: '#BB902A' },
   { href: '/emploi', label: 'Emploi', emoji: '💼', color: '#26C6DA' },
   { href: '/market', label: 'Marché', emoji: '🛒', color: '#FF5252' },
   { href: '/agri', label: 'Agri', emoji: '🌾', color: '#00C853' },

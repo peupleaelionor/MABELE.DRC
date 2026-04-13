@@ -3,26 +3,28 @@
 @tailwind utilities;
 
 /* ── Google Fonts ── */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap');
 
 /* ── Design Tokens ── */
 :root {
-  --background: #08080C;
-  --foreground: #F0F0F0;
-  --primary: #D4A017;
-  --primary-foreground: #08080C;
-  --secondary: #006400;
-  --secondary-foreground: #F0F0F0;
-  --muted: #1A1A24;
-  --muted-foreground: #9090A0;
-  --border: #2A2A3A;
-  --card: #12121C;
+  /* Brand colors — derived from the MABELE logo identity */
+  --background: #0E0E0E;
+  --foreground: #F0EDE8;
+  --primary: #C85C20;
+  --primary-foreground: #EDE8DE;
+  --secondary: #BB902A;
+  --secondary-foreground: #EDE8DE;
+  --muted: #1A1A18;
+  --muted-foreground: #8A8A80;
+  --border: #2A2A26;
+  --card: #161612;
+  --cream: #EDE8DE;
   --radius-card: 16px;
   --radius-sm: 10px;
   --radius-hero: 24px;
 
   /* Module colors — source of truth: packages/config/tailwind.ts and packages/shared/constants/index.ts */
-  --color-immo: #D4A017;
+  --color-immo: #BB902A;
   --color-emploi: #26C6DA;
   --color-marche: #FF5252;
   --color-agri: #00C853;
@@ -78,8 +80,17 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Utility Classes ── */
 @layer utilities {
+  /* Primary brand gradient — burnt orange, locked to the MABELE logo */
   .text-gradient-gold {
-    background: linear-gradient(135deg, #D4A017, #F5C842, #D4A017);
+    background: linear-gradient(135deg, #C85C20, #E07838, #C85C20);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Gold accent gradient — secondary brand color */
+  .text-gradient-secondary {
+    background: linear-gradient(135deg, #BB902A, #D4A840, #BB902A);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -93,7 +104,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .bg-glass-dark {
-    background: rgba(8, 8, 12, 0.8);
+    background: rgba(14, 14, 14, 0.85);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
@@ -104,11 +115,12 @@ h1, h2, h3, h4, h5, h6 {
   }
   .card-hover:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(212, 160, 23, 0.15);
+    box-shadow: 0 8px 32px rgba(200, 92, 32, 0.15);
   }
 
+  /* Brand glow — burnt orange, matches logo primary */
   .glow-gold {
-    box-shadow: 0 0 20px rgba(212, 160, 23, 0.3);
+    box-shadow: 0 0 20px rgba(200, 92, 32, 0.35);
   }
 
   .shimmer {

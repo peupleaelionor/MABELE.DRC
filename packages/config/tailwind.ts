@@ -5,31 +5,34 @@ const sharedConfig: Partial<Config> = {
   theme: {
     extend: {
       colors: {
-        background: '#08080C',
-        foreground: '#F0F0F0',
+        // ── Brand palette — locked to the MABELE logo identity ──
+        background: '#0E0E0E',
+        foreground: '#F0EDE8',
         primary: {
-          DEFAULT: '#D4A017',
-          foreground: '#08080C',
+          DEFAULT: '#C85C20',   // burnt orange — logo mark color
+          foreground: '#EDE8DE',
         },
         secondary: {
-          DEFAULT: '#006400',
-          foreground: '#F0F0F0',
+          DEFAULT: '#BB902A',   // warm gold — secondary accent
+          foreground: '#EDE8DE',
         },
         muted: {
-          DEFAULT: '#1A1A24',
-          foreground: '#9090A0',
+          DEFAULT: '#1A1A18',
+          foreground: '#8A8A80',
         },
-        border: '#2A2A3A',
-        card: '#12121C',
-        // Module colors
-        'color-immo': '#D4A017',
-        'color-emploi': '#26C6DA',
-        'color-marche': '#FF5252',
-        'color-agri': '#00C853',
-        'color-nkisi': '#B388FF',
-        'color-congo': '#448AFF',
-        'color-kanga': '#FFB300',
-        'color-bima': '#FF4081',
+        border: '#2A2A26',
+        card: '#161612',
+        cream: '#EDE8DE',       // warm cream — light surface
+
+        // ── Module accent colors ──
+        'color-immo': '#BB902A',    // gold — real estate, premium
+        'color-emploi': '#26C6DA',  // cyan — opportunity
+        'color-marche': '#FF5252',  // red — commerce
+        'color-agri': '#00C853',    // green — agriculture
+        'color-nkisi': '#B388FF',   // purple — tools
+        'color-congo': '#448AFF',   // blue — data
+        'color-kanga': '#FFB300',   // amber — money
+        'color-bima': '#FF4081',    // pink — health
       },
       fontFamily: {
         sans: ['DM Sans', 'system-ui', 'sans-serif'],

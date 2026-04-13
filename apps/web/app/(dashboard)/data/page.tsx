@@ -15,7 +15,7 @@ const MACRO_DATA = [
 ]
 
 const SECTOR_DATA = [
-  { sector: 'Mines & Métaux', share: 62, icon: '⛏', color: '#D4A017' },
+  { sector: 'Mines & Métaux', share: 62, icon: '⛏', color: '#BB902A' },
   { sector: 'Agriculture', share: 18, icon: '🌾', color: '#00C853' },
   { sector: 'Services', share: 12, icon: '🏢', color: '#448AFF' },
   { sector: 'Industrie', share: 5, icon: '🏭', color: '#26C6DA' },

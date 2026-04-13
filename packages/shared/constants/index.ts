@@ -57,7 +57,7 @@ export const VILLES: string[] = [
 export const CURRENCIES: string[] = ['USD', 'CDF']
 
 export const MODULE_COLORS: Record<string, string> = {
-  immo: '#D4A017',
+  immo: '#BB902A',
   emploi: '#26C6DA',
   marche: '#FF5252',
   agri: '#00C853',

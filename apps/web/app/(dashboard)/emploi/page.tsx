@@ -150,7 +150,7 @@ export default function EmploiPage() {
             className="input-field sm:w-48"
             readOnly
           />
-          <button className="btn-primary whitespace-nowrap" style={{ backgroundColor: '#26C6DA', color: '#08080C' }}>
+          <button className="btn-primary whitespace-nowrap" style={{ backgroundColor: '#26C6DA', color: '#0E0E0E' }}>
             Rechercher
           </button>
         </div>
@@ -260,7 +260,7 @@ export default function EmploiPage() {
             <div className="mt-4 flex justify-end">
               <button
                 className="btn-primary text-xs px-4 py-2"
-                style={{ backgroundColor: '#26C6DA', color: '#08080C' }}
+                style={{ backgroundColor: '#26C6DA', color: '#0E0E0E' }}
               >
                 Postuler maintenant
               </button>
@@ -277,7 +277,7 @@ export default function EmploiPage() {
 
       <button
         className="fixed bottom-20 lg:bottom-8 right-4 lg:right-8 w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg z-30 font-bold"
-        style={{ backgroundColor: '#26C6DA', color: '#08080C' }}
+        style={{ backgroundColor: '#26C6DA', color: '#0E0E0E' }}
         title="Publier une offre"
       >
         +

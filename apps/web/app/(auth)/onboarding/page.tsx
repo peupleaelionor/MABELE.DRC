@@ -25,7 +25,7 @@ const STEPS = [
 ]
 
 const SERVICES = [
-  { id: 'immo', label: 'Immobilier', emoji: '🏠', color: '#D4A017' },
+  { id: 'immo', label: 'Immobilier', emoji: '🏠', color: '#BB902A' },
   { id: 'emploi', label: 'Emploi', emoji: '💼', color: '#26C6DA' },
   { id: 'market', label: 'Marché', emoji: '🛒', color: '#FF5252' },
   { id: 'agri', label: 'AgriTech', emoji: '🌾', color: '#00C853' },

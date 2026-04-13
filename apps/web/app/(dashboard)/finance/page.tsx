@@ -150,7 +150,7 @@ export default function FinancePage() {
             <h3 className="font-semibold text-foreground">Mes tontines</h3>
             <button
               className="btn-primary text-xs px-4 py-2"
-              style={{ backgroundColor: '#FFB300', color: '#08080C' }}
+              style={{ backgroundColor: '#FFB300', color: '#0E0E0E' }}
             >
               + Rejoindre / Créer
             </button>

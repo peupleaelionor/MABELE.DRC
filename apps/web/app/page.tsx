@@ -12,7 +12,7 @@ const modules = [
     id: 'immo',
     name: 'Immobilier',
     emoji: '🏠',
-    color: '#D4A017',
+    color: '#BB902A',
     description: 'Achetez, vendez ou louez votre bien immobilier partout en RDC.',
     href: '/immo',
   },
@@ -107,7 +107,7 @@ export default function HomePage() {
         {/* Background decoration */}
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full opacity-5 blur-3xl pointer-events-none"
-          style={{ background: 'radial-gradient(circle, #D4A017, transparent)' }}
+          style={{ background: 'radial-gradient(circle, #C85C20, transparent)' }}
         />
         <div className="max-w-5xl mx-auto text-center relative">
           <div className="inline-flex items-center gap-2 bg-muted border border-border rounded-full px-4 py-1.5 text-sm text-muted-foreground mb-6">

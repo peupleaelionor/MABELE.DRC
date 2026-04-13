@@ -120,7 +120,7 @@ export default function OutilsPage() {
           <p className="text-muted-foreground mb-4">Aucun devis pour le moment</p>
           <button
             className="btn-primary"
-            style={{ backgroundColor: '#B388FF', color: '#08080C' }}
+            style={{ backgroundColor: '#B388FF', color: '#0E0E0E' }}
           >
             Créer un devis
           </button>
@@ -186,7 +186,7 @@ export default function OutilsPage() {
               <button className="btn-ghost flex-1">Sauvegarder brouillon</button>
               <button
                 className="btn-primary flex-1"
-                style={{ backgroundColor: '#B388FF', color: '#08080C' }}
+                style={{ backgroundColor: '#B388FF', color: '#0E0E0E' }}
               >
                 📤 Envoyer la facture
               </button>

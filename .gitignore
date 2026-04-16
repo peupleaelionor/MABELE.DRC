@@ -57,6 +57,9 @@ coverage/
 .vercel
 .railway
 
+# Claude Code
+.claude/
+
 # OS
 Thumbs.db
 ehthumbs.db

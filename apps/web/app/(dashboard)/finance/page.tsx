@@ -1,229 +1,118 @@
 'use client'
-
+// ─── KangaPay Wallet ──────────────────────────────────────────────────────────
+// Source: Board 3 — Wallet Home
 import { useState } from 'react'
+import Link from 'next/link'
 
-const SAMPLE_TONTINES = [
-  {
-    id: '1',
-    nom: 'Groupe Lingala Business',
-    montant: 100,
-    devise: 'USD',
-    frequence: 'MENSUEL',
-    membres: 10,
-    maxMembres: 12,
-    monTour: 3,
-    score: 98,
-  },
-  {
-    id: '2',
-    nom: 'Tontine Femmes Entrepreneurs',
-    montant: 50,
-    devise: 'USD',
-    frequence: 'HEBDOMADAIRE',
-    membres: 8,
-    maxMembres: 10,
-    monTour: null,
-    score: 100,
-  },
+const TRANSACTIONS = [
+  { id:'1', icon:'💸', label:'Paiement',    amount:-260,    currency:'CDF', date:'Mar 3, 2024',  positive:false },
+  { id:'2', icon:'🌾', label:'OEA Agri',    amount:150000,  currency:'CDF', date:'Mar 2, 2024',  positive:true  },
+  { id:'3', icon:'🤝', label:'Tontine',     amount:-1000,   currency:'CDF', date:'Mar 1, 2024',  positive:false },
+  { id:'4', icon:'💵', label:'Versement',   amount:500,     currency:'CDF', date:'Fév 28, 2024', positive:true  },
+  { id:'5', icon:'📤', label:'Transaction', amount:-145,    currency:'CDF', date:'Fév 27, 2024', positive:false },
 ]
 
-const SAMPLE_TRANSACTIONS = [
-  { id: '1', type: 'received', label: 'Tontine Lingala Business', amount: 1000, devise: 'USD', date: '2025-01-15', via: 'Airtel Money' },
-  { id: '2', type: 'sent', label: 'Cotisation mensuelle', amount: 100, devise: 'USD', date: '2025-01-10', via: 'Airtel Money' },
-  { id: '3', type: 'received', label: 'Remboursement client', amount: 250, devise: 'USD', date: '2025-01-08', via: 'M-Pesa' },
-  { id: '4', type: 'sent', label: 'Loyer Gombe', amount: 1200, devise: 'USD', date: '2025-01-05', via: 'Orange Money' },
-]
-
-const MOBILE_MONEY = [
-  { name: 'Airtel Money', emoji: '🔴', color: '#FF5252', balanceUSD: 45230 / 2780 },
-  { name: 'M-Pesa', emoji: '🟢', color: '#00C853', balanceUSD: 12850 / 2780 },
-  { name: 'Orange Money', emoji: '🟠', color: '#FFB300', balanceUSD: 8400 / 2780 },
+const QUICK = [
+  { icon:'💸', label:'Envoyer',  href:'/finance/envoyer'    },
+  { icon:'📥', label:'Recevoir', href:'/finance/recevoir'   },
+  { icon:'⬜', label:'Scanner',  href:'/finance/merchant'   },
+  { icon:'🤝', label:'Tontine',  href:'/finance/tontine'    },
+  { icon:'💹', label:'Épargne',  href:'/finance/epargne'    },
+  { icon:'📋', label:'Historique',href:'/finance/historique'},
+  { icon:'🏪', label:'Marchands',href:'/finance/merchant'   },
+  { icon:'💳', label:'Services', href:'/services'           },
 ]
 
 export default function FinancePage() {
-  const [activeTab, setActiveTab] = useState<'wallet' | 'tontine' | 'transactions'>('wallet')
-
-  const totalBalance = MOBILE_MONEY.reduce((s, m) => s + m.balanceUSD, 0)
+  const [tab, setTab] = useState<'tout'|'envois'|'recus'>('tout')
+  const filtered = TRANSACTIONS.filter(t => tab==='tout'||(tab==='envois'&&!t.positive)||(tab==='recus'&&t.positive))
 
   return (
-    <div className="p-4 md:p-6 max-w-5xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-display font-bold text-foreground mb-1">
-          💰 KangaPay
-        </h1>
-        <p className="text-muted-foreground">Mobile Money · Tontines · Paiements</p>
-      </div>
+    <div className="min-h-screen" style={{backgroundColor:'#F5F8FC'}}>
 
-      {/* Balance Card */}
-      <div
-        className="rounded-[24px] p-6 mb-6"
-        style={{
-          background: 'linear-gradient(135deg, #FFB300, #FF8F00)',
-        }}
-      >
-        <p className="text-sm font-medium text-yellow-900 mb-1">Solde total</p>
-        <div className="text-4xl font-display font-bold text-yellow-900 mb-1">
-          {totalBalance.toFixed(2)} USD
-        </div>
-        <p className="text-sm text-yellow-800">≈ {(totalBalance * 2780).toLocaleString('fr-FR')} CDF</p>
-
-        <div className="flex gap-3 mt-6">
-          <button className="flex-1 py-2 rounded-[10px] text-sm font-semibold bg-yellow-900/20 text-yellow-900 hover:bg-yellow-900/30 transition-all">
-            📤 Envoyer
-          </button>
-          <button className="flex-1 py-2 rounded-[10px] text-sm font-semibold bg-yellow-900/20 text-yellow-900 hover:bg-yellow-900/30 transition-all">
-            📥 Recevoir
-          </button>
-          <button className="flex-1 py-2 rounded-[10px] text-sm font-semibold bg-yellow-900/20 text-yellow-900 hover:bg-yellow-900/30 transition-all">
-            📱 QR Code
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Money Accounts */}
-      <h2 className="text-sm font-semibold text-foreground mb-3">Mes comptes Mobile Money</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        {MOBILE_MONEY.map((acc) => (
-          <div key={acc.name} className="card-base flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0"
-              style={{ backgroundColor: `${acc.color}20` }}
-            >
-              {acc.emoji}
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">{acc.name}</p>
-              <p className="text-sm font-bold" style={{ color: acc.color }}>
-                {acc.balanceUSD.toFixed(2)} USD
-              </p>
-            </div>
+      {/* Navy wallet header */}
+      <div className="px-4 pt-6 pb-16" style={{background:'linear-gradient(135deg,#1A3260,#0C1E47)'}}>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <p className="text-xs font-medium" style={{color:'rgba(255,255,255,0.55)'}}>KangaPay Wallet</p>
+            <p className="text-xs mt-0.5" style={{color:'rgba(255,255,255,0.40)'}}>JP Mutombo</p>
           </div>
-        ))}
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-2 mb-6 border-b border-border">
-        {[
-          { id: 'wallet', label: '💳 Portefeuille' },
-          { id: 'tontine', label: '🤝 Tontines' },
-          { id: 'transactions', label: '📋 Historique' },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-all -mb-px ${
-              activeTab === tab.id
-                ? 'border-[#FFB300] text-[#FFB300]'
-                : 'border-transparent text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Wallet Tab */}
-      {activeTab === 'wallet' && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[
-            { label: 'Payer une facture', emoji: '🧾', color: '#B388FF' },
-            { label: 'Recharger', emoji: '⚡', color: '#FFB300' },
-            { label: 'Retirer', emoji: '💵', color: '#00C853' },
-            { label: 'Payer marchand', emoji: '🏪', color: '#26C6DA' },
-          ].map((action) => (
-            <button
-              key={action.label}
-              className="card-base card-hover p-4 text-center cursor-pointer"
-              style={{ borderColor: `${action.color}30` }}
-            >
-              <div className="text-3xl mb-2">{action.emoji}</div>
-              <div className="text-xs font-medium text-foreground">{action.label}</div>
-            </button>
-          ))}
+          <button className="text-white/50 text-xl">⋯</button>
         </div>
-      )}
+        <p className="text-xs mb-1" style={{color:'rgba(255,255,255,0.55)'}}>Solde disponible</p>
+        <p className="font-bold text-white" style={{fontSize:'2.5rem',lineHeight:1}}>
+          1.250.000 <span className="text-xl font-medium" style={{color:'rgba(255,255,255,0.65)'}}>CDF</span>
+        </p>
+        <p className="text-xs mt-1" style={{color:'rgba(255,255,255,0.45)'}}>≈ 245 USD</p>
+        <div className="flex gap-3 mt-5">
+          <Link href="/finance/envoyer"
+            className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90"
+            style={{backgroundColor:'#F5A623',color:'#0C1E47',boxShadow:'0 4px 16px rgba(245,166,35,0.40)'}}>
+            ✈ Envoyer
+          </Link>
+          <Link href="/finance/recevoir"
+            className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl text-sm font-bold border transition-all hover:bg-white/10"
+            style={{borderColor:'rgba(255,255,255,0.30)',color:'white'}}>
+            ⬜ Scanner QR
+          </Link>
+        </div>
+      </div>
 
-      {/* Tontine Tab */}
-      {activeTab === 'tontine' && (
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-foreground">Mes tontines</h3>
-            <button
-              className="btn-primary text-xs px-4 py-2"
-              style={{ backgroundColor: '#FFB300', color: '#0E0E0E' }}
-            >
-              + Rejoindre / Créer
-            </button>
+      {/* Content overlapping header */}
+      <div className="px-4 -mt-8 pb-6 space-y-4">
+
+        {/* Quick actions card */}
+        <div className="bg-white rounded-2xl p-4" style={{border:'1px solid #E8EEF4',boxShadow:'0 2px 12px rgba(12,30,71,0.08)'}}>
+          <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{color:'#8FA4BA'}}>Actions rapides</p>
+          <div className="grid grid-cols-4 gap-3">
+            {QUICK.map(q => (
+              <Link key={q.label} href={q.href} className="flex flex-col items-center gap-1.5 group">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition-transform group-hover:scale-105"
+                     style={{backgroundColor:'#F5F8FC',border:'1px solid #E8EEF4'}}>
+                  {q.icon}
+                </div>
+                <span className="text-[10px] font-medium text-center" style={{color:'#3D526B'}}>{q.label}</span>
+              </Link>
+            ))}
           </div>
-          <div className="space-y-4">
-            {SAMPLE_TONTINES.map((t) => (
-              <div key={t.id} className="card-base">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h4 className="font-semibold text-foreground">{t.nom}</h4>
-                    <p className="text-xs text-muted-foreground">
-                      {t.frequence} · {t.membres}/{t.maxMembres} membres
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm font-bold" style={{ color: '#FFB300' }}>
-                      {t.montant} {t.devise}
-                    </div>
-                    <div className="text-xs text-muted-foreground">/ cotisation</div>
-                  </div>
-                </div>
+        </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Score de confiance:</span>
-                    <span className="badge bg-green-500/20 text-green-400 text-xs">{t.score}/100</span>
-                  </div>
-                  {t.monTour && (
-                    <span className="badge text-xs" style={{ backgroundColor: '#FFB30020', color: '#FFB300' }}>
-                      🎯 Tour #{t.monTour}
-                    </span>
-                  )}
-                </div>
+        {/* Transactions */}
+        <div className="bg-white rounded-2xl overflow-hidden" style={{border:'1px solid #E8EEF4',boxShadow:'0 1px 6px rgba(12,30,71,0.06)'}}>
+          <div className="flex items-center justify-between px-4 pt-4 pb-2">
+            <p className="font-semibold text-sm" style={{color:'#0C1E47'}}>Transactions récentes</p>
+            <Link href="/finance/historique" className="text-xs font-medium" style={{color:'#1B4FB3'}}>Voir tout →</Link>
+          </div>
 
-                <div className="mt-3 w-full bg-muted rounded-full h-1.5">
-                  <div
-                    className="h-1.5 rounded-full"
-                    style={{ width: `${(t.membres / t.maxMembres) * 100}%`, backgroundColor: '#FFB300' }}
-                  />
+          {/* Tabs */}
+          <div className="flex px-4 gap-1 mb-2">
+            {(['tout','envois','recus'] as const).map(t => (
+              <button key={t} onClick={()=>setTab(t)}
+                className="px-3 py-1.5 rounded-full text-xs font-medium transition-all capitalize"
+                style={{backgroundColor:tab===t?'#0C1E47':'transparent',color:tab===t?'white':'#8FA4BA'}}>
+                {t === 'tout' ? 'Tout' : t === 'envois' ? 'Envois' : 'Reçus'}
+              </button>
+            ))}
+          </div>
+
+          <div className="divide-y" style={{borderColor:'#F5F8FC'}}>
+            {filtered.map(tx => (
+              <div key={tx.id} className="flex items-center gap-3 px-4 py-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0" style={{backgroundColor:'#F5F8FC'}}>
+                  {tx.icon}
                 </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium" style={{color:'#0C1E47'}}>{tx.label}</p>
+                  <p className="text-xs" style={{color:'#8FA4BA'}}>{tx.date}</p>
+                </div>
+                <p className="text-sm font-bold flex-shrink-0" style={{color:tx.positive?'#16A34A':'#DC2626'}}>
+                  {tx.positive?'+':''}{tx.amount.toLocaleString('fr')} {tx.currency}
+                </p>
               </div>
             ))}
           </div>
         </div>
-      )}
-
-      {/* Transactions Tab */}
-      {activeTab === 'transactions' && (
-        <div className="space-y-3">
-          {SAMPLE_TRANSACTIONS.map((tx) => (
-            <div key={tx.id} className="card-base flex items-center gap-4">
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0"
-                style={{
-                  backgroundColor: tx.type === 'received' ? '#00C85320' : '#FF525220',
-                }}
-              >
-                {tx.type === 'received' ? '📥' : '📤'}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">{tx.label}</p>
-                <p className="text-xs text-muted-foreground">{tx.date} · {tx.via}</p>
-              </div>
-              <div
-                className="text-sm font-bold flex-shrink-0"
-                style={{ color: tx.type === 'received' ? '#00C853' : '#FF5252' }}
-              >
-                {tx.type === 'received' ? '+' : '-'}{tx.amount.toLocaleString()} {tx.devise}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      </div>
     </div>
   )
 }

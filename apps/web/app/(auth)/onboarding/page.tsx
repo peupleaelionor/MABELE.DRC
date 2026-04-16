@@ -1,227 +1,96 @@
 'use client'
-
+// ─── OTP Onboarding ───────────────────────────────────────────────────────────
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { useState } from 'react'
-
-const STEPS = [
-  {
-    id: 1,
-    title: 'Bienvenue sur MABELE !',
-    emoji: '🎉',
-    desc: 'Votre super-plateforme digitale congolaise. Découvrez tout ce que vous pouvez faire.',
-  },
-  {
-    id: 2,
-    title: 'Choisissez vos services',
-    emoji: '🧩',
-    desc: 'Sélectionnez les modules qui vous intéressent le plus.',
-  },
-  {
-    id: 3,
-    title: 'Complétez votre profil',
-    emoji: '👤',
-    desc: 'Quelques informations pour personnaliser votre expérience.',
-  },
-]
-
-const SERVICES = [
-  { id: 'immo', label: 'Immobilier', emoji: '🏠', color: '#BB902A' },
-  { id: 'emploi', label: 'Emploi', emoji: '💼', color: '#26C6DA' },
-  { id: 'market', label: 'Marché', emoji: '🛒', color: '#FF5252' },
-  { id: 'agri', label: 'AgriTech', emoji: '🌾', color: '#00C853' },
-  { id: 'nkisi', label: 'NKISI', emoji: '🧾', color: '#B388FF' },
-  { id: 'data', label: 'Congo Data', emoji: '📊', color: '#448AFF' },
-  { id: 'kanga', label: 'KangaPay', emoji: '💰', color: '#FFB300' },
-  { id: 'bima', label: 'Bima Santé', emoji: '🏥', color: '#FF4081' },
-]
-
-const PROVINCES = [
-  'Kinshasa', 'Kongo-Central', 'Kwango', 'Kwilu', 'Mai-Ndombe',
-  'Kasaï', 'Kasaï-Central', 'Kasaï-Oriental', 'Lomami', 'Sankuru',
-  'Maniema', 'Sud-Kivu', 'Nord-Kivu', 'Ituri', 'Haut-Uélé',
-  'Bas-Uélé', 'Tshopo', 'Mongala', 'Nord-Ubangi', 'Sud-Ubangi',
-  'Équateur', 'Tshuapa', 'Tanganyika', 'Haut-Lomami', 'Lualaba', 'Haut-Katanga',
-]
+import { useRouter } from 'next/navigation'
 
 export default function OnboardingPage() {
-  const [step, setStep] = useState(1)
-  const [selectedServices, setSelectedServices] = useState<string[]>([])
-  const [province, setProvince] = useState('')
-  const [ville, setVille] = useState('')
+  const router = useRouter()
+  const [otp, setOtp] = useState(['','','','','',''])
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [countdown, setCountdown] = useState(30)
+  const refs = useRef<(HTMLInputElement|null)[]>([])
 
-  const toggleService = (id: string) => {
-    setSelectedServices((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
-    )
+  useEffect(() => {
+    refs.current[0]?.focus()
+    const iv = setInterval(() => setCountdown(c => c > 0 ? c - 1 : 0), 1000)
+    return () => clearInterval(iv)
+  }, [])
+
+  const handleKey = (i: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace') {
+      if (!otp[i] && i > 0) refs.current[i-1]?.focus()
+      setOtp(o => { const n=[...o]; n[i]=''; return n })
+    } else if (/^\d$/.test(e.key)) {
+      e.preventDefault()
+      setOtp(o => { const n=[...o]; n[i]=e.key; return n })
+      if (i < 5) refs.current[i+1]?.focus()
+    }
   }
 
-  const handleFinish = () => {
-    window.location.href = '/immo'
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (otp.join('').length < 6) return
+    setLoading(true)
+    await new Promise(r => setTimeout(r, 1200))
+    setLoading(false); setSuccess(true)
+    setTimeout(() => router.push('/dashboard'), 2000)
   }
+
+  if (success) return (
+    <div className="min-h-screen flex items-center justify-center px-4" style={{backgroundColor:'#F5F8FC'}}>
+      <div className="text-center">
+        <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-5" style={{backgroundColor:'#DCFCE7'}}>
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <path d="M14 24l8 8 14-16" stroke="#16A34A" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <h1 className="font-display font-bold text-2xl mb-1" style={{color:'#0C1E47'}}>Compte vérifié !</h1>
+        <p className="text-sm mb-5" style={{color:'#8FA4BA'}}>Bienvenue sur MABELE 🇨🇩</p>
+        <div className="flex gap-3 justify-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold" style={{backgroundColor:'#DCFCE7',color:'#16A34A',border:'1px solid #16A34A40'}}>✓ Compte Vérifié</span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold" style={{backgroundColor:'#EFF6FF',color:'#1B4FB3',border:'1px solid #1B4FB340'}}>🔒 Paiement Sécurisé</span>
+        </div>
+        <p className="text-xs mt-5" style={{color:'#8FA4BA'}}>Redirection en cours...</p>
+      </div>
+    </div>
+  )
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="p-4 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-display font-bold text-gradient-gold">
-          MABELE
-        </Link>
-        <button onClick={handleFinish} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-          Passer →
-        </button>
-      </div>
-
-      {/* Progress bar */}
-      <div className="px-4 mb-8">
-        <div className="max-w-md mx-auto">
-          <div className="flex items-center gap-2 mb-2">
-            {STEPS.map((s) => (
-              <div
-                key={s.id}
-                className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
-                  s.id <= step ? 'bg-primary' : 'bg-border'
-                }`}
-              />
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground text-center">
-            Étape {step} sur {STEPS.length}
-          </p>
-        </div>
-      </div>
-
-      <div className="flex-1 flex items-start justify-center p-4">
-        <div className="w-full max-w-md">
-          {/* Step 1: Welcome */}
-          {step === 1 && (
-            <div className="text-center animate-fade-in">
-              <div className="text-6xl mb-6">{STEPS[0].emoji}</div>
-              <h1 className="text-3xl font-display font-bold text-foreground mb-4">
-                {STEPS[0].title}
-              </h1>
-              <p className="text-muted-foreground mb-8">{STEPS[0].desc}</p>
-
-              <div className="grid grid-cols-2 gap-3 mb-8">
-                {[
-                  { emoji: '🏠', text: 'Trouvez votre maison idéale' },
-                  { emoji: '💼', text: 'Décrochez votre prochain emploi' },
-                  { emoji: '💰', text: 'Gérez votre argent en toute sécurité' },
-                  { emoji: '🌾', text: 'Accédez aux marchés agricoles' },
-                ].map((item) => (
-                  <div key={item.text} className="card-base text-left p-4">
-                    <div className="text-2xl mb-2">{item.emoji}</div>
-                    <p className="text-sm text-foreground">{item.text}</p>
-                  </div>
+    <div className="min-h-screen flex flex-col" style={{backgroundColor:'#F5F8FC'}}>
+      <nav className="h-14 flex items-center px-4 bg-white" style={{borderBottom:'1px solid #E8EEF4'}}>
+        <Link href="/"><img src="/logo.svg" alt="MABELE" className="h-8" /></Link>
+      </nav>
+      <div className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-sm">
+          <div className="bg-white rounded-2xl p-8" style={{border:'1px solid #D0DBE8',boxShadow:'0 4px 32px rgba(12,30,71,0.10)'}}>
+            <div className="flex justify-center mb-5"><img src="/favicon.svg" alt="MABELE" className="w-14 h-14" /></div>
+            <h1 className="font-display font-bold text-2xl text-center mb-1" style={{color:'#0C1E47'}}>Vérification</h1>
+            <p className="text-sm text-center mb-7" style={{color:'#8FA4BA'}}>Un code a été envoyé au <strong style={{color:'#0C1E47'}}>+243 81 234 5678</strong></p>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="flex gap-2 justify-center">
+                {otp.map((digit, i) => (
+                  <input key={i} ref={el => { refs.current[i]=el }}
+                    type="text" inputMode="numeric" maxLength={1}
+                    value={digit} onChange={() => {}} onKeyDown={e => handleKey(i, e)}
+                    className="text-center text-xl font-bold rounded-xl focus:outline-none transition-all"
+                    style={{width:'44px',height:'52px',border:`2px solid ${digit?'#1B4FB3':'#D0DBE8'}`,backgroundColor:digit?'#EFF6FF':'#FFFFFF',color:'#0C1E47'}}
+                  />
                 ))}
               </div>
-
-              <button onClick={() => setStep(2)} className="btn-primary w-full">
-                Commencer →
+              <button type="submit" disabled={loading || otp.join('').length < 6}
+                className="w-full py-3.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 flex items-center justify-center gap-2"
+                style={{backgroundColor:otp.join('').length===6?'#F5A623':'#E8EEF4',color:otp.join('').length===6?'#0C1E47':'#8FA4BA',boxShadow:otp.join('').length===6?'0 4px 16px rgba(245,166,35,0.30)':'none'}}>
+                {loading ? <><span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"/>Vérification...</> : '✓ Vérifier le code'}
               </button>
-            </div>
-          )}
-
-          {/* Step 2: Services */}
-          {step === 2 && (
-            <div className="animate-fade-in">
-              <div className="text-center mb-6">
-                <div className="text-4xl mb-3">{STEPS[1].emoji}</div>
-                <h1 className="text-2xl font-display font-bold text-foreground mb-2">
-                  {STEPS[1].title}
-                </h1>
-                <p className="text-muted-foreground text-sm">{STEPS[1].desc}</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 mb-6">
-                {SERVICES.map((svc) => {
-                  const selected = selectedServices.includes(svc.id)
-                  return (
-                    <button
-                      key={svc.id}
-                      type="button"
-                      onClick={() => toggleService(svc.id)}
-                      className={`p-4 rounded-[16px] border text-center transition-all ${
-                        selected
-                          ? 'border-2 bg-opacity-10'
-                          : 'border-border bg-card hover:border-muted-foreground'
-                      }`}
-                      style={selected ? { borderColor: svc.color, backgroundColor: `${svc.color}15` } : {}}
-                    >
-                      <div className="text-2xl mb-2">{svc.emoji}</div>
-                      <div
-                        className="text-sm font-semibold"
-                        style={selected ? { color: svc.color } : { color: '#F0F0F0' }}
-                      >
-                        {svc.label}
-                      </div>
-                      {selected && <div className="text-xs mt-1" style={{ color: svc.color }}>✓ Sélectionné</div>}
-                    </button>
-                  )
-                })}
-              </div>
-
-              <div className="flex gap-3">
-                <button onClick={() => setStep(1)} className="btn-ghost flex-1">
-                  ← Retour
-                </button>
-                <button onClick={() => setStep(3)} className="btn-primary flex-1">
-                  Continuer →
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Profile */}
-          {step === 3 && (
-            <div className="animate-fade-in">
-              <div className="text-center mb-6">
-                <div className="text-4xl mb-3">{STEPS[2].emoji}</div>
-                <h1 className="text-2xl font-display font-bold text-foreground mb-2">
-                  {STEPS[2].title}
-                </h1>
-                <p className="text-muted-foreground text-sm">{STEPS[2].desc}</p>
-              </div>
-
-              <div className="card-base p-5 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Province
-                  </label>
-                  <select
-                    value={province}
-                    onChange={(e) => setProvince(e.target.value)}
-                    className="input-field"
-                  >
-                    <option value="">Sélectionner votre province</option>
-                    {PROVINCES.map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Ville
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Ex: Kinshasa, Lubumbashi..."
-                    value={ville}
-                    onChange={(e) => setVille(e.target.value)}
-                    className="input-field"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button onClick={() => setStep(2)} className="btn-ghost flex-1">
-                  ← Retour
-                </button>
-                <button onClick={handleFinish} className="btn-primary flex-1">
-                  🚀 Commencer à utiliser MABELE
-                </button>
-              </div>
-            </div>
-          )}
+              <p className="text-sm text-center" style={{color:'#8FA4BA'}}>
+                {countdown > 0
+                  ? <>Renvoyer dans <strong style={{color:'#0C1E47'}}>{countdown}s</strong></>
+                  : <button type="button" onClick={()=>setCountdown(30)} style={{color:'#1B4FB3'}} className="font-semibold">Renvoyer le code</button>}
+              </p>
+            </form>
+          </div>
         </div>
       </div>
     </div>

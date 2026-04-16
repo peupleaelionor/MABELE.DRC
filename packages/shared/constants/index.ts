@@ -57,14 +57,15 @@ export const VILLES: string[] = [
 export const CURRENCIES: string[] = ['USD', 'CDF']
 
 export const MODULE_COLORS: Record<string, string> = {
-  immo: '#BB902A',
-  emploi: '#26C6DA',
-  marche: '#FF5252',
-  agri: '#00C853',
-  nkisi: '#B388FF',
-  congo: '#448AFF',
-  kangapay: '#FFB300',
-  bima: '#FF4081',
+  immo:       '#1B4FB3',  // royal blue
+  emploi:     '#0891B2',  // cyan
+  marche:     '#E02020',  // red
+  agri:       '#16A34A',  // green
+  nkisi:      '#7C3AED',  // purple
+  congo:      '#0C1E47',  // navy
+  kangapay:   '#F5A623',  // gold
+  bima:       '#DB2777',  // pink
+  logistique: '#EA580C',  // orange
 }
 
 export const MODULE_NAMES: Record<string, string> = {

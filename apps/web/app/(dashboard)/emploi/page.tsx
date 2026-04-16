@@ -1,287 +1,170 @@
-import type { Metadata } from 'next'
+'use client'
+// ─── Emploi ───────────────────────────────────────────────────────────────────
+// Source: Board 2 — white-first, teal module color #0891B2
+import { useState } from 'react'
 
-export const metadata: Metadata = {
-  title: "Emploi — Offres d'emploi RDC",
-  description: "Des milliers d'offres d'emploi à travers toutes les provinces de la RDC.",
-}
+const CATEGORIES = ['Tous', 'IT & Tech', 'Finance', 'Santé', 'Éducation', 'BTP', 'Commerce', 'Agriculture']
+const JOB_TYPES  = ['Tous', 'CDI', 'CDD', 'Freelance', 'Stage']
 
-const CATEGORIES = ['Tous', 'IT & Tech', 'Finance', 'Santé', 'Éducation', 'BTP', 'Commerce', 'Agriculture', 'Juridique']
-const JOB_TYPES = ['Tous', 'CDI', 'CDD', 'Freelance', 'Stage', 'Intérim']
-
-const SAMPLE_JOBS = [
-  {
-    id: '1',
-    titre: 'Développeur Full Stack React/Node.js',
-    entreprise: 'TechFlow Solutions',
-    logo: '💻',
-    ville: 'Kinshasa',
-    province: 'Kinshasa',
-    type: 'CDI',
-    categorie: 'IT & Tech',
-    salaireMin: 1500,
-    salaireMax: 2500,
-    devise: 'USD',
-    experience: '3+ ans',
-    competences: ['React', 'Node.js', 'PostgreSQL', 'TypeScript'],
-    urgent: true,
-    remote: true,
-    vues: 456,
-    candidatures: 23,
-  },
-  {
-    id: '2',
-    titre: 'Comptable Senior',
-    entreprise: 'Banque Commerciale du Congo',
-    logo: '🏦',
-    ville: 'Kinshasa',
-    province: 'Kinshasa',
-    type: 'CDI',
-    categorie: 'Finance',
-    salaireMin: 1000,
-    salaireMax: 1800,
-    devise: 'USD',
-    experience: '5+ ans',
-    competences: ['OHADA', 'Excel', 'SAP'],
-    urgent: false,
-    remote: false,
-    vues: 234,
-    candidatures: 45,
-  },
-  {
-    id: '3',
-    titre: 'Médecin Généraliste',
-    entreprise: 'Clinique Ngaliema',
-    logo: '🏥',
-    ville: 'Kinshasa',
-    province: 'Kinshasa',
-    type: 'CDI',
-    categorie: 'Santé',
-    salaireMin: 1200,
-    salaireMax: 2000,
-    devise: 'USD',
-    experience: '2+ ans',
-    competences: ['Médecine générale', 'Urgences'],
-    urgent: true,
-    remote: false,
-    vues: 189,
-    candidatures: 12,
-  },
-  {
-    id: '4',
-    titre: 'Stage Marketing Digital',
-    entreprise: 'Congo Media Group',
-    logo: '📱',
-    ville: 'Lubumbashi',
-    province: 'Haut-Katanga',
-    type: 'Stage',
-    categorie: 'Commerce',
-    salaireMin: 200,
-    salaireMax: 400,
-    devise: 'USD',
-    experience: 'Débutant',
-    competences: ['Social Media', 'Canva', 'Facebook Ads'],
-    urgent: false,
-    remote: true,
-    vues: 312,
-    candidatures: 67,
-  },
-  {
-    id: '5',
-    titre: 'Ingénieur Civil — Projets Infrastructure',
-    entreprise: 'SOCICO',
-    logo: '🏗',
-    ville: 'Goma',
-    province: 'Nord-Kivu',
-    type: 'CDD',
-    categorie: 'BTP',
-    salaireMin: 1800,
-    salaireMax: 3000,
-    devise: 'USD',
-    experience: '5+ ans',
-    competences: ['AutoCAD', 'MS Project', 'Béton armé'],
-    urgent: false,
-    remote: false,
-    vues: 98,
-    candidatures: 8,
-  },
-  {
-    id: '6',
-    titre: 'Enseignant Mathématiques — Lycée',
-    entreprise: 'Institut Boboto',
-    logo: '📚',
-    ville: 'Kinshasa',
-    province: 'Kinshasa',
-    type: 'CDI',
-    categorie: 'Éducation',
-    salaireMin: 500,
-    salaireMax: 800,
-    devise: 'USD',
-    experience: '2+ ans',
-    competences: ['Mathématiques', 'Pédagogie'],
-    urgent: false,
-    remote: false,
-    vues: 145,
-    candidatures: 34,
-  },
+const JOBS = [
+  { id:'1', titre:'Développeur Full Stack React/Node.js', entreprise:'TechFlow Solutions',   logo:'💻', ville:'Kinshasa',    type:'CDI',     cat:'IT & Tech', salaire:'1 500 – 2 500 USD/mois', urgent:true,  remote:true,  candidatures:23 },
+  { id:'2', titre:'Comptable Senior',                     entreprise:'Banque Comm. du Congo', logo:'🏦', ville:'Kinshasa',    type:'CDI',     cat:'Finance',   salaire:'1 000 – 1 800 USD/mois', urgent:false, remote:false, candidatures:45 },
+  { id:'3', titre:'Médecin Généraliste',                   entreprise:'Clinique Ngaliema',     logo:'🏥', ville:'Kinshasa',    type:'CDI',     cat:'Santé',     salaire:'1 200 – 2 000 USD/mois', urgent:true,  remote:false, candidatures:12 },
+  { id:'4', titre:'Stage Marketing Digital',               entreprise:'Congo Media Group',     logo:'📱', ville:'Lubumbashi',  type:'Stage',   cat:'Commerce',  salaire:'200 – 400 USD/mois',    urgent:false, remote:true,  candidatures:67 },
+  { id:'5', titre:'Ingénieur Civil — Projets Infra',       entreprise:'SOCICO',                logo:'🏗', ville:'Goma',        type:'CDD',     cat:'BTP',       salaire:'1 800 – 3 000 USD/mois', urgent:false, remote:false, candidatures:8  },
+  { id:'6', titre:'Enseignant Mathématiques — Lycée',      entreprise:'Institut Boboto',       logo:'📚', ville:'Kinshasa',    type:'CDI',     cat:'Éducation', salaire:'500 – 800 USD/mois',     urgent:false, remote:false, candidatures:34 },
 ]
 
 export default function EmploiPage() {
+  const [activeCat,  setActiveCat]  = useState('Tous')
+  const [activeType, setActiveType] = useState('Tous')
+
+  const filtered = JOBS.filter(j =>
+    (activeCat  === 'Tous' || j.cat  === activeCat) &&
+    (activeType === 'Tous' || j.type === activeType)
+  )
+
   return (
-    <div className="p-4 md:p-6 max-w-7xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-display font-bold text-foreground mb-1">
-          💼 Emploi
-        </h1>
-        <p className="text-muted-foreground">{SAMPLE_JOBS.length} offres disponibles</p>
+    <div className="p-4 lg:p-6 max-w-5xl mx-auto">
+
+      {/* Header */}
+      <div className="flex items-start justify-between mb-6">
+        <div>
+          <h1 className="font-display font-bold text-2xl" style={{ color: '#0C1E47' }}>💼 Emploi</h1>
+          <p className="text-sm mt-0.5" style={{ color: '#8FA4BA' }}>{JOBS.length} offres disponibles en RDC</p>
+        </div>
+        <button className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold"
+                style={{ backgroundColor: '#0891B2', color: 'white', boxShadow: '0 2px 8px rgba(8,145,178,0.25)' }}>
+          + Publier une offre
+        </button>
       </div>
 
       {/* Search */}
-      <div className="card-base p-4 mb-6">
+      <div className="bg-white rounded-xl p-4 mb-4" style={{ border: '1px solid #E8EEF4', boxShadow: '0 1px 6px rgba(12,30,71,0.05)' }}>
         <div className="flex flex-col sm:flex-row gap-3">
-          <input
-            type="text"
-            placeholder="🔍 Poste, entreprise, compétences..."
-            className="input-field flex-1"
-            readOnly
-          />
-          <input
-            type="text"
-            placeholder="📍 Ville ou province"
-            className="input-field sm:w-48"
-            readOnly
-          />
-          <button className="btn-primary whitespace-nowrap" style={{ backgroundColor: '#26C6DA', color: '#0E0E0E' }}>
+          <div className="relative flex-1">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#8FA4BA' }}>🔍</span>
+            <input placeholder="Poste, entreprise, compétences..." readOnly
+              className="w-full pl-8 pr-3 py-2.5 rounded-lg text-sm focus:outline-none"
+              style={{ backgroundColor: '#F5F8FC', border: '1px solid #E8EEF4', color: '#0C1E47' }} />
+          </div>
+          <div className="relative sm:w-44">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#8FA4BA' }}>📍</span>
+            <input placeholder="Ville ou province" readOnly
+              className="w-full pl-8 pr-3 py-2.5 rounded-lg text-sm focus:outline-none"
+              style={{ backgroundColor: '#F5F8FC', border: '1px solid #E8EEF4', color: '#0C1E47' }} />
+          </div>
+          <button className="px-4 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap"
+                  style={{ backgroundColor: '#0891B2', color: 'white' }}>
             Rechercher
           </button>
         </div>
       </div>
 
       {/* Categories */}
-      <div className="flex gap-2 overflow-x-auto pb-1 mb-3">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition-all ${
-              cat === 'Tous'
-                ? 'border-[#26C6DA] bg-[#26C6DA20] text-[#26C6DA]'
-                : 'border-border text-muted-foreground hover:border-muted-foreground'
-            }`}
-          >
-            {cat}
+      <div className="flex gap-2 overflow-x-auto pb-1 mb-2 no-scrollbar">
+        {CATEGORIES.map((c) => (
+          <button key={c} onClick={() => setActiveCat(c)}
+            className="px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 transition-all"
+            style={{
+              border:          `1px solid ${activeCat === c ? '#0891B2' : '#E8EEF4'}`,
+              backgroundColor: activeCat === c ? '#E0F7FA' : '#FFFFFF',
+              color:           activeCat === c ? '#0891B2' : '#8FA4BA',
+            }}>
+            {c}
           </button>
         ))}
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-1 mb-6">
-        {JOB_TYPES.map((type) => (
-          <button
-            key={type}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition-all ${
-              type === 'Tous'
-                ? 'border-[#26C6DA] bg-[#26C6DA20] text-[#26C6DA]'
-                : 'border-border text-muted-foreground hover:border-muted-foreground'
-            }`}
-          >
-            {type}
+      {/* Job type + remote */}
+      <div className="flex gap-2 mb-6">
+        {JOB_TYPES.map((t) => (
+          <button key={t} onClick={() => setActiveType(t)}
+            className="px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            style={{
+              border:          `1px solid ${activeType === t ? '#0891B2' : '#E8EEF4'}`,
+              backgroundColor: activeType === t ? '#E0F7FA' : '#FFFFFF',
+              color:           activeType === t ? '#0891B2' : '#8FA4BA',
+            }}>
+            {t}
           </button>
         ))}
-        <button className="px-3 py-1.5 rounded-full text-xs font-medium border border-border text-muted-foreground whitespace-nowrap flex items-center gap-1">
+        <button className="px-3 py-1.5 rounded-full text-xs font-medium border flex items-center gap-1"
+                style={{ border: '1px solid #E8EEF4', color: '#8FA4BA', backgroundColor: 'white' }}>
           🌐 Remote
         </button>
       </div>
 
       {/* Jobs List */}
-      <div className="space-y-4">
-        {SAMPLE_JOBS.map((job) => (
-          <div key={job.id} className="card-base card-hover cursor-pointer">
+      <div className="space-y-3">
+        {filtered.map((job) => (
+          <div key={job.id} className="bg-white rounded-xl p-4 transition-all hover:-translate-y-0.5 cursor-pointer"
+               style={{ border: '1px solid #E8EEF4', boxShadow: '0 1px 6px rgba(12,30,71,0.05)' }}>
             <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-[10px] bg-muted flex items-center justify-center text-2xl flex-shrink-0">
+              {/* Logo */}
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
+                   style={{ backgroundColor: '#E0F7FA', border: '1px solid #B2EBF2' }}>
                 {job.logo}
               </div>
+
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2 flex-wrap">
+                <div className="flex items-start justify-between gap-2">
                   <div>
-                    <h3 className="font-semibold text-foreground text-sm line-clamp-1">{job.titre}</h3>
-                    <p className="text-xs text-muted-foreground">{job.entreprise}</p>
+                    <h3 className="font-semibold text-sm" style={{ color: '#0C1E47' }}>{job.titre}</h3>
+                    <p className="text-xs mt-0.5" style={{ color: '#8FA4BA' }}>{job.entreprise} · 📍 {job.ville}</p>
                   </div>
-                  <div className="flex gap-1 flex-wrap">
+                  <div className="flex gap-1 flex-shrink-0">
                     {job.urgent && (
-                      <span className="badge bg-red-500/20 text-red-400 text-[10px]">🔥 Urgent</span>
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}>🔥 Urgent</span>
                     )}
                     {job.remote && (
-                      <span className="badge bg-blue-500/20 text-blue-400 text-[10px]">🌐 Remote</span>
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: '#E0F7FA', color: '#0891B2' }}>🌐 Remote</span>
                     )}
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2 mt-2">
-                  <span
-                    className="badge text-[10px]"
-                    style={{ backgroundColor: '#26C6DA20', color: '#26C6DA' }}
-                  >
-                    {job.type}
-                  </span>
-                  <span className="badge bg-muted text-muted-foreground text-[10px]">{job.categorie}</span>
-                  <span className="badge bg-muted text-muted-foreground text-[10px]">
-                    📍 {job.ville}
-                  </span>
-                  <span className="badge bg-muted text-muted-foreground text-[10px]">
-                    ⏳ {job.experience}
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {job.competences.slice(0, 3).map((c) => (
-                    <span key={c} className="badge bg-muted text-muted-foreground text-[10px]">{c}</span>
-                  ))}
-                  {job.competences.length > 3 && (
-                    <span className="badge bg-muted text-muted-foreground text-[10px]">+{job.competences.length - 3}</span>
-                  )}
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: '#E0F7FA', color: '#0891B2' }}>{job.type}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: '#F5F8FC', color: '#3D526B' }}>{job.cat}</span>
                 </div>
 
                 <div className="flex items-center justify-between mt-3">
-                  <div>
-                    {job.salaireMin ? (
-                      <span className="text-sm font-bold" style={{ color: '#26C6DA' }}>
-                        {job.salaireMin.toLocaleString()} – {job.salaireMax?.toLocaleString()} {job.devise}/mois
-                      </span>
-                    ) : (
-                      <span className="text-xs text-muted-foreground">Salaire à négocier</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span>👁 {job.vues}</span>
-                    <span>📝 {job.candidatures}</span>
+                  <span className="text-sm font-bold" style={{ color: '#0891B2' }}>{job.salaire}</span>
+                  <div className="flex items-center gap-2 text-xs" style={{ color: '#8FA4BA' }}>
+                    <span>📝 {job.candidatures} candidats</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-4 flex justify-end">
-              <button
-                className="btn-primary text-xs px-4 py-2"
-                style={{ backgroundColor: '#26C6DA', color: '#0E0E0E' }}
-              >
-                Postuler maintenant
+            <div className="mt-3 flex justify-end">
+              <button className="px-4 py-2 rounded-lg text-xs font-semibold transition-all hover:opacity-90"
+                      style={{ backgroundColor: '#0891B2', color: 'white' }}>
+                Postuler maintenant →
               </button>
             </div>
           </div>
         ))}
       </div>
 
+      {filtered.length === 0 && (
+        <div className="text-center py-16 bg-white rounded-xl" style={{ border: '1px solid #E8EEF4' }}>
+          <div className="text-4xl mb-3">💼</div>
+          <p className="font-semibold" style={{ color: '#0C1E47' }}>Aucune offre trouvée</p>
+          <p className="text-sm mt-1" style={{ color: '#8FA4BA' }}>Modifiez vos filtres</p>
+        </div>
+      )}
+
       <div className="text-center mt-8">
-        <button className="btn-outline" style={{ borderColor: '#26C6DA', color: '#26C6DA' }}>
+        <button className="px-6 py-2.5 rounded-lg text-sm font-semibold"
+                style={{ border: '1px solid #0891B2', color: '#0891B2', backgroundColor: 'white' }}>
           Charger plus d&apos;offres
         </button>
       </div>
-
-      <button
-        className="fixed bottom-20 lg:bottom-8 right-4 lg:right-8 w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg z-30 font-bold"
-        style={{ backgroundColor: '#26C6DA', color: '#0E0E0E' }}
-        title="Publier une offre"
-      >
-        +
-      </button>
     </div>
   )
 }

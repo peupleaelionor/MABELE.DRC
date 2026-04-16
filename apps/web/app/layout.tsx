@@ -7,23 +7,23 @@ export const metadata: Metadata = {
     template: '%s | MABELE',
   },
   description:
-    'La super-plateforme digitale tout-en-un pour 112 millions de Congolais. Immobilier, Emploi, Marché, AgriTech, Finance et plus.',
-  keywords: ['DRC', 'Congo', 'plateforme', 'immobilier', 'emploi', 'marché', 'fintech', 'agritech'],
-  authors: [{ name: 'TechFlow Solutions' }],
-  creator: 'TechFlow Solutions',
+    'Tout pour chercher, vendre, travailler et payer en RDC. La super-plateforme digitale pour 112 millions de Congolais.',
+  keywords: ['DRC', 'Congo', 'plateforme', 'immobilier', 'emploi', 'marché', 'fintech', 'KangaPay', 'agritech'],
+  authors: [{ name: 'MABELE' }],
+  creator: 'MABELE',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://mabele.cd'),
   openGraph: {
     type: 'website',
     locale: 'fr_CD',
     url: 'https://mabele.cd',
     title: 'MABELE — La plateforme digitale du Congo',
-    description: 'La super-plateforme digitale tout-en-un pour 112 millions de Congolais.',
+    description: 'Tout pour chercher, vendre, travailler et payer en RDC.',
     siteName: 'MABELE',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MABELE — La plateforme digitale du Congo',
-    description: 'La super-plateforme digitale tout-en-un pour 112 millions de Congolais.',
+    description: 'Tout pour chercher, vendre, travailler et payer en RDC.',
   },
   manifest: '/manifest.json',
   icons: {
@@ -36,17 +36,13 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#C85C20',
+  themeColor: '#1B4FB3',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className="dark">
-      <body className="bg-background text-foreground antialiased">
+    <html lang="fr">
+      <body className="bg-white text-text-primary antialiased">
         {children}
       </body>
     </html>

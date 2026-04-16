@@ -1,47 +1,100 @@
 import type { Config } from 'tailwindcss'
 
+// ─── MABELE Shared Tailwind Config ────────────────────────────────────────────
+// Source of truth: MABELE Visual Kit Boards 1–4
+// White-first · Royal Blue · Golden Yellow CTAs · Midnight Blue depth
+
 const sharedConfig: Partial<Config> = {
   darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // ── Brand palette — locked to the MABELE logo identity ──
-        background: '#0E0E0E',
-        foreground: '#F0EDE8',
-        primary: {
-          DEFAULT: '#C85C20',   // burnt orange — logo mark color
-          foreground: '#EDE8DE',
-        },
-        secondary: {
-          DEFAULT: '#BB902A',   // warm gold — secondary accent
-          foreground: '#EDE8DE',
-        },
-        muted: {
-          DEFAULT: '#1A1A18',
-          foreground: '#8A8A80',
-        },
-        border: '#2A2A26',
-        card: '#161612',
-        cream: '#EDE8DE',       // warm cream — light surface
+        // ── Brand palette ──
+        background:    '#FFFFFF',
+        'bg-subtle':   '#F5F8FC',
+        foreground:    '#0C1E47',
 
-        // ── Module accent colors ──
-        'color-immo': '#BB902A',    // gold — real estate, premium
-        'color-emploi': '#26C6DA',  // cyan — opportunity
-        'color-marche': '#FF5252',  // red — commerce
-        'color-agri': '#00C853',    // green — agriculture
-        'color-nkisi': '#B388FF',   // purple — tools
-        'color-congo': '#448AFF',   // blue — data
-        'color-kanga': '#FFB300',   // amber — money
-        'color-bima': '#FF4081',    // pink — health
+        primary: {
+          DEFAULT:     '#1B4FB3',   // Royal Blue
+          light:       '#2563EB',
+          dark:        '#0F3286',
+          foreground:  '#FFFFFF',
+          muted:       'rgba(27,79,179,0.10)',
+        },
+
+        navy: {
+          DEFAULT:     '#0C1E47',   // Midnight Blue — sidebar, depth
+          light:       '#1A3260',
+          foreground:  '#FFFFFF',
+        },
+
+        gold: {
+          DEFAULT:     '#F5A623',   // Golden Yellow — CTA, active states
+          light:       '#F8C060',
+          dark:        '#D4881A',
+          foreground:  '#0C1E47',
+          muted:       'rgba(245,166,35,0.15)',
+        },
+
+        // ── Neutrals ──
+        muted: {
+          DEFAULT:     '#F5F8FC',
+          foreground:  '#8FA4BA',
+        },
+        border:        '#D0DBE8',
+        'border-light':'#E8EEF4',
+        card:          '#FFFFFF',
+        'card-hover':  '#F5F8FC',
+
+        // ── Semantic ──
+        success:       '#16A34A',
+        'success-bg':  '#DCFCE7',
+        warning:       '#F59E0B',
+        'warning-bg':  '#FEF3C7',
+        error:         '#DC2626',
+        'error-bg':    '#FEE2E2',
+
+        // ── Text ──
+        'text-primary':   '#0C1E47',
+        'text-secondary': '#3D526B',
+        'text-muted':     '#8FA4BA',
+
+        // ── Module colors ──
+        'mod-immo':     '#1B4FB3',
+        'mod-emploi':   '#0891B2',
+        'mod-marche':   '#E02020',
+        'mod-agri':     '#16A34A',
+        'mod-nkisi':    '#7C3AED',
+        'mod-data':     '#0C1E47',
+        'mod-kangapay': '#F5A623',
+        'mod-bima':     '#DB2777',
+        'mod-logistique':'#EA580C',
       },
+
       fontFamily: {
-        sans: ['DM Sans', 'system-ui', 'sans-serif'],
+        sans:    ['DM Sans', 'system-ui', 'sans-serif'],
         display: ['Playfair Display', 'Georgia', 'serif'],
+        mono:    ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
+
       borderRadius: {
-        card: '16px',
-        sm: '10px',
-        hero: '24px',
+        xs:   '4px',
+        sm:   '8px',
+        md:   '12px',
+        lg:   '16px',
+        xl:   '20px',
+        '2xl':'24px',
+      },
+
+      boxShadow: {
+        xs:   '0 1px 2px rgba(12,30,71,0.06)',
+        sm:   '0 2px 6px rgba(12,30,71,0.08)',
+        card: '0 2px 12px rgba(12,30,71,0.08)',
+        md:   '0 4px 16px rgba(12,30,71,0.10)',
+        lg:   '0 8px 32px rgba(12,30,71,0.12)',
+        gold: '0 4px 16px rgba(245,166,35,0.30)',
+        blue: '0 4px 16px rgba(27,79,179,0.25)',
+        nav:  '0 -2px 16px rgba(12,30,71,0.08)',
       },
     },
   },

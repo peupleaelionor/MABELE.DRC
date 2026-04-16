@@ -1,138 +1,152 @@
 'use client'
-
-import Link from 'next/link'
+// ─── Register Page ────────────────────────────────────────────────────────────
+// Source: Board 1 — user type selection + phone form
 import { useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
-const ROLES = [
-  { value: 'USER', label: 'Particulier', emoji: '👤', desc: 'Acheter, louer, chercher un emploi' },
-  { value: 'AGENT_IMMO', label: 'Agent Immobilier', emoji: '🏠', desc: 'Publier des annonces immobilières' },
-  { value: 'EMPLOYER', label: 'Employeur', emoji: '💼', desc: 'Recruter des talents' },
-  { value: 'FARMER', label: 'Agriculteur', emoji: '🌾', desc: 'Vendre des produits agricoles' },
+const USER_TYPES = [
+  { id: 'particulier', icon: '👤', label: 'Particulier',      desc: 'Acheter, louer, chercher' },
+  { id: 'agent',       icon: '🏠', label: 'Agent Immobilier', desc: 'Publier des annonces immo' },
+  { id: 'employeur',   icon: '💼', label: 'Employeur',        desc: 'Recruter des talents' },
+  { id: 'marchand',    icon: '🛒', label: 'Marchand',         desc: 'Vendre des produits' },
+  { id: 'agriculteur', icon: '🌾', label: 'Agriculteur',      desc: 'Vendre des produits agri' },
+  { id: 'freelance',   icon: '💻', label: 'Freelance',        desc: 'Proposer vos services' },
 ]
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({
-    name: '',
-    phone: '',
-    role: 'USER',
-  })
+  const router = useRouter()
+  const [type,    setType]    = useState('particulier')
+  const [name,    setName]    = useState('')
+  const [phone,   setPhone]   = useState('')
   const [loading, setLoading] = useState(false)
+  const [errors,  setErrors]  = useState<Record<string, string>>({})
+
+  const validate = () => {
+    const e: Record<string, string> = {}
+    if (!name.trim()) e.name = 'Nom requis'
+    if (phone.length < 9) e.phone = 'Numéro invalide — 9 chiffres'
+    setErrors(e)
+    return Object.keys(e).length === 0
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!validate()) return
     setLoading(true)
-    // TODO: create account + send OTP
     await new Promise((r) => setTimeout(r, 1000))
     setLoading(false)
-    window.location.href = '/onboarding'
+    router.push('/onboarding')
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="p-4">
-        <Link href="/" className="text-2xl font-display font-bold text-gradient-gold">
-          MABELE
-        </Link>
-      </div>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#F5F8FC' }}>
 
-      <div className="flex-1 flex items-center justify-center p-4 py-8">
-        <div className="w-full max-w-md">
-          <div className="card-base p-6 sm:p-8">
-            <div className="text-center mb-8">
-              <div className="text-4xl mb-3">✨</div>
-              <h1 className="text-2xl font-display font-bold text-foreground mb-2">
-                Créer mon compte
-              </h1>
-              <p className="text-muted-foreground text-sm">
-                Rejoignez des millions de Congolais sur MABELE
-              </p>
+      <nav className="h-14 flex items-center px-4 bg-white" style={{ borderBottom: '1px solid #E8EEF4' }}>
+        <Link href="/"><img src="/logo.svg" alt="MABELE" className="h-8" /></Link>
+      </nav>
+
+      <div className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-lg">
+          <div className="bg-white rounded-2xl p-8"
+               style={{ border: '1px solid #D0DBE8', boxShadow: '0 4px 32px rgba(12,30,71,0.10)' }}>
+
+            <div className="flex justify-center mb-6">
+              <img src="/favicon.svg" alt="MABELE" className="w-14 h-14" />
             </div>
 
+            <h1 className="font-display font-bold text-2xl text-center mb-1" style={{ color: '#0C1E47' }}>
+              Créer mon compte
+            </h1>
+            <p className="text-sm text-center mb-7" style={{ color: '#8FA4BA' }}>
+              Rejoignez des millions de Congolais sur MABELE
+            </p>
+
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Name */}
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Nom complet
-                </label>
-                <input
-                  type="text"
-                  placeholder="Jean-Pierre Mutombo"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="input-field"
-                  required
-                  autoFocus
-                />
-              </div>
 
-              {/* Phone */}
+              {/* User type */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Numéro de téléphone
-                </label>
-                <div className="flex gap-2">
-                  <div className="bg-muted border border-border rounded-[10px] px-3 py-3 text-sm text-muted-foreground flex items-center gap-1 whitespace-nowrap">
-                    🇨🇩 +243
-                  </div>
-                  <input
-                    type="tel"
-                    placeholder="81 234 5678"
-                    value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    className="input-field flex-1"
-                    maxLength={9}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Role */}
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-3">
+                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8FA4BA' }}>
                   Je suis un(e)...
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {ROLES.map((role) => (
-                    <button
-                      key={role.value}
-                      type="button"
-                      onClick={() => setForm({ ...form, role: role.value })}
-                      className={`p-3 rounded-[10px] border text-left transition-all ${
-                        form.role === role.value
-                          ? 'border-primary bg-primary/10'
-                          : 'border-border bg-muted hover:border-muted-foreground'
-                      }`}
-                    >
-                      <div className="text-xl mb-1">{role.emoji}</div>
-                      <div className="text-xs font-semibold text-foreground">{role.label}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5">{role.desc}</div>
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {USER_TYPES.map((t) => (
+                    <button key={t.id} type="button" onClick={() => setType(t.id)}
+                      className="flex items-center gap-2 p-2.5 rounded-xl text-left transition-all"
+                      style={{
+                        border:          `2px solid ${type === t.id ? '#1B4FB3' : '#E8EEF4'}`,
+                        backgroundColor: type === t.id ? '#EFF6FF' : '#FFFFFF',
+                      }}>
+                      <span className="text-xl flex-shrink-0">{t.icon}</span>
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold truncate"
+                           style={{ color: type === t.id ? '#1B4FB3' : '#0C1E47' }}>
+                          {t.label}
+                        </p>
+                        <p className="text-[10px] truncate" style={{ color: '#8FA4BA' }}>{t.desc}</p>
+                      </div>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={loading || !form.name || form.phone.length < 9}
-                className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? '⏳ Création...' : "Créer mon compte →"}
+              {/* Nom */}
+              <div>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: '#3D526B' }}>
+                  Nom Complet
+                </label>
+                <input type="text" value={name}
+                  onChange={(e) => { setName(e.target.value); setErrors((er) => ({ ...er, name: '' })) }}
+                  placeholder="Jean-Pierre Mutombo"
+                  className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all"
+                  style={{ border: `1px solid ${errors.name ? '#DC2626' : '#D0DBE8'}`, color: '#0C1E47' }}
+                />
+                {errors.name && <p className="text-xs mt-1" style={{ color: '#DC2626' }}>{errors.name}</p>}
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: '#3D526B' }}>
+                  Numéro de téléphone
+                </label>
+                <div className="flex rounded-xl overflow-hidden"
+                     style={{ border: `1px solid ${errors.phone ? '#DC2626' : '#D0DBE8'}` }}>
+                  <div className="flex items-center gap-1.5 px-3 select-none flex-shrink-0"
+                       style={{ backgroundColor: '#F5F8FC', borderRight: '1px solid #D0DBE8' }}>
+                    <span className="text-base">🇨🇩</span>
+                    <span className="text-sm font-semibold" style={{ color: '#0C1E47' }}>+243</span>
+                  </div>
+                  <input type="tel" inputMode="numeric" value={phone}
+                    onChange={(e) => { setPhone(e.target.value.replace(/\D/g, '').slice(0, 9)); setErrors((er) => ({ ...er, phone: '' })) }}
+                    placeholder="81 234 5678"
+                    className="flex-1 px-3 py-3 text-sm bg-white focus:outline-none"
+                    style={{ color: '#0C1E47' }}
+                  />
+                </div>
+                {errors.phone && <p className="text-xs mt-1" style={{ color: '#DC2626' }}>{errors.phone}</p>}
+              </div>
+
+              {/* Submit */}
+              <button type="submit" disabled={loading}
+                className="w-full py-3.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-[0.98] flex items-center justify-center gap-2"
+                style={{ backgroundColor: '#F5A623', color: '#0C1E47', boxShadow: '0 4px 16px rgba(245,166,35,0.30)' }}>
+                {loading
+                  ? <><span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />Création...</>
+                  : 'Créer mon compte →'}
               </button>
 
-              <p className="text-xs text-muted-foreground text-center">
+              <p className="text-xs text-center leading-relaxed" style={{ color: '#8FA4BA' }}>
                 En vous inscrivant, vous acceptez nos{' '}
-                <span className="text-primary cursor-pointer hover:underline">Conditions d&apos;utilisation</span>{' '}
+                <Link href="/terms" style={{ color: '#1B4FB3' }} className="underline">Conditions d'utilisation</Link>{' '}
                 et notre{' '}
-                <span className="text-primary cursor-pointer hover:underline">Politique de confidentialité</span>.
+                <Link href="/privacy" style={{ color: '#1B4FB3' }} className="underline">Politique de confidentialité</Link>.
               </p>
             </form>
 
-            <div className="mt-6 pt-6 border-t border-border text-center">
-              <p className="text-sm text-muted-foreground">
+            <div className="mt-5 pt-5 text-center" style={{ borderTop: '1px solid #E8EEF4' }}>
+              <p className="text-sm" style={{ color: '#8FA4BA' }}>
                 Déjà un compte ?{' '}
-                <Link href="/login" className="text-primary hover:underline font-semibold">
-                  Se connecter
-                </Link>
+                <Link href="/login" className="font-semibold" style={{ color: '#1B4FB3' }}>Se connecter</Link>
               </p>
             </div>
           </div>

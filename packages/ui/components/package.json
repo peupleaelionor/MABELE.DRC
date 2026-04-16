@@ -1,0 +1,12 @@
+{
+  "name": "@mabele/ui-components",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "next": "^15"
+  }
+}

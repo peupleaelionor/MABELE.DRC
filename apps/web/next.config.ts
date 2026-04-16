@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
     '@mabele/core-qr',
     '@mabele/core-wallet',
     '@mabele/ui-tokens',
+    '@mabele/ui-components',
   ],
   images: {
     unoptimized: true,

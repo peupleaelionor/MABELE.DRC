@@ -1,0 +1,10 @@
+// ─── MABELE UI Components ─────────────────────────────────────────────────────
+// Barrel export — import from '@mabele/ui-components'
+export * from './MabeleLogo'
+export * from './Button'
+export * from './Input'
+export * from './Badge'
+export * from './Card'
+export * from './SearchBar'
+export * from './States'
+export * from './Navigation'

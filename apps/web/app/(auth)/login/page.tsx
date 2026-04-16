@@ -1,150 +1,178 @@
 'use client'
-
+// ─── Login Page ───────────────────────────────────────────────────────────────
+// Source: Board 1 — white card, phone + OTP flow
+import { useState, useRef } from 'react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
-  const [step, setStep] = useState<'phone' | 'otp'>('phone')
-  const [phone, setPhone] = useState('')
-  const [otp, setOtp] = useState('')
+  const router = useRouter()
+  const [step,    setStep]    = useState<'phone' | 'otp'>('phone')
+  const [phone,   setPhone]   = useState('')
+  const [otp,     setOtp]     = useState(['', '', '', '', '', ''])
   const [loading, setLoading] = useState(false)
+  const [error,   setError]   = useState('')
+  const [countdown, setCountdown] = useState(0)
+  const refs = useRef<(HTMLInputElement | null)[]>([])
 
-  const handleSendOTP = async (e: React.FormEvent) => {
+  const fullPhone = `+243${phone}`
+
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    // TODO: integrate SMS provider
-    await new Promise((r) => setTimeout(r, 1000))
-    setLoading(false)
-    setStep('otp')
+    if (phone.length < 9) { setError('Numéro invalide — 9 chiffres requis'); return }
+    setError(''); setLoading(true)
+    await new Promise((r) => setTimeout(r, 900))
+    setLoading(false); setStep('otp')
+    setCountdown(30)
+    const iv = setInterval(() => setCountdown((c) => { if (c <= 1) { clearInterval(iv); return 0 } return c - 1 }), 1000)
   }
 
-  const handleVerifyOTP = async (e: React.FormEvent) => {
+  const handleOtpKey = (i: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace') {
+      if (!otp[i] && i > 0) refs.current[i - 1]?.focus()
+      setOtp((o) => { const n = [...o]; n[i] = ''; return n })
+    } else if (/^\d$/.test(e.key)) {
+      e.preventDefault()
+      setOtp((o) => { const n = [...o]; n[i] = e.key; return n })
+      if (i < 5) refs.current[i + 1]?.focus()
+    }
+  }
+
+  const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    // TODO: verify OTP and create session
+    const code = otp.join('')
+    if (code.length < 6) { setError('Entrez les 6 chiffres'); return }
+    setError(''); setLoading(true)
     await new Promise((r) => setTimeout(r, 1000))
     setLoading(false)
-    window.location.href = '/immo'
+    router.push('/dashboard')
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <div className="p-4">
-        <Link href="/" className="text-2xl font-display font-bold text-gradient-gold">
-          MABELE
-        </Link>
-      </div>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#F5F8FC' }}>
 
-      <div className="flex-1 flex items-center justify-center p-4">
+      {/* Minimal nav */}
+      <nav className="h-14 flex items-center px-4 bg-white" style={{ borderBottom: '1px solid #E8EEF4' }}>
+        <Link href="/"><img src="/logo.svg" alt="MABELE" className="h-8" /></Link>
+      </nav>
+
+      <div className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-sm">
-          <div className="card-base p-6 sm:p-8">
+          <div className="bg-white rounded-2xl p-8"
+               style={{ border: '1px solid #D0DBE8', boxShadow: '0 4px 32px rgba(12,30,71,0.10)' }}>
+
+            {/* Logo */}
+            <div className="flex justify-center mb-6">
+              <img src="/favicon.svg" alt="MABELE" className="w-14 h-14" />
+            </div>
+
             {step === 'phone' ? (
               <>
-                <div className="text-center mb-8">
-                  <div className="text-4xl mb-3">📱</div>
-                  <h1 className="text-2xl font-display font-bold text-foreground mb-2">
-                    Se connecter
-                  </h1>
-                  <p className="text-muted-foreground text-sm">
-                    Entrez votre numéro de téléphone pour recevoir un code OTP
-                  </p>
-                </div>
+                <h1 className="font-display font-bold text-2xl text-center mb-1" style={{ color: '#0C1E47' }}>
+                  Connexion
+                </h1>
+                <p className="text-sm text-center mb-6" style={{ color: '#8FA4BA' }}>
+                  Entrez votre numéro de téléphone
+                </p>
 
-                <form onSubmit={handleSendOTP} className="space-y-4">
+                <form onSubmit={handleSend} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
+                    <label className="block text-sm font-medium mb-1.5" style={{ color: '#3D526B' }}>
                       Numéro de téléphone
                     </label>
-                    <div className="flex gap-2">
-                      <div className="bg-muted border border-border rounded-[10px] px-3 py-3 text-sm text-muted-foreground flex items-center gap-1 whitespace-nowrap">
-                        🇨🇩 +243
+                    <div className="flex rounded-xl overflow-hidden" style={{ border: `1px solid ${error ? '#DC2626' : '#D0DBE8'}` }}>
+                      <div className="flex items-center gap-1.5 px-3 select-none flex-shrink-0"
+                           style={{ backgroundColor: '#F5F8FC', borderRight: '1px solid #D0DBE8' }}>
+                        <span className="text-base">🇨🇩</span>
+                        <span className="text-sm font-semibold" style={{ color: '#0C1E47' }}>+243</span>
                       </div>
                       <input
-                        type="tel"
-                        placeholder="81 234 5678"
+                        type="tel" inputMode="numeric" autoFocus
                         value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="input-field flex-1"
-                        maxLength={9}
-                        required
-                        autoFocus
+                        onChange={(e) => { setPhone(e.target.value.replace(/\D/g, '').slice(0, 9)); setError('') }}
+                        placeholder="81 234 5678"
+                        className="flex-1 px-3 py-3.5 text-sm bg-white focus:outline-none"
+                        style={{ color: '#0C1E47' }}
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Ex: 81 234 5678 (Airtel) · 82 345 6789 (Vodacom)
-                    </p>
+                    {error && <p className="text-xs mt-1.5" style={{ color: '#DC2626' }}>{error}</p>}
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading || phone.length < 9}
-                    className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {loading ? '⏳ Envoi...' : 'Recevoir le code OTP'}
+                  <button type="submit" disabled={loading || phone.length < 9}
+                    className="w-full py-3.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-[0.98] flex items-center justify-center gap-2"
+                    style={{
+                      backgroundColor: phone.length >= 9 ? '#F5A623' : '#E8EEF4',
+                      color:           phone.length >= 9 ? '#0C1E47' : '#8FA4BA',
+                      boxShadow:       phone.length >= 9 ? '0 4px 16px rgba(245,166,35,0.30)' : 'none',
+                    }}>
+                    {loading
+                      ? <><span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> Envoi...</>
+                      : 'Continuer →'}
                   </button>
                 </form>
               </>
             ) : (
               <>
-                <div className="text-center mb-8">
-                  <div className="text-4xl mb-3">🔑</div>
-                  <h1 className="text-2xl font-display font-bold text-foreground mb-2">
-                    Code OTP
-                  </h1>
-                  <p className="text-muted-foreground text-sm">
-                    Entrez le code à 6 chiffres envoyé au{' '}
-                    <strong className="text-foreground">+243 {phone}</strong>
-                  </p>
-                </div>
+                <button onClick={() => setStep('phone')}
+                  className="flex items-center gap-1 text-sm mb-4 transition-colors"
+                  style={{ color: '#8FA4BA' }}>
+                  ← Retour
+                </button>
+                <h1 className="font-display font-bold text-2xl text-center mb-1" style={{ color: '#0C1E47' }}>
+                  Vérification
+                </h1>
+                <p className="text-sm text-center mb-6" style={{ color: '#8FA4BA' }}>
+                  Code envoyé au <strong style={{ color: '#0C1E47' }}>{fullPhone}</strong>
+                </p>
 
-                <form onSubmit={handleVerifyOTP} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Code OTP
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="123456"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                      className="input-field text-center text-2xl tracking-[0.5em] font-mono"
-                      maxLength={6}
-                      required
-                      autoFocus
-                    />
+                <form onSubmit={handleVerify} className="space-y-5">
+                  {/* OTP boxes */}
+                  <div className="flex gap-2 justify-center">
+                    {otp.map((digit, i) => (
+                      <input key={i}
+                        ref={(el) => { refs.current[i] = el }}
+                        type="text" inputMode="numeric" maxLength={1}
+                        value={digit}
+                        onChange={() => {}}
+                        onKeyDown={(e) => handleOtpKey(i, e)}
+                        className="w-11 h-13 text-center text-xl font-bold rounded-xl focus:outline-none transition-all"
+                        style={{
+                          border:          `2px solid ${digit ? '#1B4FB3' : '#D0DBE8'}`,
+                          backgroundColor: digit ? '#EFF6FF' : '#FFFFFF',
+                          color:           '#0C1E47',
+                          height:          '52px',
+                        }}
+                      />
+                    ))}
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading || otp.length !== 6}
-                    className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {loading ? '⏳ Vérification...' : 'Vérifier le code'}
+                  {error && <p className="text-xs text-center" style={{ color: '#DC2626' }}>{error}</p>}
+
+                  <button type="submit" disabled={loading || otp.join('').length < 6}
+                    className="w-full py-3.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-[0.98] flex items-center justify-center gap-2"
+                    style={{
+                      backgroundColor: otp.join('').length === 6 ? '#F5A623' : '#E8EEF4',
+                      color:           otp.join('').length === 6 ? '#0C1E47' : '#8FA4BA',
+                      boxShadow:       otp.join('').length === 6 ? '0 4px 16px rgba(245,166,35,0.30)' : 'none',
+                    }}>
+                    {loading
+                      ? <><span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> Vérification...</>
+                      : '✓ Vérifier le code'}
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={() => setStep('phone')}
-                    className="btn-ghost w-full text-sm"
-                  >
-                    ← Changer de numéro
-                  </button>
+                  <p className="text-center text-sm" style={{ color: '#8FA4BA' }}>
+                    {countdown > 0
+                      ? <>Renvoyer le code dans <strong style={{ color: '#0C1E47' }}>{countdown}s</strong></>
+                      : <button type="button" onClick={handleSend} className="font-semibold" style={{ color: '#1B4FB3' }}>Renvoyer le code</button>}
+                  </p>
                 </form>
-
-                <p className="text-center text-xs text-muted-foreground mt-4">
-                  Pas reçu ?{' '}
-                  <button className="text-primary hover:underline">Renvoyer (30s)</button>
-                </p>
               </>
             )}
 
-            <div className="mt-6 pt-6 border-t border-border text-center">
-              <p className="text-sm text-muted-foreground">
+            <div className="mt-6 pt-5" style={{ borderTop: '1px solid #E8EEF4' }}>
+              <p className="text-sm text-center" style={{ color: '#8FA4BA' }}>
                 Pas encore de compte ?{' '}
-                <Link href="/register" className="text-primary hover:underline font-semibold">
-                  S&apos;inscrire
-                </Link>
+                <Link href="/register" className="font-semibold" style={{ color: '#1B4FB3' }}>S'inscrire</Link>
               </p>
             </div>
           </div>

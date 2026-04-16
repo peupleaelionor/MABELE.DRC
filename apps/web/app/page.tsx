@@ -10,12 +10,14 @@ export const metadata: Metadata = {
 }
 
 const SERVICES = [
-  { icon: '🏠', label: 'Immobilier',   href: '/immo',      desc: 'Achetez, vendez ou louez partout en RDC' },
-  { icon: '💼', label: 'Emploi',       href: '/emploi',    desc: "Des milliers d'offres à travers le pays" },
-  { icon: '🛒', label: 'Marché',       href: '/market',    desc: 'Petites annonces et produits divers' },
-  { icon: '💰', label: 'KangaPay',     href: '/finance',   desc: 'Paiements mobiles, tontines, transferts' },
-  { icon: '🌾', label: 'Agriculture',  href: '/agri',      desc: 'Producteurs et acheteurs agricoles' },
-  { icon: '🧾', label: 'NKISI',        href: '/outils',    desc: 'Factures, devis et comptabilité' },
+  { icon: '🏘', label: 'Immobilier',  href: '/immo',       desc: 'Achetez, vendez ou louez partout en RDC' },
+  { icon: '💼', label: 'Emploi',      href: '/emploi',     desc: "Des milliers d'offres à travers le pays" },
+  { icon: '🛒', label: 'Marché',      href: '/market',     desc: 'Petites annonces et produits divers' },
+  { icon: '💰', label: 'KangaPay',    href: '/finance',    desc: 'Paiements mobiles, tontines, transferts' },
+  { icon: '🌾', label: 'Agriculture', href: '/agri',       desc: 'Producteurs et acheteurs agricoles' },
+  { icon: '🚛', label: 'Logistique',  href: '/logistique', desc: 'Transport & livraison en RDC' },
+  { icon: '🧾', label: 'NKISI',       href: '/outils',     desc: 'Factures, devis et comptabilité' },
+  { icon: '📊', label: 'Congo Data',  href: '/data',       desc: 'Données économiques en temps réel' },
 ]
 
 const TRUST_FEATURES = [

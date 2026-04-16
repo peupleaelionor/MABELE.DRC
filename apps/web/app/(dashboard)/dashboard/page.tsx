@@ -6,11 +6,14 @@ import Link from 'next/link'
 export const metadata: Metadata = { title: 'Tableau de Bord — MABELE' }
 
 const QUICK_SERVICES = [
-  { icon: '🏠', label: 'Immobilier', href: '/immo',    color: '#1B4FB3' },
-  { icon: '💼', label: 'Emploi',     href: '/emploi',  color: '#0891B2' },
-  { icon: '🛒', label: 'Marché',     href: '/market',  color: '#E02020' },
-  { icon: '💰', label: 'KangaPay',   href: '/finance', color: '#F5A623' },
-  { icon: '🌾', label: 'AgriTech',   href: '/agri',    color: '#16A34A' },
+  { icon: '🏘', label: 'Immobilier', href: '/immo',       color: '#1B4FB3' },
+  { icon: '💼', label: 'Emploi',     href: '/emploi',     color: '#0891B2' },
+  { icon: '🛒', label: 'Marché',     href: '/market',     color: '#E02020' },
+  { icon: '💰', label: 'KangaPay',   href: '/finance',    color: '#F5A623' },
+  { icon: '🌾', label: 'AgriTech',   href: '/agri',       color: '#16A34A' },
+  { icon: '🚛', label: 'Logistique', href: '/logistique', color: '#0891B2' },
+  { icon: '🧾', label: 'NKISI',      href: '/outils',     color: '#7C3AED' },
+  { icon: '📊', label: 'Congo Data', href: '/data',       color: '#1B4FB3' },
 ]
 
 const FEATURED = [

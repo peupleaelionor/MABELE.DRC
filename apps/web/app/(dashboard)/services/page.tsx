@@ -47,6 +47,14 @@ const SERVICES = [
     stats: '15 000+ agriculteurs',
   },
   {
+    href: '/logistique',
+    icon: '🚛',
+    label: 'Logistique',
+    desc: 'Transport, livraison et déménagement partout en RDC',
+    color: '#0891B2',
+    stats: '500+ prestataires',
+  },
+  {
     href: '/outils',
     icon: '🧾',
     label: 'NKISI',

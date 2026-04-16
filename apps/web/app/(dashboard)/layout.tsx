@@ -7,14 +7,16 @@ import { usePathname } from 'next/navigation'
 // Source: Board 2 — navy sidebar + white content + golden CTAs
 
 const NAV = [
-  { href: '/dashboard', icon: '🏠', label: 'Tableau de Bord' },
-  { href: '/emploi',    icon: '💼', label: 'Emploi'          },
-  { href: '/market',    icon: '🛒', label: 'Marché'          },
-  { href: '/agri',      icon: '🌾', label: 'AgriTech'        },
-  { href: '/finance',   icon: '💰', label: 'KangaPay'        },
-  { href: '/outils',    icon: '🧾', label: 'NKISI'           },
-  { href: '/data',      icon: '📊', label: 'Congo Data'      },
-  { href: '/messages',  icon: '💬', label: 'Messages', badge: 2 },
+  { href: '/dashboard',  icon: '🏠', label: 'Tableau de Bord' },
+  { href: '/immo',       icon: '🏘', label: 'Immobilier'      },
+  { href: '/emploi',     icon: '💼', label: 'Emploi'          },
+  { href: '/market',     icon: '🛒', label: 'Marché'          },
+  { href: '/agri',       icon: '🌾', label: 'AgriTech'        },
+  { href: '/logistique', icon: '🚛', label: 'Logistique'      },
+  { href: '/finance',    icon: '💰', label: 'KangaPay'        },
+  { href: '/outils',     icon: '🧾', label: 'NKISI'           },
+  { href: '/data',       icon: '📊', label: 'Congo Data'      },
+  { href: '/messages',   icon: '💬', label: 'Messages', badge: 2 },
 ]
 
 const BOTTOM_NAV = [

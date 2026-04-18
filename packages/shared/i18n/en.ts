@@ -47,7 +47,7 @@ export const en: Messages = {
     emploi: 'Jobs',
     market: 'Marketplace',
     agri: 'AgriTech',
-    nkisi: 'NKISI',
+    sink: 'SINK',
     data: 'Congo Data',
     kangapay: 'KangaPay',
     bima: 'Bima Health',

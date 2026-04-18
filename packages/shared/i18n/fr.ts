@@ -48,7 +48,7 @@ export const fr = {
     emploi: 'Emploi',
     market: 'Marché',
     agri: 'AgriTech',
-    nkisi: 'NKISI',
+    sink: 'SINK',
     data: 'Congo Data',
     kangapay: 'KangaPay',
     bima: 'Bima Santé',

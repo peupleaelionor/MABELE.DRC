@@ -37,7 +37,7 @@ mabele/
 | **Emploi** | `#26C6DA` 🔵 | Offres d'emploi et candidatures |
 | **Marché** | `#FF5252` 🔴 | Marketplace C2C et B2C |
 | **AgriTech** | `#00C853` 🟢 | Produits agricoles et conseils |
-| **NKISI** | `#B388FF` 🟣 | Facturation, devis, outils business |
+| **SINK** | `#B388FF` 🟣 | Facturation, devis, outils business |
 | **Congo Data** | `#448AFF` 🔵 | Données économiques et tableaux de bord |
 | **KangaPay** | `#FFB300` 🟠 | Mobile money, tontines, paiements |
 | **Bima Santé** | `#FF4081` 🩷 | Assurance santé digitale |

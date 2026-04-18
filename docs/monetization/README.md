@@ -65,7 +65,7 @@ Homepage and category-page premium placement for businesses:
 - Up to 5 team members in Business plan
 - $5/additional seat/month
 
-### 8. Invoicing & Payment Tools (NKISI)
+### 8. Invoicing & Payment Tools (SINK)
 
 - Basic invoicing: free for all
 - Advanced templates, recurring invoices, payment tracking: Business+
@@ -94,7 +94,7 @@ Applied selectively where MABELE facilitates the payment:
 - Post up to 5 listings/month
 - Basic messaging
 - Phone OTP authentication
-- NKISI basic invoicing
+- SINK basic invoicing
 - KangaPay wallet (receive, send, P2P)
 - Tontine participation
 - Agri marketplace browsing

@@ -29,7 +29,7 @@ const SERVICES = [
   { id: 'emploi', label: 'Emploi', emoji: '💼', color: '#26C6DA' },
   { id: 'market', label: 'Marché', emoji: '🛒', color: '#FF5252' },
   { id: 'agri', label: 'AgriTech', emoji: '🌾', color: '#00C853' },
-  { id: 'nkisi', label: 'NKISI', emoji: '🧾', color: '#B388FF' },
+  { id: 'sink', label: 'SINK', emoji: '🧾', color: '#B388FF' },
   { id: 'data', label: 'Congo Data', emoji: '📊', color: '#448AFF' },
   { id: 'kanga', label: 'KangaPay', emoji: '💰', color: '#FFB300' },
   { id: 'bima', label: 'Bima Santé', emoji: '🏥', color: '#FF4081' },

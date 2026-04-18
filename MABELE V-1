@@ -572,7 +572,7 @@ return <div>
 }
 
 // ═══════════════════════════════════════════════════════════════
-// OUTILS PME (NKISI)
+// OUTILS PME (SINK)
 // ═══════════════════════════════════════════════════════════════
 function Outils(){
 const feats=[
@@ -584,7 +584,7 @@ const feats=[
 {ic:“📡”,ti:“Mode Hors-Ligne”,ds:“Travaillez sans Internet, synchro auto”,tg:“Inclus”,cl:C.ora},
 ];
 return <div>
-<Hdr icon="⚙️ " title="NKISI" sub="Facturation · Stock · Comptabilité — tout-en-un PME"/>
+<Hdr icon="⚙️ " title="SINK" sub="Facturation · Stock · Comptabilité — tout-en-un PME"/>
 <div className=“fu” style={{margin:“0 10px 16px”,padding:20,borderRadius:C.rx,background:`linear-gradient(135deg,${C.purD},${C.purD.replace(".10",".02")})`,border:`1px solid ${C.pur}20`}}>
 <div style={{fontSize:32,fontWeight:900,color:C.pur,fontFamily:C.fd}}>0 CDF</div>
 <div style={{fontSize:12,color:”#bbb”,marginTop:3}}>Pour commencer — 50 factures/mois gratuitement</div>
@@ -662,7 +662,7 @@ return <div>
 // ═══════════════════════════════════════════════════════════════
 function More({go,favs}){
 const items=[
-{id:“outils”,em:“⚙️”,lb:“NKISI — Outils PME”,ds:“Facturation, stock, comptabilité”,cl:C.pur},
+{id:“outils”,em:“⚙️”,lb:“SINK — Outils PME”,ds:“Facturation, stock, comptabilité”,cl:C.pur},
 {id:“data”,em:“📊”,lb:“Congo Data”,ds:“Intelligence économique temps réel”,cl:C.blu},
 {id:“finance”,em:“💰”,lb:“KangaPay”,ds:“Tontine & micro-épargne”,cl:C.ora},
 ];

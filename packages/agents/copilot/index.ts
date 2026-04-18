@@ -35,10 +35,10 @@ const INTENT_PATTERNS: Array<{
     response: 'KangaPay est votre service de paiement. Que souhaitez-vous faire ?',
   },
   {
-    keywords: ['facture', 'devis', 'facturation', 'nkisi', 'comptabilité'],
-    intent: 'nkisi',
+    keywords: ['facture', 'devis', 'facturation', 'sink', 'comptabilité'],
+    intent: 'sink',
     route: '/outils',
-    response: 'NKISI est votre outil de facturation. Créez des devis et factures professionnels.',
+    response: 'SINK est votre outil de facturation. Créez des devis et factures professionnels.',
   },
   {
     keywords: ['agri', 'agriculture', 'ferme', 'produit agricole', 'récolte'],

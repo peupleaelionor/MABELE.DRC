@@ -29,7 +29,7 @@ const sharedConfig: Partial<Config> = {
         'color-emploi': '#26C6DA',  // cyan — opportunity
         'color-marche': '#FF5252',  // red — commerce
         'color-agri': '#00C853',    // green — agriculture
-        'color-nkisi': '#B388FF',   // purple — tools
+        'color-sink': '#B388FF',   // purple — tools
         'color-congo': '#448AFF',   // blue — data
         'color-kanga': '#FFB300',   // amber — money
         'color-bima': '#FF4081',    // pink — health

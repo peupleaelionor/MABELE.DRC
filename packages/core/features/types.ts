@@ -7,7 +7,7 @@ export type ModuleKey =
   | 'emploi'
   | 'marketplace'
   | 'agritech'
-  | 'nkisi'
+  | 'sink'
   | 'congodata'
   | 'kangapay'
   | 'bima'

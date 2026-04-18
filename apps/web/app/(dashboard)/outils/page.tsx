@@ -27,7 +27,7 @@ export default function OutilsPage() {
     <div className="p-4 md:p-6 max-w-5xl mx-auto">
       <div className="mb-6">
         <h1 className="text-3xl font-display font-bold text-foreground mb-1">
-          🧾 NKISI
+          🧾 SINK
         </h1>
         <p className="text-muted-foreground">Votre outil de facturation et gestion business</p>
       </div>

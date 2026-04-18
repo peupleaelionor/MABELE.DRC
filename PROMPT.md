@@ -30,7 +30,7 @@ Immobilier  : #D4A017 (or/gold)
 Emploi      : #26C6DA (teal)
 Marché      : #FF5252 (rouge)
 AgriTech    : #00C853 (vert)
-NKISI       : #B388FF (violet)
+SINK        : #B388FF (violet)
 Congo Data  : #448AFF (bleu)
 KangaPay    : #FFB300 (orange)
 Bima Santé  : #FF4081 (rose)
@@ -62,7 +62,7 @@ apps/web/app/
     ├── emploi/page.tsx     # Module Emploi
     ├── market/page.tsx     # Module Marché
     ├── agri/page.tsx       # Module AgriTech
-    ├── outils/page.tsx     # Module NKISI
+    ├── outils/page.tsx     # Module SINK
     ├── data/page.tsx       # Module Congo Data
     └── finance/page.tsx    # Module KangaPay
 ```
@@ -125,7 +125,7 @@ const formatPrice = () => {}
 - Labels: Bio, Certifié
 - Conseil agricole IA (à venir)
 
-### NKISI (Outils Business)
+### SINK (Outils Business)
 - Création de devis et factures PDF
 - Numérotation automatique
 - Suivi des paiements

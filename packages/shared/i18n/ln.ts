@@ -51,7 +51,7 @@ export const ln: Messages = {
     emploi: 'Mosala',
     market: 'Zando',
     agri: 'AgriTech',
-    nkisi: 'NKISI',
+    sink: 'SINK',
     data: 'Congo Data',
     kangapay: 'KangaPay',
     bima: 'Bima Santé',

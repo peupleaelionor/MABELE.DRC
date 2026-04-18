@@ -51,7 +51,7 @@ export const sw: Messages = {
     emploi: 'Kazi',
     market: 'Soko',
     agri: 'AgriTech',
-    nkisi: 'NKISI',
+    sink: 'SINK',
     data: 'Congo Data',
     kangapay: 'KangaPay',
     bima: 'Bima Afya',

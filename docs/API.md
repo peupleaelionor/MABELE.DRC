@@ -144,7 +144,7 @@ Create an agri product. **Requires auth (FARMER or ADMIN).**
 
 ---
 
-## Module: NKISI (Factures)
+## Module: SINK (Factures)
 
 ### GET /api/invoices
 List user's invoices. **Requires auth.**

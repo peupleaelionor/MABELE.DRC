@@ -142,7 +142,7 @@ Add screenshots for UI changes.
 | Emploi | Core team | 🟢 Active |
 | Marché | Core team | 🟡 In Progress |
 | AgriTech | Core team | 🟡 In Progress |
-| NKISI | Core team | 🟡 In Progress |
+| SINK | Core team | 🟡 In Progress |
 | Congo Data | Core team | 🔴 Planned |
 | KangaPay | Core team | 🔴 Planned |
 | Bima Santé | Core team | 🔴 Planned |

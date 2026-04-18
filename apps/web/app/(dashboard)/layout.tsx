@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { href: '/emploi', label: 'Emploi', emoji: '💼', color: '#26C6DA' },
   { href: '/market', label: 'Marché', emoji: '🛒', color: '#FF5252' },
   { href: '/agri', label: 'Agri', emoji: '🌾', color: '#00C853' },
-  { href: '/outils', label: 'NKISI', emoji: '🧾', color: '#B388FF' },
+  { href: '/outils', label: 'SINK', emoji: '🧾', color: '#B388FF' },
   { href: '/data', label: 'Data', emoji: '📊', color: '#448AFF' },
   { href: '/finance', label: 'KangaPay', emoji: '💰', color: '#FFB300' },
   { href: '/bima', label: 'Bima Santé', emoji: '🏥', color: '#FF4081' },

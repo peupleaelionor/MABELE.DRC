@@ -41,8 +41,8 @@ const modules = [
     href: '/agri',
   },
   {
-    id: 'nkisi',
-    name: 'NKISI',
+    id: 'sink',
+    name: 'SINK',
     emoji: '🧾',
     color: '#B388FF',
     description: 'Gérez votre business: devis, factures, comptabilité.',
@@ -274,7 +274,7 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold text-foreground mb-3 text-sm">Outils</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/outils" className="hover:text-primary transition-colors">NKISI</Link></li>
+                <li><Link href="/outils" className="hover:text-primary transition-colors">SINK</Link></li>
                 <li><Link href="/data" className="hover:text-primary transition-colors">Congo Data</Link></li>
                 <li><Link href="/finance" className="hover:text-primary transition-colors">KangaPay</Link></li>
               </ul>

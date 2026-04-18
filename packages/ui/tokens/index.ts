@@ -56,7 +56,7 @@ export const brand = {
     emploi: '#26C6DA',    // cyan — professional, opportunity
     market: '#FF5252',    // red — energy, commerce
     agri: '#00C853',      // green — growth, nature
-    nkisi: '#B388FF',     // purple — tools, creation
+    sink: '#B388FF',     // purple — tools, creation
     data: '#448AFF',      // blue — knowledge, data
     kangapay: '#FFB300',  // amber — money, warmth
     bima: '#FF4081',      // pink — health, care

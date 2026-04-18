@@ -160,13 +160,18 @@ export function generateToken(length: number = 32): string {
     throw new Error('La longueur du jeton doit être supérieure à zéro')
   }
 
-  const bytes = randomBytes(length)
+  // Rejection sampling to avoid modulo bias
+  const charCount = TOKEN_CHARS.length
+  const maxValid = 256 - (256 % charCount)
   const chars: string[] = []
 
-  for (let i = 0; i < length; i++) {
-    const byte = bytes[i]
-    if (byte !== undefined) {
-      chars.push(TOKEN_CHARS[byte % TOKEN_CHARS.length] ?? 'A')
+  while (chars.length < length) {
+    const bytes = randomBytes(length - chars.length + 16)
+    for (let i = 0; i < bytes.length && chars.length < length; i++) {
+      const byte = bytes[i]
+      if (byte !== undefined && byte < maxValid) {
+        chars.push(TOKEN_CHARS[byte % charCount] ?? 'A')
+      }
     }
   }
 

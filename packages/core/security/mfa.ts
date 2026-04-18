@@ -222,8 +222,14 @@ function computeHOTP(
 // ─── OTP par SMS ─────────────────────────────────────────────────────────────
 
 export function generateSmsOtp(expiryMs: number = SMS_OTP_EXPIRY_MS): SmsOtp {
-  const bytes = randomBytes(4)
-  const numeric = bytes.readUInt32BE(0) % 1_000_000
+  // Rejection sampling to avoid modulo bias
+  const maxUnbiased = Math.floor(0xFFFFFFFF / 1_000_000) * 1_000_000
+  let numeric: number
+  do {
+    const bytes = randomBytes(4)
+    numeric = bytes.readUInt32BE(0)
+  } while (numeric >= maxUnbiased)
+  numeric = numeric % 1_000_000
   const code = numeric.toString().padStart(SMS_OTP_LENGTH, '0')
   const now = Date.now()
 

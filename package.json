@@ -16,9 +16,9 @@
     "db:studio": "turbo db:studio --filter=@mabele/database"
   },
   "devDependencies": {
-    "turbo": "^2.0.0",
+    "@types/node": "^20.19.39",
     "prettier": "^3.0.0",
-    "@types/node": "^20.0.0",
+    "turbo": "^2.0.0",
     "typescript": "^5.0.0"
   }
 }

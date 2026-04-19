@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       '@types/node':
-        specifier: ^20.0.0
+        specifier: ^20.19.39
         version: 20.19.39
       prettier:
         specifier: ^3.0.0
@@ -141,6 +141,8 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  packages/core/i18n: {}
+
   packages/core/listings:
     dependencies:
       '@mabele/database':
@@ -198,6 +200,8 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  packages/core/offline: {}
+
   packages/core/payments:
     dependencies:
       '@mabele/database':
@@ -225,6 +229,8 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.3.1
+
+  packages/core/realtime: {}
 
   packages/core/search:
     dependencies:

@@ -132,6 +132,11 @@ export default function HomePage() {
               Explorer la plateforme
             </Link>
           </div>
+          <div className="mt-4">
+            <Link href="/lovable" className="inline-flex items-center gap-2 text-sm text-primary hover:underline transition-colors">
+              📱 Accéder à l&apos;app mobile MABELE →
+            </Link>
+          </div>
           <p className="mt-4 text-sm text-muted-foreground">
             Gratuit · Mobile Money · 🇨🇩 Fait pour la RDC
           </p>

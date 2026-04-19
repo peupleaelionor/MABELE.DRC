@@ -1,81 +1,66 @@
-// ─── MABELE Design Tokens ─────────────────────────────────────────────────────
-// Source of truth: MABELE Visual Kit Boards 1–4
-// White-first · Royal Blue primary · Golden Yellow CTAs · Midnight Blue depth
+// ─── MABELE Design Tokens — Dark Premium ──────────────────────────────────────
+// Source of truth: MABELE Visual Kit · Dark palette · Orange accent #E05C1A
 
 export const brand = {
-  // ── Royal Blue — navigation, headers, primary actions ──
-  royalBlue:       '#1B4FB3',
-  royalBlueLight:  '#2563EB',
-  royalBlueDark:   '#0F3286',
-  royalBlueMuted:  'rgba(27, 79, 179, 0.10)',
+  // ── Orange Accent — primary CTAs, active states, KangaPay ──
+  accent:        '#E05C1A',
+  accentLight:   '#F07A3A',
+  accentDark:    '#C04A10',
+  accentMuted:   'rgba(224, 92, 26, 0.12)',
+  accentGlow:    'rgba(224, 92, 26, 0.30)',
 
-  // ── Midnight Blue — sidebar, deep backgrounds, strong text ──
-  navy:            '#0C1E47',
-  navyLight:       '#1A3260',
-  navyMuted:       'rgba(12, 30, 71, 0.08)',
-
-  // ── Golden Yellow — primary CTAs, active states, KangaPay accent ──
-  gold:            '#F5A623',
-  goldLight:       '#F8C060',
-  goldDark:        '#D4881A',
-  goldMuted:       'rgba(245, 166, 35, 0.15)',
-
-  // ── Red — error, destructive, alert ──
-  red:             '#E02020',
-  redLight:        '#FEE2E2',
-  redMuted:        'rgba(224, 32, 32, 0.10)',
-
-  // ── Backgrounds ──
-  white:           '#FFFFFF',
-  gray50:          '#F5F8FC',
-  gray100:         '#EBF0F7',
-  gray200:         '#D4DEEb',
-
-  // ── Borders ──
-  border:          '#D0DBE8',
-  borderLight:     '#E8EEF4',
+  // ── Dark Backgrounds ──
+  bg:            '#1A1A1A',
+  surface:       '#242424',
+  surfaceHigh:   '#2D2D2D',
+  input:         '#2A2A2A',
+  nav:           '#191919',
 
   // ── Text ──
-  textPrimary:     '#0C1E47',
-  textSecondary:   '#3D526B',
-  textMuted:       '#8FA4BA',
-  textOnDark:      '#FFFFFF',
-  textOnGold:      '#0C1E47',
+  textPrimary:   '#FFFFFF',
+  textSecondary: 'rgba(255, 255, 255, 0.60)',
+  textMuted:     'rgba(255, 255, 255, 0.40)',
+  textSubtle:    'rgba(255, 255, 255, 0.25)',
+
+  // ── Borders ──
+  border:        'rgba(255, 255, 255, 0.08)',
+  borderLight:   'rgba(255, 255, 255, 0.06)',
+  borderStrong:  'rgba(255, 255, 255, 0.12)',
 
   // ── Semantic ──
-  success:         '#16A34A',
-  successLight:    '#DCFCE7',
-  warning:         '#F59E0B',
-  warningLight:    '#FEF3C7',
-  error:           '#DC2626',
-  errorLight:      '#FEE2E2',
-  info:            '#1B4FB3',
-  infoLight:       '#EFF6FF',
+  success:       '#22C55E',
+  successMuted:  'rgba(34, 197, 94, 0.12)',
+  error:         '#EF4444',
+  errorMuted:    'rgba(239, 68, 68, 0.12)',
+  warning:       '#F59E0B',
+  warningMuted:  'rgba(245, 158, 11, 0.12)',
+  info:          '#38BDF8',
+  infoMuted:     'rgba(56, 189, 248, 0.12)',
 
-  // ── Module accents (Board 2 service cards) ──
+  // ── Module accents (preserved for contextual clarity) ──
   modules: {
-    immo:     '#1B4FB3',  // royal blue
-    emploi:   '#0891B2',  // cyan
-    marche:   '#E02020',  // red
-    agri:     '#16A34A',  // green
-    nkisi:    '#7C3AED',  // purple
-    data:     '#0C1E47',  // navy
-    kangapay: '#F5A623',  // gold
-    bima:     '#DB2777',  // pink
-    logistique: '#EA580C', // orange
+    immo:       '#E05C1A',  // orange (primary accent)
+    emploi:     '#0891B2',  // teal
+    marche:     '#E02020',  // red
+    agri:       '#16A34A',  // green
+    nkisi:      '#7C3AED',  // purple
+    data:       '#1B4FB3',  // blue
+    kangapay:   '#E05C1A',  // orange
+    bima:       '#0891B2',  // teal
+    logistique: '#0891B2',  // teal
   },
 } as const
 
 export const shadow = {
-  xs:   '0 1px 2px rgba(12, 30, 71, 0.06)',
-  sm:   '0 2px 6px rgba(12, 30, 71, 0.08)',
-  md:   '0 4px 16px rgba(12, 30, 71, 0.10)',
-  lg:   '0 8px 32px rgba(12, 30, 71, 0.12)',
-  xl:   '0 16px 48px rgba(12, 30, 71, 0.14)',
-  card: '0 2px 12px rgba(12, 30, 71, 0.08)',
-  nav:  '0 -2px 16px rgba(12, 30, 71, 0.08)',
-  gold: '0 4px 16px rgba(245, 166, 35, 0.30)',
-  blue: '0 4px 16px rgba(27, 79, 179, 0.25)',
+  xs:     '0 1px 4px rgba(0, 0, 0, 0.20)',
+  sm:     '0 2px 8px rgba(0, 0, 0, 0.25)',
+  md:     '0 4px 16px rgba(0, 0, 0, 0.30)',
+  lg:     '0 8px 32px rgba(0, 0, 0, 0.35)',
+  xl:     '0 16px 48px rgba(0, 0, 0, 0.40)',
+  card:   '0 2px 12px rgba(0, 0, 0, 0.28)',
+  nav:    '0 -2px 16px rgba(0, 0, 0, 0.30)',
+  accent: '0 4px 16px rgba(224, 92, 26, 0.35)',
+  glow:   '0 0 24px rgba(224, 92, 26, 0.25)',
 } as const
 
 export const radius = {
@@ -116,34 +101,30 @@ export const typography = {
   },
 
   leading: {
-    tight:  1.2,
-    snug:   1.4,
-    normal: 1.6,
-    relaxed:1.75,
+    tight:   1.2,
+    snug:    1.4,
+    normal:  1.6,
+    relaxed: 1.75,
   },
 } as const
 
 export const breakpoints = {
-  sm:  '640px',
-  md:  '768px',
-  lg:  '1024px',
-  xl:  '1280px',
+  sm:    '640px',
+  md:    '768px',
+  lg:    '1024px',
+  xl:    '1280px',
   '2xl': '1536px',
 } as const
 
-// ── Logo context rules ────────────────────────────────────────────────────────
-
 export const logoContexts = {
-  light: {
-    background: brand.white,
-    wordmark:   brand.royalBlue,
-  },
   dark: {
-    background: brand.navy,
-    wordmark:   brand.white,
+    background: brand.nav,
+    wordmark:   brand.textPrimary,
+    accent:     brand.accent,
   },
-  sidebar: {
-    background: brand.navy,
-    wordmark:   brand.white,
+  surface: {
+    background: brand.surface,
+    wordmark:   brand.textPrimary,
+    accent:     brand.accent,
   },
 } as const

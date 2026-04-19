@@ -1,6 +1,4 @@
-// ─── MABELE Landing Page ──────────────────────────────────────────────────────
-// Source: Board 1 — Web App Overview / Landing
-// White-first · Royal Blue headline · Golden Yellow CTAs
+// ─── MABELE Landing Page — Dark Premium ──────────────────────────────────────
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
@@ -23,7 +21,7 @@ const SERVICES = [
 const TRUST_FEATURES = [
   { icon: '🛡', title: 'Identité Validée',    desc: 'Profils vérifiés et badgés pour chaque utilisateur.' },
   { icon: '🔒', title: 'Paiement Sécurisé',   desc: 'Toutes les transactions passent par KangaPay.' },
-  { icon: '📱', title: 'KangaPay mobile',      desc: 'Payez et recevez de l\'argent depuis votre téléphone.' },
+  { icon: '📱', title: 'KangaPay mobile',      desc: "Payez et recevez de l'argent depuis votre téléphone." },
 ]
 
 const STATS = [
@@ -33,30 +31,31 @@ const STATS = [
   { value: '100%', label: 'Mobile',    sub: 'Money compatible' },
 ]
 
+const ACC = '#E05C1A'
+
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: '#1A1A1A' }}>
 
       {/* ── Navigation ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-xs" style={{ borderColor: '#D0DBE8' }}>
+      <nav className="fixed top-0 left-0 right-0 z-50"
+           style={{ backgroundColor: 'rgba(25,25,25,0.92)', borderBottom: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(16px)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/">
-            <img src="/logo.svg" alt="MABELE" className="h-9" />
+          <Link href="/" className="flex items-center gap-2.5">
+            <img src="/favicon.svg" alt="MABELE" className="h-9 w-9" />
+            <span className="font-bold text-white text-lg tracking-wide">MABELE</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
             {[
-              { href: '/',        label: 'Accueil'   },
-              { href: '#services',label: 'Solutions'  },
-              { href: '/about',   label: 'À Propos'  },
-              { href: '/contact', label: 'Contact'   },
+              { href: '/',         label: 'Accueil'   },
+              { href: '#services', label: 'Solutions'  },
+              { href: '/about',    label: 'À Propos'  },
+              { href: '/contact',  label: 'Contact'   },
             ].map((link) => (
               <Link key={link.label} href={link.href}
                 className="text-sm font-medium transition-colors"
-                style={{ color: '#3D526B' }}
-                onMouseOver={(e) => ((e.target as HTMLElement).style.color = '#1B4FB3')}
-                onMouseOut={(e) =>  ((e.target as HTMLElement).style.color = '#3D526B')}
-              >
+                style={{ color: 'rgba(255,255,255,0.55)' }}>
                 {link.label}
               </Link>
             ))}
@@ -64,15 +63,13 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-2">
             <Link href="/login"
-              className="hidden sm:inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-              style={{ color: '#3D526B' }}
-            >
+              className="hidden sm:inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium"
+              style={{ color: 'rgba(255,255,255,0.70)' }}>
               Se connecter
             </Link>
             <Link href="/register"
-              className="inline-flex items-center px-4 py-2.5 rounded-lg text-sm font-semibold text-white shadow-blue transition-all hover:opacity-90 active:scale-95"
-              style={{ backgroundColor: '#F5A623', color: '#0C1E47', boxShadow: '0 4px 16px rgba(245,166,35,0.30)' }}
-            >
+              className="inline-flex items-center px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-95"
+              style={{ backgroundColor: ACC, boxShadow: '0 4px 16px rgba(224,92,26,0.35)' }}>
               Créer mon compte
             </Link>
           </div>
@@ -80,65 +77,62 @@ export default function LandingPage() {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="pt-24 pb-16 px-4 sm:px-6 relative overflow-hidden">
-        {/* Subtle bg decoration */}
-        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-5 blur-3xl pointer-events-none"
-             style={{ background: 'radial-gradient(circle, #1B4FB3, transparent)' }} />
+      <section className="pt-28 pb-20 px-4 sm:px-6 relative overflow-hidden">
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-10 blur-3xl pointer-events-none"
+             style={{ background: `radial-gradient(circle, ${ACC}, transparent)` }} />
+        <div className="absolute top-40 -left-20 w-64 h-64 rounded-full opacity-5 blur-3xl pointer-events-none"
+             style={{ background: `radial-gradient(circle, #FF8C42, transparent)` }} />
 
         <div className="max-w-7xl mx-auto">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
 
             {/* Left: copy */}
             <div className="max-w-xl">
-              <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium mb-6 border"
-                   style={{ backgroundColor: '#EFF6FF', borderColor: '#BFDBFE', color: '#1B4FB3' }}>
+              <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium mb-6"
+                   style={{ backgroundColor: 'rgba(224,92,26,0.12)', border: '1px solid rgba(224,92,26,0.25)', color: ACC }}>
                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 Beta · Kinshasa, RDC 🇨🇩
               </div>
 
-              <h1 className="font-display font-bold leading-tight mb-6"
-                  style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: '#0C1E47' }}>
+              <h1 className="font-bold leading-tight mb-6 text-white"
+                  style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}>
                 Tout pour chercher, vendre, travailler et payer en RDC.
               </h1>
 
-              <p className="text-lg mb-3" style={{ color: '#3D526B' }}>
+              <p className="text-lg mb-3" style={{ color: 'rgba(255,255,255,0.70)' }}>
                 L'application qui connecte toute la RDC.
               </p>
-              <p className="text-base mb-8" style={{ color: '#8FA4BA' }}>
+              <p className="text-base mb-8" style={{ color: 'rgba(255,255,255,0.45)' }}>
                 Immobilier, emploi, marché, agriculture, finance — une seule plateforme
-                pour <strong style={{ color: '#0C1E47' }}>112 millions de Congolais</strong>.
+                pour <strong className="text-white">112 millions de Congolais</strong>.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-8">
                 <Link href="/register"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold transition-all hover:opacity-90 active:scale-95"
-                  style={{ backgroundColor: '#F5A623', color: '#0C1E47', boxShadow: '0 4px 20px rgba(245,166,35,0.35)' }}
-                >
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold transition-all hover:opacity-90 active:scale-95 text-white"
+                  style={{ backgroundColor: ACC, boxShadow: '0 4px 20px rgba(224,92,26,0.40)' }}>
                   🚀 Créer mon compte
                 </Link>
                 <Link href="/login"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold border transition-all hover:opacity-90"
-                  style={{ borderColor: '#1B4FB3', color: '#1B4FB3' }}
-                >
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold transition-all"
+                  style={{ border: `1px solid rgba(255,255,255,0.20)`, color: 'rgba(255,255,255,0.80)' }}>
                   Se connecter →
                 </Link>
               </div>
 
-              {/* App store badges (placeholder) */}
               <div className="flex gap-3">
                 {[
                   { store: '🍎 App Store', sub: 'Disponible sur' },
                   { store: '🤖 Google Play', sub: 'Télécharger sur' },
                 ].map((b) => (
                   <button key={b.store}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl border bg-white opacity-60 cursor-not-allowed text-left"
-                    style={{ borderColor: '#D0DBE8' }}
-                    disabled
-                  >
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl opacity-40 cursor-not-allowed text-left"
+                    style={{ border: '1px solid rgba(255,255,255,0.15)', backgroundColor: 'rgba(255,255,255,0.04)' }}
+                    disabled>
                     <span className="text-xl">{b.store.split(' ')[0]}</span>
                     <div>
-                      <p className="text-[10px]" style={{ color: '#8FA4BA' }}>{b.sub}</p>
-                      <p className="text-xs font-semibold" style={{ color: '#0C1E47' }}>
+                      <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.45)' }}>{b.sub}</p>
+                      <p className="text-xs font-semibold text-white">
                         {b.store.split(' ').slice(1).join(' ')}
                       </p>
                     </div>
@@ -148,18 +142,15 @@ export default function LandingPage() {
             </div>
 
             {/* Right: register card */}
-            <div className="mt-12 lg:mt-0">
-              <div className="bg-white rounded-2xl border shadow-lg p-6 max-w-md mx-auto"
-                   style={{ borderColor: '#D0DBE8', boxShadow: '0 8px 40px rgba(12,30,71,0.12)' }}>
-                <h2 className="font-display font-bold text-xl mb-1" style={{ color: '#0C1E47' }}>
-                  Créer mon compte
-                </h2>
-                <p className="text-sm mb-5" style={{ color: '#8FA4BA' }}>
+            <div className="mt-14 lg:mt-0">
+              <div className="rounded-2xl p-6 max-w-md mx-auto"
+                   style={{ backgroundColor: '#242424', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 8px 40px rgba(0,0,0,0.40)' }}>
+                <h2 className="font-bold text-xl text-white mb-1">Créer mon compte</h2>
+                <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.40)' }}>
                   Rejoignez des millions de Congolais sur MABELE
                 </p>
 
-                {/* User type selection */}
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8FA4BA' }}>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
                   Je suis un(e)...
                 </p>
                 <div className="grid grid-cols-2 gap-2 mb-4">
@@ -168,65 +159,55 @@ export default function LandingPage() {
                     { id: 'agent',       icon: '🏠', label: 'Agent Immobilier' },
                   ].map((t) => (
                     <label key={t.id}
-                      className="flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-all hover:border-primary"
-                      style={{ borderColor: '#D0DBE8' }}
-                    >
-                      <input type="radio" name="usertype" value={t.id} className="accent-blue-600" />
+                      className="flex items-center gap-2 p-3 rounded-xl cursor-pointer transition-all"
+                      style={{ border: '1px solid rgba(255,255,255,0.10)', backgroundColor: 'rgba(255,255,255,0.04)' }}>
+                      <input type="radio" name="usertype" value={t.id} className="accent-orange-500" />
                       <span className="text-lg">{t.icon}</span>
-                      <span className="text-sm font-medium" style={{ color: '#0C1E47' }}>{t.label}</span>
+                      <span className="text-sm font-medium text-white">{t.label}</span>
                     </label>
                   ))}
                 </div>
 
-                {/* Name field */}
                 <div className="mb-3">
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: '#3D526B' }}>
+                  <label className="block text-sm font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
                     Nom Complet
                   </label>
-                  <input
-                    type="text"
-                    placeholder="Jean-Pierre Mutombo"
-                    className="w-full px-4 py-3 rounded-lg border text-sm transition-all focus:outline-none"
-                    style={{ borderColor: '#D0DBE8', color: '#0C1E47' }}
-                  />
+                  <input type="text" placeholder="Jean-Pierre Mutombo"
+                    className="w-full px-4 py-3 rounded-xl text-sm text-white focus:outline-none transition-all"
+                    style={{ backgroundColor: '#2A2A2A', border: '1px solid rgba(255,255,255,0.10)' }} />
                 </div>
 
-                {/* Phone field */}
                 <div className="mb-5">
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: '#3D526B' }}>
+                  <label className="block text-sm font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
                     Numéro de téléphone
                   </label>
-                  <div className="flex rounded-lg border overflow-hidden" style={{ borderColor: '#D0DBE8' }}>
-                    <div className="flex items-center gap-1.5 px-3 border-r select-none"
-                         style={{ borderColor: '#D0DBE8', backgroundColor: '#F5F8FC' }}>
+                  <div className="flex rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.10)' }}>
+                    <div className="flex items-center gap-1.5 px-3 select-none"
+                         style={{ backgroundColor: 'rgba(255,255,255,0.06)', borderRight: '1px solid rgba(255,255,255,0.10)' }}>
                       <span>🇨🇩</span>
-                      <span className="text-sm font-medium" style={{ color: '#3D526B' }}>+243</span>
+                      <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.70)' }}>+243</span>
                     </div>
-                    <input
-                      type="tel"
-                      placeholder="81 234 5678"
-                      className="flex-1 px-3 py-3 text-sm bg-white focus:outline-none"
-                      style={{ color: '#0C1E47' }}
-                    />
+                    <input type="tel" placeholder="81 234 5678"
+                      className="flex-1 px-3 py-3 text-sm text-white focus:outline-none"
+                      style={{ backgroundColor: '#2A2A2A' }} />
                   </div>
                 </div>
 
                 <Link href="/register"
-                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
-                  style={{ backgroundColor: '#F5A623', color: '#0C1E47', boxShadow: '0 4px 16px rgba(245,166,35,0.30)' }}
-                >
+                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+                  style={{ backgroundColor: ACC, boxShadow: '0 4px 16px rgba(224,92,26,0.35)' }}>
                   Créer mon compte →
                 </Link>
 
-                <p className="text-xs text-center mt-3 leading-relaxed" style={{ color: '#8FA4BA' }}>
+                <p className="text-xs text-center mt-3 leading-relaxed" style={{ color: 'rgba(255,255,255,0.35)' }}>
                   En vous inscrivant, vous acceptez nos{' '}
-                  <Link href="/terms" className="underline" style={{ color: '#1B4FB3' }}>Conditions d'utilisation</Link>
+                  <Link href="/terms" className="underline" style={{ color: ACC }}>Conditions d'utilisation</Link>
                   {' '}et notre{' '}
-                  <Link href="/privacy" className="underline" style={{ color: '#1B4FB3' }}>Politique de confidentialité</Link>.
+                  <Link href="/privacy" className="underline" style={{ color: ACC }}>Politique de confidentialité</Link>.
                 </p>
-                <p className="text-xs text-center mt-2" style={{ color: '#8FA4BA' }}>
+                <p className="text-xs text-center mt-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
                   Déjà un compte ?{' '}
-                  <Link href="/login" className="font-semibold" style={{ color: '#1B4FB3' }}>Se connecter</Link>
+                  <Link href="/login" className="font-semibold" style={{ color: ACC }}>Se connecter</Link>
                 </p>
               </div>
             </div>
@@ -235,13 +216,13 @@ export default function LandingPage() {
       </section>
 
       {/* ── Stats ── */}
-      <section style={{ backgroundColor: '#F5F8FC', borderTop: '1px solid #E8EEF4', borderBottom: '1px solid #E8EEF4' }}>
+      <section style={{ backgroundColor: '#191919', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
           {STATS.map((s) => (
             <div key={s.value} className="text-center">
-              <p className="font-display font-bold text-3xl sm:text-4xl" style={{ color: '#1B4FB3' }}>{s.value}</p>
-              <p className="font-semibold text-sm mt-0.5" style={{ color: '#0C1E47' }}>{s.label}</p>
-              <p className="text-xs mt-0.5" style={{ color: '#8FA4BA' }}>{s.sub}</p>
+              <p className="font-bold text-3xl sm:text-4xl" style={{ color: ACC }}>{s.value}</p>
+              <p className="font-semibold text-sm mt-0.5 text-white">{s.label}</p>
+              <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>{s.sub}</p>
             </div>
           ))}
         </div>
@@ -251,23 +232,20 @@ export default function LandingPage() {
       <section id="services" className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="font-display font-bold text-3xl mb-3" style={{ color: '#0C1E47' }}>
-              Nos Services Clés
-            </h2>
-            <p style={{ color: '#8FA4BA' }}>8 modules conçus pour la réalité économique congolaise.</p>
+            <h2 className="font-bold text-3xl mb-3 text-white">Nos Services Clés</h2>
+            <p style={{ color: 'rgba(255,255,255,0.40)' }}>8 modules conçus pour la réalité économique congolaise.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {SERVICES.map((s) => (
               <Link key={s.label} href={s.href}
-                className="group rounded-2xl p-5 transition-all duration-200 hover:-translate-y-1 text-white"
-                style={{ background: 'linear-gradient(135deg, #1A3260, #0C1E47)', boxShadow: '0 4px 20px rgba(12,30,71,0.15)' }}
-              >
+                className="group rounded-2xl p-5 transition-all duration-200 hover:-translate-y-1"
+                style={{ backgroundColor: '#242424', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 4px 16px rgba(0,0,0,0.35)' }}>
                 <div className="text-4xl mb-4">{s.icon}</div>
-                <h3 className="font-bold text-lg mb-1">{s.label}</h3>
-                <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.65)' }}>{s.desc}</p>
+                <h3 className="font-bold text-lg text-white mb-1">{s.label}</h3>
+                <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>{s.desc}</p>
                 <span className="text-sm font-semibold transition-colors group-hover:underline"
-                      style={{ color: '#F5A623' }}>
+                      style={{ color: ACC }}>
                   Explorer →
                 </span>
               </Link>
@@ -277,22 +255,19 @@ export default function LandingPage() {
       </section>
 
       {/* ── Trust ── */}
-      <section style={{ backgroundColor: '#F5F8FC', borderTop: '1px solid #E8EEF4' }} className="py-20 px-4">
+      <section style={{ backgroundColor: '#191919', borderTop: '1px solid rgba(255,255,255,0.06)' }} className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="font-display font-bold text-3xl mb-3" style={{ color: '#0C1E47' }}>
-              Détails de Confiance
-            </h2>
+            <h2 className="font-bold text-3xl text-white mb-3">Sécurité & Confiance</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {TRUST_FEATURES.map((f) => (
               <div key={f.title}
-                className="bg-white rounded-2xl p-6 border text-center"
-                style={{ borderColor: '#D0DBE8', boxShadow: '0 2px 12px rgba(12,30,71,0.06)' }}
-              >
+                className="rounded-2xl p-6 text-center"
+                style={{ backgroundColor: '#242424', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 2px 12px rgba(0,0,0,0.30)' }}>
                 <div className="text-4xl mb-4">{f.icon}</div>
-                <h3 className="font-semibold text-base mb-2" style={{ color: '#0C1E47' }}>{f.title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: '#8FA4BA' }}>{f.desc}</p>
+                <h3 className="font-semibold text-base text-white mb-2">{f.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.40)' }}>{f.desc}</p>
               </div>
             ))}
           </div>
@@ -300,47 +275,49 @@ export default function LandingPage() {
       </section>
 
       {/* ── CTA Banner ── */}
-      <section className="py-20 px-4" style={{ background: 'linear-gradient(135deg, #0F3286, #0C1E47)' }}>
+      <section className="py-20 px-4"
+               style={{ background: `linear-gradient(135deg, rgba(224,92,26,0.15), rgba(224,92,26,0.05))`, borderTop: '1px solid rgba(224,92,26,0.20)' }}>
         <div className="max-w-3xl mx-auto text-center text-white">
-          <h2 className="font-display font-bold text-3xl md:text-4xl mb-4">
-            MABELE dans votre poche
-          </h2>
-          <p className="text-lg mb-8" style={{ color: 'rgba(255,255,255,0.65)' }}>
+          <h2 className="font-bold text-3xl md:text-4xl mb-4">MABELE dans votre poche</h2>
+          <p className="text-lg mb-8" style={{ color: 'rgba(255,255,255,0.55)' }}>
             Rejoignez des milliers de Congolais qui utilisent déjà MABELE chaque jour.
           </p>
           <Link href="/register"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-bold transition-all hover:opacity-90"
-            style={{ backgroundColor: '#F5A623', color: '#0C1E47', boxShadow: '0 4px 24px rgba(245,166,35,0.40)' }}
-          >
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-bold text-white transition-all hover:opacity-90"
+            style={{ backgroundColor: ACC, boxShadow: '0 4px 24px rgba(224,92,26,0.45)' }}>
             🚀 Commencer gratuitement
           </Link>
-          <p className="mt-4 text-sm" style={{ color: 'rgba(255,255,255,0.40)' }}>
+          <p className="mt-4 text-sm" style={{ color: 'rgba(255,255,255,0.30)' }}>
             Gratuit · Mobile Money · Sans carte bancaire
           </p>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t py-12 px-4" style={{ borderColor: '#E8EEF4', backgroundColor: '#F5F8FC' }}>
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', backgroundColor: '#191919' }} className="py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             <div className="col-span-2 md:col-span-1">
-              <img src="/logo.svg" alt="MABELE" className="h-8 mb-3" />
-              <p className="text-sm" style={{ color: '#8FA4BA' }}>
+              <div className="flex items-center gap-2 mb-3">
+                <img src="/favicon.svg" alt="MABELE" className="w-8 h-8" />
+                <span className="font-bold text-white">MABELE</span>
+              </div>
+              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
                 La super-plateforme digitale de la République Démocratique du Congo.
               </p>
             </div>
             {[
-              { title: 'Modules',    links: [['Immobilier', '/immo'], ['Emploi', '/emploi'], ['Marché', '/market'], ['AgriTech', '/agri']] },
-              { title: 'Outils',     links: [['NKISI', '/outils'], ['Congo Data', '/data'], ['KangaPay', '/finance']] },
-              { title: 'Entreprise', links: [['À propos', '/about'], ['Contact', '/contact'], ['Conditions', '/terms'], ['Confidentialité', '/privacy']] },
+              { title: 'Modules',    links: [['Immobilier', '/immo'], ['Emploi', '/emploi'], ['Marché', '/market'], ['AgriTech', '/agri']] as [string,string][] },
+              { title: 'Outils',     links: [['NKISI', '/outils'], ['Congo Data', '/data'], ['KangaPay', '/finance']] as [string,string][] },
+              { title: 'Entreprise', links: [['À propos', '/about'], ['Contact', '/contact'], ['Conditions', '/terms'], ['Confidentialité', '/privacy']] as [string,string][] },
             ].map((col) => (
               <div key={col.title}>
-                <h4 className="font-semibold text-sm mb-3" style={{ color: '#0C1E47' }}>{col.title}</h4>
+                <h4 className="font-semibold text-sm text-white mb-3">{col.title}</h4>
                 <ul className="space-y-2">
                   {col.links.map(([label, href]) => (
                     <li key={label}>
-                      <Link href={href} className="text-sm transition-colors" style={{ color: '#8FA4BA' }}>
+                      <Link href={href} className="text-sm transition-colors"
+                            style={{ color: 'rgba(255,255,255,0.35)' }}>
                         {label}
                       </Link>
                     </li>
@@ -350,8 +327,8 @@ export default function LandingPage() {
             ))}
           </div>
 
-          <div className="border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm"
-               style={{ borderColor: '#E8EEF4', color: '#8FA4BA' }}>
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm"
+               style={{ borderTop: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.30)' }}>
             <p>© 2025 MABELE. Tous droits réservés.</p>
             <p>Fait avec ❤️ pour la 🇨🇩 RDC</p>
           </div>

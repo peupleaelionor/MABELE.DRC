@@ -1,24 +1,26 @@
 'use client'
-// ─── Immobilier ───────────────────────────────────────────────────────────────
-// Source: Board 2 — white-first, royal blue accents
+// ─── Immobilier — Dark Premium ─────────────────────────────────────────────────
 import { useState } from 'react'
 import Link from 'next/link'
+
+const ACC = '#E05C1A'
 
 const TYPES   = ['Tous', 'Appartement', 'Maison', 'Villa', 'Terrain', 'Bureau', 'Local']
 const ACTIONS = ['Tous', 'Location', 'Vente']
 
 const LISTINGS = [
-  { id:'1', type:'Villa',      action:'Vente',    titre:'Belle villa avec piscine à Gombe',      loc:'Gombe, Kin.',    prix:'450 000 USD',    chambres:5, surface:400, verified:true,  vues:234 },
-  { id:'2', type:'Appartement',action:'Location', titre:'Appartement meublé 3 ch. — Lingwala',  loc:'Lingwala, Kin.', prix:'1 200 USD/mois', chambres:3, surface:120, verified:false, vues:89  },
-  { id:'3', type:'Terrain',    action:'Vente',    titre:'Terrain 1000m² à Ngaliema avec titre', loc:'Ngaliema, Kin.', prix:'85 000 USD',     chambres:0, surface:1000,verified:true,  vues:156 },
-  { id:'4', type:'Bureau',     action:'Location', titre:'Espace bureau moderne — centre-ville',  loc:'Centre, Lshi.',  prix:'2 500 USD/mois', chambres:0, surface:200, verified:true,  vues:67  },
-  { id:'5', type:'Maison',     action:'Vente',    titre:'Maison familiale 4 ch. à Goma',         loc:'Volcans, Goma',  prix:'120 000 USD',    chambres:4, surface:180, verified:false, vues:43  },
-  { id:'6', type:'Appartement',action:'Location', titre:'Studio meublé proche université',       loc:'Lemba, Kin.',    prix:'350 USD/mois',   chambres:1, surface:35,  verified:false, vues:201 },
+  { id:'1', type:'Villa',       action:'Vente',    titre:'Belle villa avec piscine à Gombe',      loc:'Gombe, Kin.',    prix:'450 000 USD',    chambres:5, surface:400,  verified:true,  vues:234 },
+  { id:'2', type:'Appartement', action:'Location', titre:'Appartement meublé 3 ch. — Lingwala',  loc:'Lingwala, Kin.', prix:'1 200 USD/mois', chambres:3, surface:120,  verified:false, vues:89  },
+  { id:'3', type:'Terrain',     action:'Vente',    titre:'Terrain 1000m² à Ngaliema avec titre', loc:'Ngaliema, Kin.', prix:'85 000 USD',     chambres:0, surface:1000, verified:true,  vues:156 },
+  { id:'4', type:'Bureau',      action:'Location', titre:'Espace bureau moderne — centre-ville',  loc:'Centre, Lshi.',  prix:'2 500 USD/mois', chambres:0, surface:200,  verified:true,  vues:67  },
+  { id:'5', type:'Maison',      action:'Vente',    titre:'Maison familiale 4 ch. à Goma',         loc:'Volcans, Goma',  prix:'120 000 USD',    chambres:4, surface:180,  verified:false, vues:43  },
+  { id:'6', type:'Appartement', action:'Location', titre:'Studio meublé proche université',       loc:'Lemba, Kin.',    prix:'350 USD/mois',   chambres:1, surface:35,   verified:false, vues:201 },
 ]
 
 export default function ImmoPage() {
   const [activeType,   setActiveType]   = useState('Tous')
   const [activeAction, setActiveAction] = useState('Tous')
+  const [liked,        setLiked]        = useState<Record<string, boolean>>({})
 
   const filtered = LISTINGS.filter(l =>
     (activeType   === 'Tous' || l.type   === activeType) &&
@@ -31,27 +33,31 @@ export default function ImmoPage() {
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="font-display font-bold text-2xl" style={{ color: '#0C1E47' }}>🏠 Immobilier</h1>
-          <p className="text-sm mt-0.5" style={{ color: '#8FA4BA' }}>{LISTINGS.length} annonces disponibles en RDC</p>
+          <h1 className="font-bold text-2xl text-white">🏠 Immobilier</h1>
+          <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.40)' }}>
+            {LISTINGS.length} annonces disponibles en RDC
+          </p>
         </div>
         <Link href="/publish"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold"
-          style={{ backgroundColor: '#F5A623', color: '#0C1E47', boxShadow: '0 2px 8px rgba(245,166,35,0.30)' }}>
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+          style={{ backgroundColor: ACC, boxShadow: '0 2px 8px rgba(224,92,26,0.30)' }}>
           + Publier
         </Link>
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-xl p-4 mb-4" style={{ border: '1px solid #E8EEF4', boxShadow: '0 1px 6px rgba(12,30,71,0.05)' }}>
+      <div className="rounded-xl p-4 mb-4"
+           style={{ backgroundColor: '#242424', border: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="flex gap-3">
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#8FA4BA' }}>🔍</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm"
+                  style={{ color: 'rgba(255,255,255,0.35)' }}>🔍</span>
             <input placeholder="Villa, appartement, terrain..." readOnly
-              className="w-full pl-8 pr-3 py-2.5 rounded-lg text-sm focus:outline-none"
-              style={{ backgroundColor: '#F5F8FC', border: '1px solid #E8EEF4', color: '#0C1E47' }} />
+              className="w-full pl-8 pr-3 py-2.5 rounded-xl text-sm text-white focus:outline-none"
+              style={{ backgroundColor: '#2A2A2A', border: '1px solid rgba(255,255,255,0.08)' }} />
           </div>
-          <button className="px-4 py-2.5 rounded-lg text-sm font-semibold"
-                  style={{ backgroundColor: '#1B4FB3', color: 'white' }}>
+          <button className="px-4 py-2.5 rounded-xl text-sm font-semibold text-white"
+                  style={{ backgroundColor: ACC }}>
             Chercher
           </button>
         </div>
@@ -63,9 +69,9 @@ export default function ImmoPage() {
           <button key={t} onClick={() => setActiveType(t)}
             className="px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 transition-all"
             style={{
-              border:          `1px solid ${activeType === t ? '#1B4FB3' : '#E8EEF4'}`,
-              backgroundColor: activeType === t ? '#EFF6FF' : '#FFFFFF',
-              color:           activeType === t ? '#1B4FB3' : '#8FA4BA',
+              border:          `1px solid ${activeType === t ? ACC : 'rgba(255,255,255,0.10)'}`,
+              backgroundColor: activeType === t ? 'rgba(224,92,26,0.12)' : 'transparent',
+              color:           activeType === t ? ACC : 'rgba(255,255,255,0.45)',
             }}>
             {t}
           </button>
@@ -78,9 +84,9 @@ export default function ImmoPage() {
           <button key={a} onClick={() => setActiveAction(a)}
             className="px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
             style={{
-              border:          `1px solid ${activeAction === a ? '#1B4FB3' : '#E8EEF4'}`,
-              backgroundColor: activeAction === a ? '#EFF6FF' : '#FFFFFF',
-              color:           activeAction === a ? '#1B4FB3' : '#8FA4BA',
+              border:          `1px solid ${activeAction === a ? ACC : 'rgba(255,255,255,0.10)'}`,
+              backgroundColor: activeAction === a ? 'rgba(224,92,26,0.12)' : 'transparent',
+              color:           activeAction === a ? ACC : 'rgba(255,255,255,0.45)',
             }}>
             {a}
           </button>
@@ -90,56 +96,67 @@ export default function ImmoPage() {
       {/* Listings Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((l) => (
-          <Link key={l.id} href={`/immo/${l.id}`}
-            className="bg-white rounded-xl overflow-hidden transition-all hover:-translate-y-0.5"
-            style={{ border: '1px solid #E8EEF4', boxShadow: '0 1px 6px rgba(12,30,71,0.06)' }}>
+          <div key={l.id} className="rounded-xl overflow-hidden transition-all hover:-translate-y-0.5"
+               style={{ backgroundColor: '#242424', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 2px 10px rgba(0,0,0,0.30)' }}>
             {/* Image */}
-            <div className="aspect-[4/3] flex items-center justify-center relative"
-                 style={{ background: 'linear-gradient(135deg, #EBF0F7, #F5F8FC)' }}>
-              <span className="text-5xl opacity-20">🏠</span>
-              <div className="absolute top-2 left-2 flex gap-1.5">
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                      style={{
-                        backgroundColor: l.action === 'Vente' ? '#FFF7E6' : '#EFF6FF',
-                        color: l.action === 'Vente' ? '#D4881A' : '#1B4FB3',
-                      }}>
-                  {l.action}
-                </span>
+            <Link href={`/immo/${l.id}`}>
+              <div className="aspect-[4/3] flex items-center justify-center relative"
+                   style={{ background: 'linear-gradient(135deg, #2D2D2D, #383838)' }}>
+                <span className="text-5xl opacity-25">🏠</span>
+                <div className="absolute top-2 left-2 flex gap-1.5">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                        style={{
+                          backgroundColor: l.action === 'Vente' ? 'rgba(224,92,26,0.20)' : 'rgba(8,145,178,0.20)',
+                          color: l.action === 'Vente' ? ACC : '#38BDF8',
+                        }}>
+                    {l.action}
+                  </span>
+                </div>
+                {/* Like button */}
+                <button
+                  className={`like-btn${liked[l.id] ? ' liked' : ''}`}
+                  aria-label="J'aime"
+                  onClick={(e) => { e.preventDefault(); setLiked(p => ({ ...p, [l.id]: !p[l.id] })) }}>
+                  <span className="text-sm">{liked[l.id] ? '♥' : '♡'}</span>
+                </button>
+                {l.verified && (
+                  <span className="absolute bottom-2 left-2 text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: 'rgba(34,197,94,0.20)', color: '#22C55E', border: '1px solid rgba(34,197,94,0.25)' }}>
+                    ✓ Vérifié
+                  </span>
+                )}
               </div>
-              {l.verified && (
-                <span className="absolute bottom-2 left-2 text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                      style={{ backgroundColor: '#DCFCE7', color: '#16A34A', border: '1px solid #16A34A40' }}>
-                  ✓ Vérifié
-                </span>
-              )}
-            </div>
+            </Link>
             <div className="p-3">
-              <p className="text-xs font-semibold text-muted" style={{ color: '#8FA4BA' }}>{l.type}</p>
-              <p className="text-sm font-medium leading-tight mt-0.5" style={{ color: '#0C1E47' }}>{l.titre}</p>
-              <p className="text-sm font-bold mt-1" style={{ color: '#1B4FB3' }}>{l.prix}</p>
+              <p className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.40)' }}>{l.type}</p>
+              <Link href={`/immo/${l.id}`}>
+                <p className="text-sm font-medium leading-tight mt-0.5 text-white">{l.titre}</p>
+              </Link>
+              <p className="text-sm font-bold mt-1" style={{ color: ACC }}>{l.prix}</p>
               <div className="flex items-center justify-between mt-2">
-                <p className="text-[11px]" style={{ color: '#8FA4BA' }}>📍 {l.loc}</p>
-                <div className="flex items-center gap-2 text-[11px]" style={{ color: '#8FA4BA' }}>
+                <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.35)' }}>📍 {l.loc}</p>
+                <div className="flex items-center gap-2 text-[11px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
                   {l.chambres > 0 && <span>🛏 {l.chambres}</span>}
                   {l.surface > 0  && <span>📐 {l.surface}m²</span>}
                 </div>
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center py-16 bg-white rounded-xl" style={{ border: '1px solid #E8EEF4' }}>
+        <div className="text-center py-16 rounded-xl"
+             style={{ backgroundColor: '#242424', border: '1px solid rgba(255,255,255,0.06)' }}>
           <div className="text-4xl mb-3">🏠</div>
-          <p className="font-semibold" style={{ color: '#0C1E47' }}>Aucune annonce trouvée</p>
-          <p className="text-sm mt-1" style={{ color: '#8FA4BA' }}>Modifiez vos filtres</p>
+          <p className="font-semibold text-white">Aucune annonce trouvée</p>
+          <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.40)' }}>Modifiez vos filtres</p>
         </div>
       )}
 
       <div className="text-center mt-8">
-        <button className="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all"
-                style={{ border: '1px solid #1B4FB3', color: '#1B4FB3', backgroundColor: 'white' }}>
+        <button className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:bg-white/5"
+                style={{ border: `1px solid ${ACC}`, color: ACC }}>
           Charger plus d&apos;annonces
         </button>
       </div>

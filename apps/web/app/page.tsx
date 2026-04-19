@@ -92,16 +92,21 @@ export default function HomePage() {
             <Image src="/favicon.svg" alt="MABELE" width={36} height={36} style={{ borderRadius: '8px' }} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span style={{ fontSize: '18px', fontWeight: 800, color: '#1A1A2E', fontFamily: "'Playfair Display', Georgia, serif", letterSpacing: '1px' }}>MABELE</span>
-              <span style={{ fontSize: '9px', fontWeight: 600, color: '#8A8A80', letterSpacing: '2px', textTransform: 'uppercase' }}>BY FLOW TECH DRC</span>
+              <span style={{ fontSize: '10px', fontWeight: 600, color: '#8A8A80', letterSpacing: '2px', textTransform: 'uppercase' }}>BY FLOW TECH DRC</span>
             </div>
           </Link>
-          <Link href="/lovable" aria-label="Menu" style={{ padding: '8px', borderRadius: '8px', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A1A2E" strokeWidth="2" strokeLinecap="round">
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Link href="/login" style={{ fontSize: '14px', fontWeight: 600, color: '#1A1A2E', textDecoration: 'none', padding: '8px 12px', borderRadius: '8px' }}>
+              Se connecter
+            </Link>
+            <Link href="/lovable" aria-label="Menu" style={{ padding: '8px', borderRadius: '8px', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A1A2E" strokeWidth="2" strokeLinecap="round">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -172,8 +177,7 @@ export default function HomePage() {
               }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
               Découvrir
             </Link>
@@ -346,8 +350,8 @@ export default function HomePage() {
             <div>
               <h4 style={{ fontWeight: 700, color: '#1A1A2E', marginBottom: '12px', fontSize: '14px' }}>Entreprise</h4>
               <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
-                <li><span style={{ color: '#6B7280', cursor: 'pointer' }}>À propos</span></li>
-                <li><span style={{ color: '#6B7280', cursor: 'pointer' }}>Contact</span></li>
+                <li><span style={{ color: '#6B7280' }}>À propos</span></li>
+                <li><span style={{ color: '#6B7280' }}>Contact</span></li>
                 <li><Link href="/terms" style={{ color: '#6B7280', textDecoration: 'none' }}>Conditions</Link></li>
                 <li><Link href="/privacy" style={{ color: '#6B7280', textDecoration: 'none' }}>Confidentialité</Link></li>
               </ul>

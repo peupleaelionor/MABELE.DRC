@@ -1,5 +1,5 @@
 [build]
-  command = "cd apps/web && npx next build"
+  command = "cd packages/database && npx prisma generate && cd ../../apps/web && npx next build"
   publish = "apps/web/.next"
 
 [build.environment]

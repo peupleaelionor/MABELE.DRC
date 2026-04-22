@@ -1,157 +1,90 @@
-# MABELE — Super-Platform for the DRC 🇨🇩
+# MABELE.DRC
+### Unified Digital Super-Platform for the Democratic Republic of Congo 🇨🇩
 
-> **La plateforme digitale tout-en-un pour 112 millions de Congolais**
-
-MABELE (Terre en Lingala) is a unified digital super-platform for the Democratic Republic of Congo, built by **TechFlow Solutions**. It aggregates eight critical economic verticals into a single mobile-first application.
+MABELE (Terre en Lingala) est une infrastructure numérique ambitieuse conçue pour centraliser les services essentiels de l'économie congolaise. Plus qu'une application, c'est un écosystème modulaire visant à digitaliser les secteurs clés : immobilier, emploi, marketplace et services financiers.
 
 ---
 
-## 📐 Architecture
+### 🏗️ Architecture Monorepo
 
-```
+Le projet utilise une architecture **Monorepo** pilotée par **Turborepo**, permettant une isolation stricte des domaines métier tout en partageant une infrastructure commune.
+
+```text
 mabele/
 ├── apps/
-│   └── web/                  # Next.js 15 App Router (main web app)
+│   └── web/                  # Next.js 15 App Router (Interface principale)
 ├── packages/
-│   ├── core/                 # Domain logic packages
-│   │   ├── listings/         # CRUD annonces (immobilier, emploi, produit, agri)
-│   │   ├── search/           # Recherche multi-verticale + NLP
-│   │   ├── messaging/        # Conversations & messages temps réel
-│   │   ├── notifications/    # Notifications utilisateur
-│   │   ├── payments/         # Mobile money & paiements
-│   │   └── features/         # Feature flags par module
-│   ├── database/             # Prisma ORM + PostgreSQL schema + seed
-│   ├── shared/               # Types, utils, constants partagés
-│   └── config/               # ESLint, TypeScript, Tailwind partagés
-├── infrastructure/           # Docker, Dockerfile, deploy configs
-└── docs/                     # API, Deployment, Contributing docs
+│   ├── core/                 # Logique métier (Listings, Search, Messaging)
+│   ├── database/             # Prisma ORM + PostgreSQL Schema
+│   ├── shared/               # Types, Utils et Constantes partagés
+│   └── config/               # Configurations partagées (TS, Tailwind, ESLint)
+├── services/                 # Microservices backend
+└── infrastructure/           # Docker, CI/CD et scripts de déploiement
 ```
 
 ---
 
-## 🧩 Modules
+### 🧩 Domaines Métier (Verticales)
 
-| Module | Color | Description |
-|--------|-------|-------------|
-| **Immobilier** | `#D4A017` 🟡 | Annonces immobilières — achat, vente, location |
-| **Emploi** | `#26C6DA` 🔵 | Offres d'emploi et candidatures |
-| **Marché** | `#FF5252` 🔴 | Marketplace C2C et B2C |
-| **AgriTech** | `#00C853` 🟢 | Produits agricoles et conseils |
-| **NKISI** | `#B388FF` 🟣 | Facturation, devis, outils business |
-| **Congo Data** | `#448AFF` 🔵 | Données économiques et tableaux de bord |
-| **KangaPay** | `#FFB300` 🟠 | Mobile money, tontines, paiements |
-| **Bima Santé** | `#FF4081` 🩷 | Assurance santé digitale |
+MABELE agrège huit verticales critiques pour l'économie locale :
+*   **Immobilier** : Gestion des annonces, locations et transactions.
+*   **Emploi** : Plateforme de recrutement et gestion de candidatures.
+*   **Marché** : Marketplace C2C/B2C optimisée pour le commerce local.
+*   **KangaPay** : Intégration Mobile Money et solutions de paiement unifiées.
+*   **AgriTech** : Support aux producteurs agricoles et distribution.
+*   **Bima Santé** : Assurance santé digitale et accès aux soins.
 
 ---
 
-## 🛠 Tech Stack
+### 🛠️ Stack Technique
 
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript 5 (strict)
-- **Styling**: Tailwind CSS + CSS Variables
-- **Database**: PostgreSQL via Prisma ORM
-- **Monorepo**: Turborepo + pnpm workspaces
-- **Auth**: NextAuth.js (phone/OTP)
-- **Validation**: Zod
-- **Infra**: Docker, Vercel, Railway
+*   **Framework** : Next.js 15 (App Router, Server Components).
+*   **Language** : TypeScript 5 (Strict Mode).
+*   **Database** : PostgreSQL via Prisma ORM.
+*   **Styling** : Tailwind CSS avec un Design System personnalisé.
+*   **Orchestration** : Turborepo + pnpm workspaces.
+*   **Auth** : NextAuth.js avec support OTP/Phone (adapté au marché local).
 
 ---
 
-## 🚀 Getting Started
+### 🚀 Démarrage Rapide
 
-### Prerequisites
-- Node.js ≥ 20
-- pnpm ≥ 9
-- Docker & Docker Compose
-- PostgreSQL (or use Docker)
-
-### Installation
+Le projet nécessite **Node.js ≥ 20** et **pnpm ≥ 9**.
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-org/mabele.git
-cd mabele
-
-# Install dependencies
+# Installation des dépendances
 pnpm install
 
-# Copy environment variables
-cp .env.example .env
-
-# Start infrastructure (PostgreSQL, Redis, Meilisearch)
+# Lancer l'infrastructure (PostgreSQL, Redis)
 docker-compose -f infrastructure/docker-compose.yml up -d
 
-# Push database schema
+# Initialiser la base de données
 pnpm db:push
-
-# Seed the database
 pnpm db:seed
 
-# Start development
+# Lancer l'environnement de développement
 pnpm dev
 ```
 
-### Available Commands
+---
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start all apps in dev mode |
-| `pnpm dev:web` | Start web app only |
-| `pnpm build` | Build all apps |
-| `pnpm lint` | Lint all packages |
-| `pnpm format` | Format with Prettier |
-| `pnpm db:push` | Push Prisma schema |
-| `pnpm db:seed` | Seed the database |
-| `pnpm db:migrate` | Run migrations |
-| `pnpm db:studio` | Open Prisma Studio |
+### 🗺️ Vision & Roadmap
+
+MABELE est conçu pour répondre aux défis de la pénétration mobile en RDC (67%) et s'inscrit dans le Plan Numérique RDC 2025–2030.
+- [ ] Finalisation de l'intégration KangaPay (Mobile Money).
+- [ ] Déploiement des modules AgriTech et Bima Santé.
+- [ ] Support multilingue (Lingala, Swahili, Kikongo, Tshiluba).
 
 ---
 
-## 🎨 Design System
+### 📫 Travailler avec moi / Techflow Agency
 
-### Colors
-```
-Background : #08080C  (near-black)
-Text       : #F0F0F0  (off-white)
-Primary    : #D4A017  (Gold — richness of Congo)
-Secondary  : #006400  (Green — Congolese flag)
-```
+Ce projet illustre ma capacité à architecturer des systèmes complexes à l'échelle nationale, alliant vision produit et excellence technique.
 
-### Typography
-- **Body**: DM Sans
-- **Headings**: Playfair Display
-
-### Border Radius
-- Cards: `16px`
-- Small elements: `10px`
-- Hero sections: `24px`
+*   **Expertise** : Architecture Monorepo, Super-Apps, Fintech, Marchés émergents.
+*   **Contact** : [TechFlow Solutions](https://www.techflowsolutions.space)
 
 ---
-
-## 📁 Environment Variables
-
-See [`.env.example`](.env.example) for all required variables.
-
----
-
-## 📚 Documentation
-
-- [API Reference](docs/API.md)
-- [Deployment Guide](docs/DEPLOYMENT.md)
-- [Mobile Money Integration](docs/MOBILE-MONEY.md)
-- [Contributing Guide](docs/CONTRIBUTING.md)
-
----
-
-## 🌍 Context
-
-- **Population**: 112 million Congolais
-- **Mobile penetration**: 67%
-- **Digital plan**: $8.7Md Plan Numérique DRC 2025–2030
-- **Languages**: French (primary UI), Lingala, Swahili (planned)
-
----
-
-## 🏢 Built by TechFlow Solutions
-
-© 2025 TechFlow Solutions. All rights reserved.
+<div align="center">
+  <sub>© 2025 TechFlow Solutions. Tous droits réservés.</sub>
+</div>

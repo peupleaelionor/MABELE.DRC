@@ -1,6 +1,6 @@
 'use client'
 // ─── Market Item Detail — Dark Premium ────────────────────────────────────────
-import { useState } from 'react'
+import { use, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -30,13 +30,14 @@ const ETAT_COLOR: Record<string, { bg: string; color: string }> = {
   Reconditionné: { bg: 'rgba(56,189,248,0.15)', color: '#38BDF8' },
 }
 
-export default function MarketItemPage({ params }: { params: { id: string } }) {
+export default function MarketItemPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const router = useRouter()
   const [liked, setLiked] = useState(false)
   const ec = ETAT_COLOR[ITEM.etat] ?? { bg: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.45)' }
 
   function handleBuy() {
-    router.push(`/checkout?itemId=${params.id}&type=PURCHASE&amount=${ITEM.prix}&currency=${ITEM.devise}&desc=${encodeURIComponent(ITEM.nom)}`)
+    router.push(`/checkout?itemId=${id}&type=PURCHASE&amount=${ITEM.prix}&currency=${ITEM.devise}&desc=${encodeURIComponent(ITEM.nom)}`)
   }
 
   return (

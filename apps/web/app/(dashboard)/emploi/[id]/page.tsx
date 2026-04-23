@@ -1,6 +1,6 @@
 'use client'
 // ─── Job Detail — Dark Premium ─────────────────────────────────────────────────
-import { useState } from 'react'
+import { use, useState } from 'react'
 import Link from 'next/link'
 
 const MOD = '#0891B2'
@@ -33,7 +33,8 @@ Missions :
   contact: 'recrutement@techflow.cd',
 }
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
+export default function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  use(params) // unwrap; id available if needed
   const [applied, setApplied] = useState(false)
 
   return (

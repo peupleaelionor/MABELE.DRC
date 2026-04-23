@@ -18,7 +18,8 @@
     "clsx": "^2.1.0",
     "tailwind-merge": "^2.3.0",
     "@mabele/database": "workspace:*",
-    "@mabele/shared": "workspace:*"
+    "@mabele/shared": "workspace:*",
+    "@mabele/core-security": "workspace:*"
   },
   "devDependencies": {
     "@mabele/config": "workspace:*",

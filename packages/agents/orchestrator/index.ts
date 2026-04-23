@@ -17,6 +17,7 @@ export type AgentName =
   | 'growth-agent'
   | 'support-agent'
   | 'merchant-agent'
+  | 'security-agent'
 
 export interface AgentContext {
   agentName: AgentName

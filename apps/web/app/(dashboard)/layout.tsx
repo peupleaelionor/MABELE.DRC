@@ -11,10 +11,12 @@ const NAV = [
   { href: '/market',     icon: '🛒', label: 'Marché'        },
   { href: '/agri',       icon: '🌾', label: 'AgriTech'      },
   { href: '/logistique', icon: '🚛', label: 'Logistique'    },
+  { href: '/bima',       icon: '🛡', label: 'Bima'          },
   { href: '/finance',    icon: '💰', label: 'KangaPay'      },
   { href: '/outils',     icon: '🧾', label: 'NKISI'         },
   { href: '/data',       icon: '📊', label: 'Congo Data'    },
   { href: '/messages',   icon: '💬', label: 'Messages', badge: 2 },
+  { href: '/orders',     icon: '📦', label: 'Commandes'     },
 ]
 
 const BOTTOM_NAV = [

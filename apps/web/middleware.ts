@@ -80,6 +80,9 @@ export function middleware(request: NextRequest) {
   if (requiresAuth(pathname)) {
     const sessionCookie = request.cookies.get('mabele-session')?.value
     if (!sessionCookie) {
+      // No session cookie at all → redirect to login
+      // Note: full JWT/signature verification is done inside each API route handler
+      // via getSessionUser() which validates the session server-side.
       const loginUrl = new URL('/login', request.url)
       loginUrl.searchParams.set('next', pathname)
       return NextResponse.redirect(loginUrl)

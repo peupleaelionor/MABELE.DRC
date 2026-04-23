@@ -45,7 +45,12 @@ export function buildFingerprintRaw(headers: Headers): {
   return { ip, raw, signals: { userAgent: ua, acceptLanguage: lang, acceptEncoding: enc, ip }, country }
 }
 
-/** Hash a string to a short hex (using djb2 — no async, pure). */
+/**
+ * Hash a string to a short hex using djb2.
+ * Intentionally non-cryptographic — used for bucketing/fingerprinting,
+ * not for security decisions. Fast and Edge-runtime compatible (no async).
+ * Cryptographic decisions (HMAC, ban) are handled by sentinel.ts and hmac.ts.
+ */
 export function quickHash(s: string): string {
   let h = 5381
   for (let i = 0; i < s.length; i++) {

@@ -26,10 +26,13 @@ export async function GET() {
     })
 
     // Derive a human-readable description from metadata or type
-    const formatted = orders.map(o => ({
-      ...o,
-      description: (o.metadata as Record<string, string> | null)?.description ?? typeToLabel(o.type as string),
-    }))
+    const formatted = orders.map(o => {
+      const meta = o.metadata as Record<string, string> | null
+      return {
+        ...o,
+        description: meta?.description ?? typeToLabel(String(o.type)),
+      }
+    })
 
     return apiSuccess(formatted)
   } catch (error) {

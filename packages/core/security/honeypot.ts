@@ -70,27 +70,10 @@ export const HONEYPOT_PATHS: readonly string[] = [
 
 /** Known scanner/bot user-agent patterns. */
 export const SCANNER_UA_PATTERNS: readonly RegExp[] = [
-  /sqlmap/i,
-  /nikto/i,
-  /nmap/i,
-  /masscan/i,
-  /zgrab/i,
-  /nuclei/i,
-  /acunetix/i,
-  /nessus/i,
-  /openvas/i,
-  /burpsuite/i,
-  /zaproxy/i,
-  /dirbuster/i,
-  /gobuster/i,
-  /ffuf/i,
-  /wfuzz/i,
-  /hydra/i,
-  /metasploit/i,
-  /havij/i,
-  /python-requests\/[0-9]/i, // raw scripts (allow common versions selectively if needed)
-  /go-http-client\/[12]\./i,
-  /curl\/[0-9]/i,
+  // Known attack tools
+  /sqlmap|nikto|nmap|masscan|zgrab|nuclei|acunetix|nessus|openvas|burpsuite|zaproxy|dirbuster|gobuster|ffuf|wfuzz|hydra|metasploit|havij/i,
+  // Raw HTTP clients used as the full UA (automated scripts with no browser wrapper)
+  /^python-requests\/[0-9]|^go-http-client\/[12]\.|^curl\/[0-9]/i,
 ]
 
 /** Injection attack patterns to detect in URL paths and query strings. */

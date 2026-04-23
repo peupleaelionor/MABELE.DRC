@@ -40,7 +40,7 @@ function CheckoutContent() {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, currency, provider, type, phone: phone || undefined, description: desc }),
+        body: JSON.stringify({ amount, currency, provider, type, phone: phone?.trim() || undefined, description: desc }),
       })
       const data = await res.json()
       if (!res.ok || !data.success) {

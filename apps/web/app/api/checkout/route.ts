@@ -40,8 +40,8 @@ export async function POST(request: Request) {
 
     const { amount, currency, provider, type, phone, description, callbackUrl } = parsed.data
 
-    // Generate unique reference
-    const reference = `CHK-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`
+    // Generate cryptographically secure unique reference
+    const reference = `CHK-${Date.now().toString(36).toUpperCase()}-${crypto.randomUUID().replace(/-/g, '').slice(0, 6).toUpperCase()}`
 
     // Persist intent
     const intent = await db.paymentIntent.create({

@@ -8,7 +8,7 @@ import { getSessionUser } from '@/lib/auth'
 import { permanentBan, liftBan } from '@mabele/core-security'
 
 const schema = z.object({
-  ip:     z.string().ip(),
+  ip:     z.string().ip({ version: 'v4' }).or(z.string().ip({ version: 'v6' })),
   action: z.enum(['ban', 'unban']),
   reason: z.string().optional(),
 })

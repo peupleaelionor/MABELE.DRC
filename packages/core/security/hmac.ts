@@ -60,7 +60,7 @@ export async function signRequest(body: string, secret?: string): Promise<{ sign
   return { signature, timestamp }
 }
 
-/** Verify a request signature. Rejects if older than 5 minutes. */
+/** Verify a request signature. Rejects if older than 5 minutes or from the future. */
 export async function verifyRequest(
   body: string,
   signature: string,
@@ -69,7 +69,10 @@ export async function verifyRequest(
   maxAgeMs = 5 * 60 * 1000,
 ): Promise<boolean> {
   const age = Date.now() - timestamp
-  if (age < 0 || age > maxAgeMs) return false
+  // Reject future timestamps (clock skew > 30s indicates replay attack or manipulation)
+  if (age < -30_000) return false
+  // Reject expired timestamps
+  if (age > maxAgeMs) return false
   const payload = `${timestamp}.${body}`
   return verifyHmac(payload, signature, secret)
 }

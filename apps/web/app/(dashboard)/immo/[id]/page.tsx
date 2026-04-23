@@ -29,7 +29,8 @@ const LISTING = {
   images: 4,
 }
 
-export default function ListingDetailPage({ params }: { params: { id: string } }) {
+export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await params // unwrap; id not used in static mock
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#1A1A1A' }}>
       <header className="sticky top-0 z-30"
@@ -161,10 +162,11 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                         style={{ border: `1px solid ${ACC}`, color: ACC }}>
                   💬 Envoyer Message
                 </button>
-                <button className="w-full py-2.5 rounded-xl text-sm font-medium"
-                        style={{ backgroundColor: '#2D2D2D', color: 'rgba(255,255,255,0.60)' }}>
+                <a href={`/checkout?itemId=${LISTING.id}&type=PURCHASE&amount=5000&currency=USD&desc=${encodeURIComponent(LISTING.title)}`}
+                   className="w-full py-2.5 rounded-xl text-sm font-medium text-center block"
+                   style={{ backgroundColor: '#2D2D2D', color: '#22C55E', border: '1px solid rgba(34,197,94,0.20)' }}>
                   💰 Payer / Réserver
-                </button>
+                </a>
               </div>
             </div>
 

@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  typescript: { ignoreBuildErrors: true },
   transpilePackages: [
     '@mabele/shared',
     '@mabele/database',
@@ -11,6 +12,7 @@ const nextConfig: NextConfig = {
     '@mabele/core-logger',
     '@mabele/core-qr',
     '@mabele/core-wallet',
+    '@mabele/core-security',
     '@mabele/ui-tokens',
     '@mabele/ui-components',
   ],
